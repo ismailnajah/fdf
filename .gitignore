@@ -1,6 +1,6 @@
 *.*.swp
 fdf
-
+!fdf/
 # Prerequisites
 *.d
 

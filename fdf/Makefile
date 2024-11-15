@@ -2,8 +2,7 @@ NAME = fdf
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -lm
-
+CFLAGS = -Wall -Wextra -Werror -Imlx -fsanitize=address -g3
 INCLUDE = .
 
 SRC =  main.c\
@@ -14,8 +13,8 @@ LIBFT = $(LIBFTDIR)/libft.a
 
 all: $(NAME)
 
-$(NAME): $(LIBFT)
-	$(CC) $(CFLAGS) -I$(INCLUDE) -o $(NAME) $(SRC) $(LIBFT)
+$(NAME): $(LIBFT) $(SRC)
+	$(CC) $(CFLAGS) -Imlx -Lmlx -lmlx -framework OpenGL -framework Appkit -o $(NAME) $(SRC) $(LIBFT)
 
 $(LIBFT):
 	make -C $(LIBFTDIR)

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/16 11:58:53 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/16 14:06:28 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #define C_RED	0x55FF0000
 #define C_GREEN 0x5500FF00
 #define C_BLUE  0x550000FF
+#define C_BLACK 0x00000000
 
 #define KEY_ESC 53 
 
@@ -43,6 +44,13 @@ enum {
 	ON_EXPOSE = 12,
 	ON_DESTROY = 17
 };
+
+typedef struct s_point
+{
+	int x;
+	int y;
+	int z;
+}	t_point;
 
 typedef struct s_map
 {
@@ -146,7 +154,7 @@ t_layout *init_layout(void* mlx)
 	layout->side = ft_init_image(mlx, SIDE_W, SIDE_H);
 	if (!layout->side)
 		return (ft_free_layout(mlx, layout));
-	ft_fill_image(layout->side, SIDE_W, SIDE_H, C_RED);
+	//ft_fill_image(layout->side, SIDE_W, SIDE_H, C_RED);
 	return (layout);
 }
 
@@ -216,13 +224,16 @@ int	get_b(int trgb)
 }
 
 
-unsigned int ft_lerp(unsigned int a, unsigned int b, float t)
+unsigned int ft_color_lerp(unsigned int c1, unsigned int c2, float t)
 {
-	int sg = get_g(a);
-	int eg = get_g(b);
+	int r;
+	int g;
+	int b;
 
-	int out = (sg + t * (eg - sg));
-	return create_trgb(0, 255, out, 255);
+	r = get_r(c1) + t * (get_r(c2) - get_r(c1));
+	g = get_g(c1) + t * (get_g(c2) - get_g(c1));
+	b = get_b(c1) + t * (get_b(c2) - get_b(c1));
+	return create_trgb(0, r, g, b);
 }
 
 int ft_fill_image(t_image *img, int w, int h, size_t color)
@@ -234,7 +245,7 @@ int ft_fill_image(t_image *img, int w, int h, size_t color)
 		x = 0;
 		while (x < w)
 		{
-			my_mlx_pixel_put(img, x, y, ft_lerp(color, C_WHITE, (float)y / h));
+			my_mlx_pixel_put(img, x, y, ft_color_lerp(C_RED, color, (float)y / h));
 			x++;
 		}
 		y++;
@@ -257,11 +268,78 @@ void	ft_draw_rectangle(t_image *img, t_rectangle rec)
 	i = 0;
 	while (i < rec.h)
 	{
-		my_mlx_pixel_put(img, rec.x, rec.y + i, ft_lerp(0x000099cc, C_WHITE, (float)i / rec.h));
+		my_mlx_pixel_put(img, rec.x, rec.y + i, ft_color_lerp(0x000099cc, C_WHITE, (float)i / rec.h));
 		if (rec.x)
-			my_mlx_pixel_put(img, rec.x + rec.w, rec.y + i, ft_lerp(0x000099cc, C_WHITE, (float)i / rec.h));
+			my_mlx_pixel_put(img, rec.x + rec.w, rec.y + i, ft_color_lerp(0x000099cc, C_WHITE, (float)i / rec.h));
 		i++;
 	}
+}
+
+void ft_swap_point(t_point *a, t_point *b)
+{
+	t_point tmp;
+
+	tmp = *b;
+	*b = *a;
+	*a = tmp;
+}
+// draw a line;
+void ft_draw_line(t_image *img, t_point a, t_point b)
+{
+	int y;
+	int x;
+
+	if (a.x == b.x)
+	{
+		if (a.y > b.y)
+			ft_swap_point(&a, &b);
+		y = a.y;
+		while (y <= b.y)
+		{
+			my_mlx_pixel_put(img, a.x, y, C_RED);
+			y++;
+		}
+	} 
+	else
+	{
+		if (a.x > b.x)
+			ft_swap_point(&a, &b);
+		x = a.x;
+		while (x <= b.x)
+		{
+			y = (a.y * (b.x - x) + b.y * (x - a.x)) / (b.x - a.x);
+			my_mlx_pixel_put(img, x, y, C_RED);
+			x++;
+		}
+	}
+}
+
+void ft_draw_shape(t_image *img, t_point *points, int nb)
+{
+	int i;
+
+	i = 0;
+	while (i < nb)
+	{
+		ft_draw_line(img, points[i], points[(i + 1) % nb]);
+		i++;
+	}
+}
+
+void ft_draw_triangle(t_image *img, int x, int y, int size)
+{
+	t_point points[3];
+	
+	points[0].x = x;
+	points[0].y = y;
+
+	points[1].x = x - size / 2;
+	points[1].y = y + size;
+
+	points[2].x = x + size / 2;
+	points[2].y = y + size;
+
+	ft_draw_shape(img, points, 3);
 }
 
 int	main(void)
@@ -280,6 +358,17 @@ int	main(void)
 	int w = 800;
 	int h = 400;
 	ft_draw_rectangle(vars.layout->main, ft_rectangle(MAIN_W/2 - w/2, MAIN_H/2 - h/2, w, h));
+
+	t_point a;
+	t_point b;
+	a.x = 0;
+	a.y = 0;
+	b.x = MAIN_W;
+	b.y = MAIN_H;
+
+//	ft_draw_line(vars.layout->main, a, b);
+	ft_draw_line(vars.layout->main, b, a);
+	ft_draw_triangle(vars.layout->side, 200, 200, 300);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->top->data, MAIN_W, 0);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->side->data, MAIN_W, WIN_H / 2);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->main->data, 0, 0);

@@ -38,7 +38,16 @@ SRC =  ft_memmove.c\
 	 ft_strlen.c\
 	 ft_strdup.c\
 	 ft_error.c\
-	 get_next_line.c
+	 get_next_line.c\
+	 ft_utils.c\
+	 ft_addr_spec.c\
+	 ft_dec_to_base.c\
+	 ft_parse_format.c\
+	 ft_char_str_spec.c\
+	 ft_format.c\
+	 ft_printf.c\
+	 ft_d_i_u_spec.c\
+	 ft_hex_percent_spec.c\
 
 BSRC = ft_lstnew_bonus.c\
 	   ft_lstadd_front_bonus.c\

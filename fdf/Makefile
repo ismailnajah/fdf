@@ -6,6 +6,8 @@ CFLAGS = -Wall -Wextra -Werror -Imlx -fsanitize=address -g3
 INCLUDE = .
 
 SRC =  main.c\
+	   ft_parse_map.c\
+
 
 LIBFTDIR = ./libft
 

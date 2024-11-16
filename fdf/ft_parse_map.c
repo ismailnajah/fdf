@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/15 08:18:54 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/16 10:21:05 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	ft_parse_map(char *path)
 	w = 0;
 	h = 0;
 	if (!ft_get_map_resolution(path, &w, &h))
-		printf("Invalid map\n");
+		ft_printf("Invalid map\n");
 	else
-		printf("width: %d | height: %d\n", w, h);
+		ft_printf("width: %d | height: %d\n", w, h);
 
 	return 1;
 }

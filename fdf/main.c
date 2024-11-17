@@ -6,87 +6,13 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/16 14:06:28 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/17 11:34:46 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include "mlx.h"
 #include <stdio.h>
-
-#define FACT 120
-#define WIN_W (16 * FACT)
-#define WIN_H (9 * FACT)
-
-#define MAIN_W (WIN_W * 0.7)
-#define MAIN_H WIN_H
-
-#define TOP_W (WIN_W - MAIN_W)
-#define TOP_H (WIN_H / 2)
-
-#define SIDE_W (WIN_W - MAIN_W)
-#define SIDE_H (WIN_H / 2)
-
-#define C_WHITE 0xFFFFFFFF
-#define C_RED	0x55FF0000
-#define C_GREEN 0x5500FF00
-#define C_BLUE  0x550000FF
-#define C_BLACK 0x00000000
-
-#define KEY_ESC 53 
-
-enum {
-	ON_KEYDOWN = 2,
-	ON_KEYUP = 3,
-	ON_MOUSEDOWN = 4,
-	ON_MOUSEUP = 5,
-	ON_MOUSEMOVE = 6,
-	ON_EXPOSE = 12,
-	ON_DESTROY = 17
-};
-
-typedef struct s_point
-{
-	int x;
-	int y;
-	int z;
-}	t_point;
-
-typedef struct s_map
-{
-	int width;
-	int height;
-	int	*values;
-}	t_map;
-
-typedef struct s_image
-{
-	void	*data;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-	int		w;
-	int		h;
-}	t_image;
-
-
-typedef struct s_layout
-{
-	t_image	*main; // the main image where the fdf is rendered
-	t_image	*top;  // top view of the fdf 
-	t_image	*side; // side view of the fdf
-}	t_layout;
-
-typedef struct s_vars
-{
-	void		*mlx;
-	void		*win;
-	t_layout *layout;
-}	t_vars;
-
-
-int ft_fill_image(t_image *img, int w, int h, size_t color);
 
 void my_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
@@ -342,8 +268,16 @@ void ft_draw_triangle(t_image *img, int x, int y, int size)
 	ft_draw_shape(img, points, 3);
 }
 
-int	main(void)
+int	main(int ac, char **av)
 {
+	t_map *map;
+
+	if (ac != 2)
+		return (1);
+	map = ft_get_map_from_file(av[1]);
+	if (map)
+		ft_debug_map(map);
+#if 0
 	t_vars vars;
 
 	vars.mlx = mlx_init();
@@ -366,9 +300,11 @@ int	main(void)
 	b.x = MAIN_W;
 	b.y = MAIN_H;
 
-//	ft_draw_line(vars.layout->main, a, b);
 	ft_draw_line(vars.layout->main, b, a);
 	ft_draw_triangle(vars.layout->side, 200, 200, 300);
+
+//TODO: parse the map and build the points cloud (note: the map file has the format z,[color])
+	// put layout to window
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->top->data, MAIN_W, 0);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->side->data, MAIN_W, WIN_H / 2);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->main->data, 0, 0);
@@ -376,6 +312,6 @@ int	main(void)
 	mlx_hook(vars.win, ON_KEYDOWN, 1L<<0, ft_on_keydown, &vars);
 	mlx_hook(vars.win, ON_DESTROY, 0, ft_on_destroy, &vars);
 	mlx_loop(vars.mlx);
-
+#endif
 	return (0);
 }

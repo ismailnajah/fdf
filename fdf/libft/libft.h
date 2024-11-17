@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:18:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/16 10:35:14 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/17 08:50:52 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # define STDIN	0
 # define STDOUT	1
 # define STDERR	2
+
+# define SUCCESS 1
+# define FAILURE 0
 
 # define ERROR_HAPPENED 1
 # define ERROR_GET 0

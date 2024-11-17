@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/17 13:36:58 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/17 14:04:18 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,9 +324,8 @@ int	main(int ac, char **av)
 	map = ft_get_map_from_file(av[1]);
 	if (!map)
 		return (1);
-	//if (map)
-		//ft_debug_map(map);
-
+	//ft_debug_map(map);
+#if 1
 	t_vars vars;
 
 	vars.mlx = mlx_init();
@@ -362,6 +361,6 @@ int	main(int ac, char **av)
 	mlx_hook(vars.win, ON_KEYDOWN, 1L<<0, ft_on_keydown, &vars);
 	mlx_hook(vars.win, ON_DESTROY, 0, ft_on_destroy, &vars);
 	mlx_loop(vars.mlx);
-
+#endif
 	return (0);
 }

@@ -15,7 +15,7 @@ LIBFT = $(LIBFTDIR)/libft.a
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(SRC)
+$(NAME): $(LIBFT) $(SRC) fdf.h
 	$(CC) $(CFLAGS) -Imlx -Lmlx -lmlx -framework OpenGL -framework Appkit -o $(NAME) $(SRC) $(LIBFT)
 
 $(LIBFT):

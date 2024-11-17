@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/17 13:42:35 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/17 14:14:46 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ unsigned int	ft_hex_to_int(char *hex)
    
 	color = 0;
 	i = 0;
-	while (hex[i])
+	while (hex[i] && hex[i] != '\n')
 	{
 		c = ft_toupper(hex[i]);
 		if (ft_isdigit(c))
@@ -218,5 +218,6 @@ t_map	*ft_get_map_from_file(char *path)
 		return (ft_printf("[ ERROR ] %s could not be opened: %s\n", path, strerror(errno)), ft_free_map(map));
 	ft_parse_map(fd, map);
 	close(fd);
+	ft_printf("[ INFO  ] Loading done.\n");
 	return (map);
 }

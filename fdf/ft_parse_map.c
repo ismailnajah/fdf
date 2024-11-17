@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/17 11:49:08 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/17 13:42:35 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ unsigned int	ft_parse_color(char *color_str)
 {
 	if (!color_str)
 		return (C_WHITE);
-	if (ft_strlen(color_str) != 8)
-		return (C_WHITE);
 	if (color_str[0] != '0' || (color_str[1] != 'x' && color_str[1] != 'X'))
 		return (C_WHITE);
 	return (ft_hex_to_int(color_str + 2));
@@ -222,5 +220,3 @@ t_map	*ft_get_map_from_file(char *path)
 	close(fd);
 	return (map);
 }
-
-

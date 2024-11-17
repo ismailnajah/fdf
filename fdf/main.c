@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/17 11:34:46 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/17 13:36:58 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_layout *init_layout(void* mlx)
 	layout->top = ft_init_image(mlx, TOP_W, TOP_H);
 	if (!layout->top)
 		return (ft_free_layout(mlx, layout));
-	ft_fill_image(layout->top, TOP_W, TOP_H, C_BLUE);
+	//ft_fill_image(layout->top, TOP_W, TOP_H, C_BLUE);
 	layout->side = ft_init_image(mlx, SIDE_W, SIDE_H);
 	if (!layout->side)
 		return (ft_free_layout(mlx, layout));
@@ -222,7 +222,7 @@ void ft_draw_line(t_image *img, t_point a, t_point b)
 		y = a.y;
 		while (y <= b.y)
 		{
-			my_mlx_pixel_put(img, a.x, y, C_RED);
+			my_mlx_pixel_put(img, a.x, y, ft_color_lerp(a.color, b.color, (float)y / b.y));
 			y++;
 		}
 	} 
@@ -234,7 +234,7 @@ void ft_draw_line(t_image *img, t_point a, t_point b)
 		while (x <= b.x)
 		{
 			y = (a.y * (b.x - x) + b.y * (x - a.x)) / (b.x - a.x);
-			my_mlx_pixel_put(img, x, y, C_RED);
+			my_mlx_pixel_put(img, x, y, ft_color_lerp(a.color, b.color, (float)x / b.x));
 			x++;
 		}
 	}
@@ -268,6 +268,53 @@ void ft_draw_triangle(t_image *img, int x, int y, int size)
 	ft_draw_shape(img, points, 3);
 }
 
+void	ft_draw_top_view(t_image *img, t_map *map)
+{
+	int	i;
+	int j;
+	int x_off;
+	int y_off;
+	int x_scale;
+	int y_scale;
+
+	t_point a;
+	t_point b;
+
+	x_scale = img->w / map->w;
+	y_scale = img->h / map->h; 
+	x_off = (img->w - (map->w - 1) * x_scale) / 2;
+	y_off = (img->h - (map->h - 1) * y_scale) / 2;
+
+	j = 0;
+	while (j < map->h)
+	{
+		i = 0;
+		while (i < map->w)
+		{
+			a.x = map->points[j * map->w + i].x * x_scale + x_off;
+			a.y = map->points[j * map->w + i].y * y_scale + y_off;
+			a.color = map->points[j * map->w + i].color;
+
+			if (i + 1 < map->w)
+			{
+				b.x = map->points[j * map->w + i + 1].x * x_scale + x_off;
+				b.y = map->points[j * map->w + i + 1].y * y_scale + y_off;
+				b.color = map->points[j * map->w + i + 1].color;
+				ft_draw_line(img, a, b);
+			}
+			if (j + 1 < map->h)
+			{
+				b.x = map->points[(j + 1) * map->w + i].x * x_scale + x_off;
+				b.y = map->points[(j + 1) * map->w + i].y * y_scale + y_off;
+				b.color = map->points[(j + 1) * map->w + i].color;
+				ft_draw_line(img, a, b);
+			}
+			i++;
+		}
+		j++;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_map *map;
@@ -275,9 +322,11 @@ int	main(int ac, char **av)
 	if (ac != 2)
 		return (1);
 	map = ft_get_map_from_file(av[1]);
-	if (map)
-		ft_debug_map(map);
-#if 0
+	if (!map)
+		return (1);
+	//if (map)
+		//ft_debug_map(map);
+
 	t_vars vars;
 
 	vars.mlx = mlx_init();
@@ -289,10 +338,13 @@ int	main(int ac, char **av)
 	if (!vars.layout)
 		return (2);
 
-	int w = 800;
-	int h = 400;
-	ft_draw_rectangle(vars.layout->main, ft_rectangle(MAIN_W/2 - w/2, MAIN_H/2 - h/2, w, h));
-
+	ft_draw_top_view(vars.layout->main, map);
+	ft_draw_top_view(vars.layout->side, map);
+	ft_draw_top_view(vars.layout->top, map);
+	//int w = 800;
+	//int h = 400;
+	//ft_draw_rectangle(vars.layout->main, ft_rectangle(MAIN_W/2 - w/2, MAIN_H/2 - h/2, w, h));
+/*
 	t_point a;
 	t_point b;
 	a.x = 0;
@@ -302,9 +354,7 @@ int	main(int ac, char **av)
 
 	ft_draw_line(vars.layout->main, b, a);
 	ft_draw_triangle(vars.layout->side, 200, 200, 300);
-
-//TODO: parse the map and build the points cloud (note: the map file has the format z,[color])
-	// put layout to window
+*/
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->top->data, MAIN_W, 0);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->side->data, MAIN_W, WIN_H / 2);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->main->data, 0, 0);
@@ -312,6 +362,6 @@ int	main(int ac, char **av)
 	mlx_hook(vars.win, ON_KEYDOWN, 1L<<0, ft_on_keydown, &vars);
 	mlx_hook(vars.win, ON_DESTROY, 0, ft_on_destroy, &vars);
 	mlx_loop(vars.mlx);
-#endif
+
 	return (0);
 }

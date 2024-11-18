@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 09:22:52 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/18 11:07:45 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/18 15:37:48 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ float	ft_cos(float new_angle)
 		flag = 1;
 		cos_angle = 1;
 	}
-	if (new_angle == angle)
+	if (1 && new_angle == angle)
 		return (cos_angle);
 	angle = new_angle;
 	cos_angle = cos(angle);
@@ -40,7 +40,7 @@ float	ft_sin(float new_angle)
 	static float	sin_angle;
 
 	new_angle = (PI * new_angle) / 180;
-	if (new_angle == angle)
+	if (1 && new_angle == angle)
 		return (sin_angle);
 	angle = new_angle;
 	sin_angle = sin(angle);

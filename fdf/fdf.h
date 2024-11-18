@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/18 13:59:27 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/18 16:42:19 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include "libft/libft.h"
 
 
-# define SCALE 500
+# define ANGLE_STEP 5
 # define FACT 120
 # define WIN_W (16 * FACT)
 # define WIN_H (9 * FACT)
@@ -46,6 +46,12 @@
 //keys codes
 enum {
 	KEY_ESC = 53,
+	KEY_W = 13,
+	KEY_S = 1,
+	KEY_A = 0,
+	KEY_D = 2,
+	KEY_E = 14,
+	KEY_Q = 12,
 };
 
 //events codes

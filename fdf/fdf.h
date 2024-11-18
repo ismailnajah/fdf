@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/17 14:07:40 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/18 13:59:27 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,14 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <errno.h>
+# include <limits.h>
 # include <fcntl.h>
+# include <math.h>
+# include <stdio.h>
 # include "libft/libft.h"
 
+
+# define SCALE 500
 # define FACT 120
 # define WIN_W (16 * FACT)
 # define WIN_H (9 * FACT)
@@ -83,9 +88,9 @@ typedef struct s_vars
 
 typedef struct s_point
 {
-	int				x;
-	int				y;
-	int				z;
+	float			x;
+	float			y;
+	float			z;
 	unsigned int	color;
 }	t_point;
 
@@ -96,7 +101,12 @@ typedef struct s_map
 	t_point	*points;
 }	t_map;
 
-
+typedef struct	s_matrix
+{
+	int	w;
+	int	h;
+	float	*values;
+}	t_matrix;
 
 int	create_trgb(int t, int r, int g, int b);
 int	get_t(int trgb);
@@ -107,6 +117,18 @@ int	get_b(int trgb);
 int ft_fill_image(t_image *img, int w, int h, size_t color);
 
 void	ft_debug_map(t_map *map);
+void	*ft_free_map(t_map *map);
+t_map	*ft_init_map(int w, int h);
 t_map	*ft_get_map_from_file(char *path);
+
+
+void	*ft_matrix_free(t_matrix *mat);
+t_matrix	*ft_matrix_init(int w, int h);
+void	ft_matrix_point_mul(t_matrix *mat, t_point *p, t_point *out);
+void	ft_matrix_rotateX(t_matrix *mat, float angle);
+void	ft_matrix_rotateY(t_matrix *mat, float angle);
+void	ft_matrix_rotateZ(t_matrix *mat, float angle);
+
+
 
 #endif

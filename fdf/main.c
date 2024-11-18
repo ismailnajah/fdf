@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/17 14:04:18 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/18 13:47:44 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,10 +280,10 @@ void	ft_draw_top_view(t_image *img, t_map *map)
 	t_point a;
 	t_point b;
 
-	x_scale = img->w / map->w;
-	y_scale = img->h / map->h; 
-	x_off = (img->w - (map->w - 1) * x_scale) / 2;
-	y_off = (img->h - (map->h - 1) * y_scale) / 2;
+	x_scale = img->w / 2;
+	y_scale = img->w / 2; 
+	x_off = img->w / 2;
+	y_off = img->h / 2;
 
 	j = 0;
 	while (j < map->h)
@@ -315,6 +315,55 @@ void	ft_draw_top_view(t_image *img, t_map *map)
 	}
 }
 
+void	ft_draw_main_view(t_image *img, t_map *map)
+{
+	t_map		*new_map;
+	t_point		px;
+	t_point		py;
+	t_matrix	*rotateX;
+	t_matrix	*rotateY;
+	t_matrix	*rotateZ;
+
+	int		i;
+	int		j;
+
+	new_map = ft_init_map(map->w, map->h);
+	if (!new_map)
+		return ;
+	rotateX = ft_matrix_init(3, 3);
+	if (!rotateX)
+		return ;
+	rotateY = ft_matrix_init(3, 3);
+	if (!rotateY)
+		return ;
+	rotateZ = ft_matrix_init(3, 3);
+	if (!rotateZ)
+		return ;
+
+	ft_matrix_rotateX(rotateX, 55.0f);
+	ft_matrix_rotateY(rotateY, 40.0f);
+	ft_matrix_rotateZ(rotateZ, -20.0f);
+	j = 0;
+	while (j < new_map->h)
+	{
+		i = 0;
+		while (i < new_map->w)
+		{
+			ft_matrix_point_mul(rotateX, &map->points[j * map->w + i], &px);
+			ft_matrix_point_mul(rotateY, &px, &py);
+			ft_matrix_point_mul(rotateZ, &py, &new_map->points[j * new_map->w + i]);
+			i++;
+		}
+		j++;
+	}
+	ft_draw_top_view(img, new_map);
+	ft_matrix_free(rotateX);
+	ft_matrix_free(rotateY);
+	ft_matrix_free(rotateZ);
+	ft_free_map(new_map);
+}
+
+
 int	main(int ac, char **av)
 {
 	t_map *map;
@@ -325,6 +374,9 @@ int	main(int ac, char **av)
 	if (!map)
 		return (1);
 	//ft_debug_map(map);
+	//
+
+
 #if 1
 	t_vars vars;
 
@@ -337,9 +389,10 @@ int	main(int ac, char **av)
 	if (!vars.layout)
 		return (2);
 
-	ft_draw_top_view(vars.layout->main, map);
-	ft_draw_top_view(vars.layout->side, map);
-	ft_draw_top_view(vars.layout->top, map);
+	ft_draw_main_view(vars.layout->main, map);
+	//ft_draw_top_view(vars.layout->main, map);
+	//ft_draw_top_view(vars.layout->side, map);
+	//ft_draw_top_view(vars.layout->top, map);
 	//int w = 800;
 	//int h = 400;
 	//ft_draw_rectangle(vars.layout->main, ft_rectangle(MAIN_W/2 - w/2, MAIN_H/2 - h/2, w, h));

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 14:06:44 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 15:29:36 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,32 @@ float	ft_clamp(float value, float min, float max)
 	return (value);
 }
 
+void	ft_reset_setting(int state, t_setting *s)
+{
+	static int start;
+
+	if (state)
+		start = 1;
+	if (!start)
+		return ;
+	if (s->angleX != DEFAULT_ANGLE_X)
+		s->angleX += (1 - 2 * (s->angleX > DEFAULT_ANGLE_X)) * ANGLE_STEP;
+	if (s->angleY != DEFAULT_ANGLE_Y)
+		s->angleY += (1 - 2 * (s->angleY > DEFAULT_ANGLE_Y)) * ANGLE_STEP;
+	if (s->angleZ != DEFAULT_ANGLE_Z)
+		s->angleZ += (1 - 2 * (s->angleZ > DEFAULT_ANGLE_Z)) * ANGLE_STEP;
+	if (s->scale != DEFAULT_SCALE)
+		s->scale += (1 - 2 * (s->scale > DEFAULT_SCALE)) * SCALE_STEP;
+	if (s->x_off != DEFAULT_X_OFF)
+		s->x_off += (1 - 2 * (s->x_off > DEFAULT_X_OFF)) * OFFSET_STEP;
+	if (s->y_off != DEFAULT_Y_OFF)
+		s->y_off += (1 - 2 * (s->y_off > DEFAULT_Y_OFF)) * OFFSET_STEP;
+	if (s->angleX == DEFAULT_ANGLE_X && s->angleY == DEFAULT_ANGLE_Y
+			&& s->angleZ == DEFAULT_ANGLE_Z && s->scale == DEFAULT_SCALE
+			&& s->x_off == DEFAULT_X_OFF && s->y_off == DEFAULT_Y_OFF)
+		start = 0;
+}
+
 int ft_on_keydown(int keycode, t_vars *vars)
 {
 	if (keycode == KEY_ESC)
@@ -119,6 +145,8 @@ int ft_on_keydown(int keycode, t_vars *vars)
 		vars->setting->x_off -= OFFSET_STEP;
 	if (keycode == KEY_RIGHT)
 		vars->setting->x_off += OFFSET_STEP;
+	if (keycode == KEY_SPACE)
+		ft_reset_setting(1, vars->setting);
 	//printf("keycode: %d\n", keycode);
 	return (0);
 }
@@ -338,6 +366,7 @@ int	render_next_frame(t_vars *vars)
 {
 	ft_free_image(vars->mlx, vars->layout->main);	
 	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
+	ft_reset_setting(0, vars->setting);
 	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
 	return (0);
@@ -363,18 +392,16 @@ int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
 {
 	(void) x;
 	(void) y;
-	int	scale;
 
-	scale = (MAX_ZOOM - MIN_ZOOM) / SCALE_STEP;
 	if (keycode == KEY_SCROLL_UP)
 	{
 		if (vars->setting->scale <= MAX_ZOOM)
-			vars->setting->scale += scale;
+			vars->setting->scale += SCALE_STEP;
 	}
 	if (keycode == KEY_SCROLL_DOWN)
 	{
 		if (vars->setting->scale > MIN_ZOOM)
-			vars->setting->scale -= scale;
+			vars->setting->scale -= SCALE_STEP;
 	}
 	//printf("[ INFO ] (%d, %d) Mouse button (%d) clicked! (scale = %d)\n", x, y, keycode, scale);
 	return (0);

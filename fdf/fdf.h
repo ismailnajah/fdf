@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 14:04:14 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 15:20:18 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 # include <stdio.h>
 # include "libft/libft.h"
 
-
-# define ANGLE_STEP 5
-# define SCALE_STEP 30
-# define OFFSET_STEP 10
 # define MAX_ZOOM  1500
 # define MIN_ZOOM 50
+
+# define ANGLE_STEP 5
+# define SCALE_STEP (MAX_ZOOM - MIN_ZOOM) / 30
+# define OFFSET_STEP 10
 
 # define FACT 120
 # define WIN_W (16 * FACT)
@@ -72,6 +72,7 @@ enum
 	KEY_D = 2,
 	KEY_E = 14,
 	KEY_Q = 12,
+	KEY_SPACE = 49,
 	KEY_SCROLL_UP = 4,
 	KEY_SCROLL_DOWN = 5,
 };

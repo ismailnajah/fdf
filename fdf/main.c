@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 13:12:08 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 14:06:44 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,15 @@ int ft_on_keydown(int keycode, t_vars *vars)
 		vars->setting->angleZ = ft_clamp(vars->setting->angleZ + ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_E)
 		vars->setting->angleZ = ft_clamp(vars->setting->angleZ - ANGLE_STEP, -360.0f, 360.0f);
+	if (keycode == KEY_UP)
+		vars->setting->y_off -= OFFSET_STEP;
+	if (keycode == KEY_DOWN)
+		vars->setting->y_off += OFFSET_STEP;
+	if (keycode == KEY_LEFT)
+		vars->setting->x_off -= OFFSET_STEP;
+	if (keycode == KEY_RIGHT)
+		vars->setting->x_off += OFFSET_STEP;
+	//printf("keycode: %d\n", keycode);
 	return (0);
 }
 

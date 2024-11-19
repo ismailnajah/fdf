@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 13:13:10 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 14:04:14 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 
 # define ANGLE_STEP 5
 # define SCALE_STEP 30
+# define OFFSET_STEP 10
 # define MAX_ZOOM  1500
 # define MIN_ZOOM 50
 
@@ -51,7 +52,7 @@
 # define DEFAULT_ANGLE_X 40.0f
 # define DEFAULT_ANGLE_Y 35.0f
 # define DEFAULT_ANGLE_Z -30.0f
-# define DEFAULT_SCALE 50
+# define DEFAULT_SCALE MAX_ZOOM / 3
 # define DEFAULT_X_OFF (MAIN_W / 2)
 # define DEFAULT_Y_OFF (MAIN_H / 2)
 
@@ -61,6 +62,10 @@
 enum 
 {
 	KEY_ESC = 53,
+	KEY_UP = 126,
+	KEY_DOWN = 125,
+	KEY_LEFT = 123,
+	KEY_RIGHT = 124,
 	KEY_W = 13,
 	KEY_S = 1,
 	KEY_A = 0,

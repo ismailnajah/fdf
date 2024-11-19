@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/18 16:46:46 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 13:12:08 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,61 +82,47 @@ t_layout *init_layout(void* mlx)
 	return (layout);
 }
 
-
-int angleX;
-int angleY;
-int angleZ;
+float	ft_clamp(float value, float min, float max)
+{
+	if (value <= min || value >= max)
+		return (0.0f);
+	return (value);
+}
 
 int ft_on_keydown(int keycode, t_vars *vars)
 {
 	if (keycode == KEY_ESC)
 	{
 		ft_free_layout(vars->mlx, vars->layout);
+		free(vars->setting);
+		ft_free_map(vars->map);
 		mlx_destroy_window(vars->mlx, vars->win);
 		exit(0);
 	}
 	if (keycode == KEY_W)
-		angleX = (angleX + ANGLE_STEP) % 360;
+		vars->setting->angleX = ft_clamp(vars->setting->angleX + ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_S)
-		angleX = (angleX - ANGLE_STEP) % 360;
+		vars->setting->angleX = ft_clamp(vars->setting->angleX - ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_D)
-		angleY = (angleY + ANGLE_STEP) % 360;
+		vars->setting->angleY = ft_clamp(vars->setting->angleY + ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_A)
-		angleY = (angleY - ANGLE_STEP) % 360;
+		vars->setting->angleY = ft_clamp(vars->setting->angleY - ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_Q)
-		angleZ = (angleZ + ANGLE_STEP) % 360;
+		vars->setting->angleZ = ft_clamp(vars->setting->angleZ + ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_E)
-		angleZ = (angleZ - ANGLE_STEP) % 360;
+		vars->setting->angleZ = ft_clamp(vars->setting->angleZ - ANGLE_STEP, -360.0f, 360.0f);
 	return (0);
 }
 
 int ft_on_destroy(t_vars *vars)
 {
 	ft_free_layout(vars->mlx, vars->layout);
+	free(vars->setting);
+	ft_free_map(vars->map);
 	mlx_destroy_window(vars->mlx, vars->win);
 	ft_printf("Bye\n");
 	exit(0);
 	return (0);
-}
-
-//draw rectangle
-typedef struct s_rectangle
-{
-	int x;
-	int y;
-	int w;
-	int h;
-}	t_rectangle;
-
-t_rectangle	ft_rectangle(int x, int y, int w, int h)
-{
-	t_rectangle rec;
-	
-	rec.x = x;
-	rec.y = y;
-	rec.w = w;
-	rec.h = h;
-	return (rec);
 }
 
 int	create_trgb(int t, int r, int g, int b)
@@ -177,45 +163,6 @@ unsigned int ft_color_lerp(unsigned int c1, unsigned int c2, float t)
 	return create_trgb(0, r, g, b);
 }
 
-int ft_fill_image(t_image *img, int w, int h, size_t color)
-{
-	int x = 0;
-	int y = 0;
-	while (y < h)
-	{
-		x = 0;
-		while (x < w)
-		{
-			my_mlx_pixel_put(img, x, y, ft_color_lerp(C_RED, color, (float)y / h));
-			x++;
-		}
-		y++;
-	}
-	return (0);
-}
-
-void	ft_draw_rectangle(t_image *img, t_rectangle rec)
-{
-	int i;
-
-	i = 0;
-	while (i < rec.w)
-	{
-		my_mlx_pixel_put(img, rec.x + i, rec.y, C_RED);
-		if (rec.h)
-			my_mlx_pixel_put(img, rec.x + i, rec.y + rec.h, C_RED);
-		i++;
-	}
-	i = 0;
-	while (i < rec.h)
-	{
-		my_mlx_pixel_put(img, rec.x, rec.y + i, ft_color_lerp(0x000099cc, C_WHITE, (float)i / rec.h));
-		if (rec.x)
-			my_mlx_pixel_put(img, rec.x + rec.w, rec.y + i, ft_color_lerp(0x000099cc, C_WHITE, (float)i / rec.h));
-		i++;
-	}
-}
-
 void ft_swap_point(t_point *a, t_point *b)
 {
 	t_point tmp;
@@ -254,7 +201,7 @@ void ft_draw_line_lerp(t_image *img, t_point a, t_point b)
 		}
 	}
 }
-
+// TODO: fix the order of render (always go back to front);
 void	ft_draw_line_dda(t_image *img, t_point a, t_point b)
 {
 	float	dx;
@@ -271,14 +218,14 @@ void	ft_draw_line_dda(t_image *img, t_point a, t_point b)
 	else
 		steps = dy;
 	i = 0;
-	x = (a.x > b.x) * b.x + (a.x <= b.x) * a.x;
-	y = (a.x > b.x) * b.y + (a.x <= b.x) * a.y;
+	x = a.x;//(a.x > b.x) * b.x + (a.x <= b.x) * a.x;
+	y = a.y;//(a.x > b.x) * b.y + (a.x <= b.x) * a.y;
 	printf("[ INFO ] drawing a line from (%.2f, %.2f) to (%.2f, %.2f)\n", a.x, a.y, b.x, b.y);
 	printf("[ INFO ] x=%.2f y=%.2f steps=%.2f dx=%.2f dy=%.2f\n", x, y, steps, dx, dy);
 	while (i < steps)
 	{
 		printf("");
-		my_mlx_pixel_put(img, lround(x), lround(y), ft_color_lerp(a.color, b.color, dx / steps));
+		my_mlx_pixel_put(img, lround(x), lround(y), ft_color_lerp(a.color, b.color, x / steps));
 		x = x + dx / steps;
 		y = y + dy / steps;
 		i++;
@@ -290,53 +237,15 @@ void	ft_draw_line(t_image *img, t_point a, t_point b)
 	//linear interpolation
 	ft_draw_line_lerp(img, a, b);
 	//DDA
-	//ft_draw_line_dda(img, b, a);
+	//ft_draw_line_dda(img, a, b);
 }
 
-void ft_draw_shape(t_image *img, t_point *points, int nb)
-{
-	int i;
-
-	i = 0;
-	while (i < nb)
-	{
-		ft_draw_line(img, points[i], points[(i + 1) % nb]);
-		i++;
-	}
-}
-
-void ft_draw_triangle(t_image *img, int x, int y, int size)
-{
-	t_point points[3];
-	
-	points[0].x = x;
-	points[0].y = y;
-
-	points[1].x = x - size / 2;
-	points[1].y = y + size;
-
-	points[2].x = x + size / 2;
-	points[2].y = y + size;
-
-	ft_draw_shape(img, points, 3);
-}
-
-void	ft_draw_top_view(t_image *img, t_map *map)
+void	ft_draw_projection(t_image *img, t_map *map, t_setting *s)
 {
 	int	i;
 	int j;
-	int x_off;
-	int y_off;
-	int x_scale;
-	int y_scale;
-
 	t_point a;
 	t_point b;
-
-	x_scale = img->w / 2;
-	y_scale = img->h / 2; 
-	x_off = img->w / 2;
-	y_off = img->h / 2;
 
 	j = 0;
 	while (j < map->h)
@@ -344,21 +253,21 @@ void	ft_draw_top_view(t_image *img, t_map *map)
 		i = 0;
 		while (i < map->w)
 		{
-			a.x = map->points[j * map->w + i].x * x_scale + x_off;
-			a.y = map->points[j * map->w + i].y * y_scale + y_off;
+			a.x = map->points[j * map->w + i].x * s->scale + s->x_off;
+			a.y = map->points[j * map->w + i].y * s->scale + s->y_off;
 			a.color = map->points[j * map->w + i].color;
 
 			if (i + 1 < map->w)
 			{
-				b.x = map->points[j * map->w + i + 1].x * x_scale + x_off;
-				b.y = map->points[j * map->w + i + 1].y * y_scale + y_off;
+				b.x = map->points[j * map->w + i + 1].x * s->scale + s->x_off;
+				b.y = map->points[j * map->w + i + 1].y * s->scale + s->y_off;
 				b.color = map->points[j * map->w + i + 1].color;
 				ft_draw_line(img, a, b);
 			}
 			if (j + 1 < map->h)
 			{
-				b.x = map->points[(j + 1) * map->w + i].x * x_scale + x_off;
-				b.y = map->points[(j + 1) * map->w + i].y * y_scale + y_off;
+				b.x = map->points[(j + 1) * map->w + i].x * s->scale + s->x_off;
+				b.y = map->points[(j + 1) * map->w + i].y * s->scale + s->y_off;
 				b.color = map->points[(j + 1) * map->w + i].color;
 				ft_draw_line(img, a, b);
 			}
@@ -368,7 +277,7 @@ void	ft_draw_top_view(t_image *img, t_map *map)
 	}
 }
 
-void	ft_draw_main_view(t_image *img, t_map *map)
+void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 {
 	t_map		*new_map;
 	t_point		px;
@@ -393,9 +302,9 @@ void	ft_draw_main_view(t_image *img, t_map *map)
 	if (!rotateZ)
 		return ;
 
-	ft_matrix_rotateX(rotateX, angleX);
-	ft_matrix_rotateY(rotateY, angleY);
-	ft_matrix_rotateZ(rotateZ, angleZ);
+	ft_matrix_rotateX(rotateX, s->angleX);
+	ft_matrix_rotateY(rotateY, s->angleY);
+	ft_matrix_rotateZ(rotateZ, s->angleZ);
 	j = 0;
 	while (j < new_map->h)
 	{
@@ -409,59 +318,85 @@ void	ft_draw_main_view(t_image *img, t_map *map)
 		}
 		j++;
 	}
-	ft_draw_top_view(img, new_map);
+	ft_draw_projection(img, new_map, s);
 	ft_matrix_free(rotateX);
 	ft_matrix_free(rotateY);
 	ft_matrix_free(rotateZ);
 	ft_free_map(new_map);
 }
 
-t_map *map;
-
 int	render_next_frame(t_vars *vars)
 {
-	ft_free_image(vars->mlx, vars->layout->main);
+	ft_free_image(vars->mlx, vars->layout->main);	
 	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
-	ft_draw_main_view(vars->layout->main, map);
+	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
+	return (0);
+}
+
+t_setting	*init_setting(void)
+{
+	t_setting	*s;
+
+	s = (t_setting*)malloc(sizeof(t_setting));
+	if (!s)
+		return (NULL);
+	s->angleX = DEFAULT_ANGLE_X;
+	s->angleY = DEFAULT_ANGLE_Y;
+	s->angleZ = DEFAULT_ANGLE_Z;
+	s->scale = DEFAULT_SCALE;
+	s->x_off = DEFAULT_X_OFF;
+	s->y_off = DEFAULT_Y_OFF;
+	return (s);
+}
+
+int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
+{
+	(void) x;
+	(void) y;
+	int	scale;
+
+	scale = (MAX_ZOOM - MIN_ZOOM) / SCALE_STEP;
+	if (keycode == KEY_SCROLL_UP)
+	{
+		if (vars->setting->scale <= MAX_ZOOM)
+			vars->setting->scale += scale;
+	}
+	if (keycode == KEY_SCROLL_DOWN)
+	{
+		if (vars->setting->scale > MIN_ZOOM)
+			vars->setting->scale -= scale;
+	}
+	//printf("[ INFO ] (%d, %d) Mouse button (%d) clicked! (scale = %d)\n", x, y, keycode, scale);
 	return (0);
 }
 
 int	main(int ac, char **av)
 {
-	//t_map *map;
+	t_vars	vars;
 
 	if (ac != 2)
 		return (1);
-	map = ft_get_map_from_file(av[1]);
-	if (!map)
+	vars.map = ft_get_map_from_file(av[1]);
+	if (!vars.map)
 		return (1);
 	//ft_debug_map(map);
-	//
-
-#if 1
-	t_vars vars;
-
 	vars.mlx = mlx_init();
 	if (!vars.mlx)
-		return (1);
-
+		return (2);
 	vars.win = mlx_new_window(vars.mlx, WIN_W, WIN_H, "Fil de Fer");
+	if (!vars.win)
+		return (3);
 	vars.layout = init_layout(vars.mlx);
 	if (!vars.layout)
-		return (2);
-
-	ft_draw_main_view(vars.layout->main, map);
-
-
-	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->top->data, MAIN_W, 0);
-	mlx_put_image_to_window(vars.mlx, vars.win, vars.layout->side->data, MAIN_W, WIN_H / 2);	
-
+		return (4);
+	vars.setting = init_setting();
+	if (!vars.setting)
+		return (5);
 	mlx_hook(vars.win, ON_KEYDOWN, 1L<<0, ft_on_keydown, &vars);
+	mlx_mouse_hook(vars.win, ft_mouse_event, &vars);
 	mlx_hook(vars.win, ON_DESTROY, 0, ft_on_destroy, &vars);
-	
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
 	mlx_loop(vars.mlx);
-#endif
 	return (0);
 }

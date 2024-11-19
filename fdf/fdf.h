@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/18 16:42:19 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 13:13:10 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,15 @@
 
 
 # define ANGLE_STEP 5
+# define SCALE_STEP 30
+# define MAX_ZOOM  1500
+# define MIN_ZOOM 50
+
 # define FACT 120
 # define WIN_W (16 * FACT)
 # define WIN_H (9 * FACT)
 
-# define MAIN_W (WIN_W * 0.7)
+# define MAIN_W (WIN_W * 1)
 # define MAIN_H WIN_H
 
 # define TOP_W (WIN_W - MAIN_W)
@@ -43,8 +47,19 @@
 # define C_BLUE  0x550000FF
 # define C_BLACK 0x00000000
 
+//default settings
+# define DEFAULT_ANGLE_X 40.0f
+# define DEFAULT_ANGLE_Y 35.0f
+# define DEFAULT_ANGLE_Z -30.0f
+# define DEFAULT_SCALE 50
+# define DEFAULT_X_OFF (MAIN_W / 2)
+# define DEFAULT_Y_OFF (MAIN_H / 2)
+
+
+
 //keys codes
-enum {
+enum 
+{
 	KEY_ESC = 53,
 	KEY_W = 13,
 	KEY_S = 1,
@@ -52,10 +67,13 @@ enum {
 	KEY_D = 2,
 	KEY_E = 14,
 	KEY_Q = 12,
+	KEY_SCROLL_UP = 4,
+	KEY_SCROLL_DOWN = 5,
 };
 
 //events codes
-enum {
+enum 
+{
 	ON_KEYDOWN = 2,
 	ON_KEYUP = 3,
 	ON_MOUSEDOWN = 4,
@@ -76,22 +94,6 @@ typedef struct s_image
 	int		h;
 }	t_image;
 
-
-typedef struct s_layout
-{
-	t_image	*main; // the main image where the fdf is rendered
-	t_image	*top;  // top view of the fdf 
-	t_image	*side; // side view of the fdf
-}	t_layout;
-
-typedef struct s_vars
-{
-	void		*mlx;
-	void		*win;
-	t_layout *layout;
-}	t_vars;
-
-
 typedef struct s_point
 {
 	float			x;
@@ -106,6 +108,34 @@ typedef struct s_map
 	int	h;
 	t_point	*points;
 }	t_map;
+
+
+
+typedef struct s_layout
+{
+	t_image	*main; // the main image where the fdf is rendered
+	t_image	*top;  // top view of the fdf 
+	t_image	*side; // side view of the fdf
+}	t_layout;
+
+typedef	struct s_setting
+{
+	float	angleX;
+	float	angleY;
+	float	angleZ;
+	int		scale;
+	int		x_off;
+	int		y_off;
+}	t_setting;
+
+typedef struct s_vars
+{
+	void		*mlx;
+	void		*win;
+	t_map		*map;
+	t_layout	*layout;
+	t_setting	*setting;
+}	t_vars;
 
 typedef struct	s_matrix
 {

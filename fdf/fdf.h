@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 15:20:18 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 16:49:24 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define ANGLE_STEP 5
 # define SCALE_STEP (MAX_ZOOM - MIN_ZOOM) / 30
 # define OFFSET_STEP 10
+# define Z_OFFSET_STEP 0.001f
 
 # define FACT 120
 # define WIN_W (16 * FACT)
@@ -49,12 +50,13 @@
 # define C_BLACK 0x00000000
 
 //default settings
-# define DEFAULT_ANGLE_X 40.0f
-# define DEFAULT_ANGLE_Y 35.0f
-# define DEFAULT_ANGLE_Z -30.0f
+# define DEFAULT_ANGLE_X 58.0f
+# define DEFAULT_ANGLE_Y 43.0f
+# define DEFAULT_ANGLE_Z -19.0f
 # define DEFAULT_SCALE MAX_ZOOM / 3
 # define DEFAULT_X_OFF (MAIN_W / 2)
 # define DEFAULT_Y_OFF (MAIN_H / 2)
+# define DEFAULT_Z_OFF 0.0f
 
 
 
@@ -72,6 +74,8 @@ enum
 	KEY_D = 2,
 	KEY_E = 14,
 	KEY_Q = 12,
+	KEY_PLUS = 24,
+	KEY_MINUS = 27,
 	KEY_SPACE = 49,
 	KEY_SCROLL_UP = 4,
 	KEY_SCROLL_DOWN = 5,
@@ -132,6 +136,7 @@ typedef	struct s_setting
 	int		scale;
 	int		x_off;
 	int		y_off;
+	float	z_off;
 }	t_setting;
 
 typedef struct s_vars

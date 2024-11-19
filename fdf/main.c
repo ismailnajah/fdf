@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 15:29:36 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 16:53:30 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,11 @@ int ft_on_keydown(int keycode, t_vars *vars)
 		vars->setting->x_off -= OFFSET_STEP;
 	if (keycode == KEY_RIGHT)
 		vars->setting->x_off += OFFSET_STEP;
+	if (keycode == KEY_PLUS)
+		vars->setting->z_off += Z_OFFSET_STEP;
+	if (keycode == KEY_MINUS)
+		vars->setting->z_off -= Z_OFFSET_STEP;
+
 	if (keycode == KEY_SPACE)
 		ft_reset_setting(1, vars->setting);
 	//printf("keycode: %d\n", keycode);
@@ -338,7 +343,6 @@ void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 	rotateZ = ft_matrix_init(3, 3);
 	if (!rotateZ)
 		return ;
-
 	ft_matrix_rotateX(rotateX, s->angleX);
 	ft_matrix_rotateY(rotateY, s->angleY);
 	ft_matrix_rotateZ(rotateZ, s->angleZ);
@@ -385,7 +389,13 @@ t_setting	*init_setting(void)
 	s->scale = DEFAULT_SCALE;
 	s->x_off = DEFAULT_X_OFF;
 	s->y_off = DEFAULT_Y_OFF;
+	s->z_off = DEFAULT_Z_OFF;
 	return (s);
+}
+
+void	print_setting(t_setting *s)
+{
+	printf("[angleX: %.2f | angleY: %.2f | angleZ: %.2f | scale: %d | x_off: %d | y_off: %d | z_off: %.2f]\n", s->angleX, s->angleY, s->angleZ, s->scale, s->x_off, s->y_off, s->z_off);
 }
 
 int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
@@ -403,6 +413,7 @@ int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
 		if (vars->setting->scale > MIN_ZOOM)
 			vars->setting->scale -= SCALE_STEP;
 	}
+	//print_setting(vars->setting);
 	//printf("[ INFO ] (%d, %d) Mouse button (%d) clicked! (scale = %d)\n", x, y, keycode, scale);
 	return (0);
 }

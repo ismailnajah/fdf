@@ -5,8 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
+/*   Updated: 2024/11/19 21:29:47 by inajah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 16:53:30 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 21:11:20 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +121,30 @@ void	ft_reset_setting(int state, t_setting *s)
 		s->x_off += (1 - 2 * (s->x_off > DEFAULT_X_OFF)) * OFFSET_STEP;
 	if (s->y_off != DEFAULT_Y_OFF)
 		s->y_off += (1 - 2 * (s->y_off > DEFAULT_Y_OFF)) * OFFSET_STEP;
+	if (s->z_off != DEFAULT_Z_OFF)
+		s->z_off += (1 - 2 * (s->z_off > DEFAULT_Z_OFF)) * Z_OFFSET_STEP;
 	if (s->angleX == DEFAULT_ANGLE_X && s->angleY == DEFAULT_ANGLE_Y
 			&& s->angleZ == DEFAULT_ANGLE_Z && s->scale == DEFAULT_SCALE
-			&& s->x_off == DEFAULT_X_OFF && s->y_off == DEFAULT_Y_OFF)
+			&& s->x_off == DEFAULT_X_OFF && s->y_off == DEFAULT_Y_OFF
+			&& s->z_off == DEFAULT_Z_OFF)
 		start = 0;
+}
+
+void	print_setting(t_setting *s)
+{
+	printf("[angleX: %.2f | angleY: %.2f | angleZ: %.2f | scale: %d | x_off: %d | y_off: %d | z_off: %.2f]\n", s->angleX, s->angleY, s->angleZ, s->scale, s->x_off, s->y_off, s->z_off);
+}
+
+void	ft_scale_z(t_map *map, float z_off)
+{
+	int		i;
+
+	i = 0;
+	while (i < map->w * map->h && z_off != 0.0f)
+	{
+		map->points[i].z /= z_off;
+		i++;
+	}
 }
 
 int ft_on_keydown(int keycode, t_vars *vars)
@@ -146,10 +178,11 @@ int ft_on_keydown(int keycode, t_vars *vars)
 	if (keycode == KEY_RIGHT)
 		vars->setting->x_off += OFFSET_STEP;
 	if (keycode == KEY_PLUS)
-		vars->setting->z_off += Z_OFFSET_STEP;
+		ft_scale_z(vars->map, 1 - Z_OFFSET_STEP);
 	if (keycode == KEY_MINUS)
-		vars->setting->z_off -= Z_OFFSET_STEP;
-
+		ft_scale_z(vars->map, 1 + Z_OFFSET_STEP);
+	if (keycode == KEY_V)
+		print_setting(vars->setting);
 	if (keycode == KEY_SPACE)
 		ft_reset_setting(1, vars->setting);
 	//printf("keycode: %d\n", keycode);
@@ -207,11 +240,23 @@ unsigned int ft_color_lerp(unsigned int c1, unsigned int c2, float t)
 
 void ft_swap_point(t_point *a, t_point *b)
 {
-	t_point tmp;
+	float			tmp;
+	unsigned int	c;
+	tmp = b->x;
+	b->x = a->x;
+	a->x = tmp;
 
-	tmp = *b;
-	*b = *a;
-	*a = tmp;
+	tmp = b->y;
+	b->y = a->y;
+	a->y = tmp;
+
+	tmp = b->z;
+	b->z = a->z;
+	a->z = tmp;
+
+	c = b->color;
+	b->color = a->color;
+	a->color = c;
 }
 // draw a line;
 void ft_draw_line_lerp(t_image *img, t_point a, t_point b)
@@ -343,8 +388,9 @@ void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 	rotateZ = ft_matrix_init(3, 3);
 	if (!rotateZ)
 		return ;
-	ft_matrix_rotateX(rotateX, s->angleX);
+
 	ft_matrix_rotateY(rotateY, s->angleY);
+	ft_matrix_rotateX(rotateX, s->angleX);
 	ft_matrix_rotateZ(rotateZ, s->angleZ);
 	j = 0;
 	while (j < new_map->h)
@@ -370,8 +416,8 @@ int	render_next_frame(t_vars *vars)
 {
 	ft_free_image(vars->mlx, vars->layout->main);	
 	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
-	ft_reset_setting(0, vars->setting);
-	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
+	ft_reset_setting(0, vars->setting);	
+	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);	
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
 	return (0);
 }
@@ -393,10 +439,7 @@ t_setting	*init_setting(void)
 	return (s);
 }
 
-void	print_setting(t_setting *s)
-{
-	printf("[angleX: %.2f | angleY: %.2f | angleZ: %.2f | scale: %d | x_off: %d | y_off: %d | z_off: %.2f]\n", s->angleX, s->angleY, s->angleZ, s->scale, s->x_off, s->y_off, s->z_off);
-}
+
 
 int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
 {

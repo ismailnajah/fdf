@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 15:48:11 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 20:34:46 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void	ft_parse_point(t_map *map, int i, int j, char *point_str)
 	w = (map->w != 1) * (map->w - 1) + 1 * (map->w == 1);
 	h = (map->h != 1) * (map->h - 1) + 1 * (map->h == 1);
 	map->points[j * map->w + i].x = ((float)i / w - 0.5f);
-	map->points[j * map->w + i].y = ((float)j / h - 0.5f);
+	map->points[j * map->w + i].y = ((float)j / w - 0.5f);
 	map->points[j * map->w + i].z = 0;
 	map->points[j * map->w + i].color = C_WHITE;
 	words = ft_split(point_str, ',');
@@ -228,7 +228,7 @@ void	ft_normalize_z(t_map *map)
 	i = 0;
 	while (i < map->h * map->w && max != min)
 	{
-		map->points[i].z = ((float)(map->points[i].z - min) / (float)(max - min)) - 0.5f;
+		map->points[i].z = (((float)(map->points[i].z - min) / (float)(max - min)) - 0.5f) / 4;
 		i++;
 	}
 }

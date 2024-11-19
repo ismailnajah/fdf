@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 16:49:24 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/19 21:26:40 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 # include <stdio.h>
 # include "libft/libft.h"
 
-# define MAX_ZOOM  1500
+# define MAX_ZOOM  2500
 # define MIN_ZOOM 50
 
-# define ANGLE_STEP 5
+# define ANGLE_STEP 1
 # define SCALE_STEP (MAX_ZOOM - MIN_ZOOM) / 30
 # define OFFSET_STEP 10
-# define Z_OFFSET_STEP 0.001f
+# define Z_OFFSET_STEP 0.05f
 
 # define FACT 120
 # define WIN_W (16 * FACT)
@@ -51,12 +51,12 @@
 
 //default settings
 # define DEFAULT_ANGLE_X 58.0f
-# define DEFAULT_ANGLE_Y 43.0f
-# define DEFAULT_ANGLE_Z -19.0f
-# define DEFAULT_SCALE MAX_ZOOM / 3
+# define DEFAULT_ANGLE_Y 40.0f
+# define DEFAULT_ANGLE_Z -22.0f
+# define DEFAULT_SCALE MAX_ZOOM / 4
 # define DEFAULT_X_OFF (MAIN_W / 2)
 # define DEFAULT_Y_OFF (MAIN_H / 2)
-# define DEFAULT_Z_OFF 0.0f
+# define DEFAULT_Z_OFF 1.0f
 
 
 
@@ -74,6 +74,7 @@ enum
 	KEY_D = 2,
 	KEY_E = 14,
 	KEY_Q = 12,
+	KEY_V = 9,
 	KEY_PLUS = 24,
 	KEY_MINUS = 27,
 	KEY_SPACE = 49,

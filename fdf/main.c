@@ -6,19 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 21:29:47 by inajah           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/13 14:26:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 21:11:20 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/20 11:29:36 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,16 +251,19 @@ void ft_draw_line_lerp(t_image *img, t_point a, t_point b)
 {
 	float y;
 	float x;
+	unsigned int c;
 
-	if (a.x == b.x)
+	if (fabs(a.x - b.x) < fabs(a.y - b.y))
 	{
 		if (a.y > b.y)
 			ft_swap_point(&a, &b);
 		y = a.y;
-		while (y <= b.y)
+		while (y <= b.y && a.y != b.y)
 		{
-			my_mlx_pixel_put(img, a.x, y, ft_color_lerp(a.color, b.color, (float)y / b.y));
-			y += 0.1;
+			c = ft_color_lerp(a.color, b.color, (float)y / b.y);
+			x = a.x + (y - a.y) * ((b.x - a.x) / (b.y - a.y));
+			my_mlx_pixel_put(img, x, y, ft_color_lerp(a.color, b.color, (float)y / b.y));
+			y += 1;
 		}
 	} 
 	else
@@ -280,11 +271,11 @@ void ft_draw_line_lerp(t_image *img, t_point a, t_point b)
 		if (a.x > b.x)
 			ft_swap_point(&a, &b);
 		x = a.x;
-		while (x <= b.x)
+		while (x <= b.x && a.x != b.x)
 		{
-			y = (a.y * (b.x - x) + b.y * (x - a.x)) / (b.x - a.x);
+			y = a.y + (x - a.x) * ((b.y - a.y) / (b.x - a.x));
 			my_mlx_pixel_put(img, x, y, ft_color_lerp(a.color, b.color, (float)x / b.x));
-			x += 0.1;
+			x += 1;
 		}
 	}
 }
@@ -364,14 +355,45 @@ void	ft_draw_projection(t_image *img, t_map *map, t_setting *s)
 	}
 }
 
+int	ft_project_point(t_point *p, t_point *projected, t_setting *s)
+{
+	static t_matrix *rotateX;
+	static t_matrix *rotateY;
+	static t_matrix *rotateZ;
+	t_point	px;
+	t_point py;
+
+	if (!rotateX)
+	{
+		rotateX = ft_matrix_init(3, 3);
+		if (!rotateX)
+			return (FAILURE);
+	}
+	if (!rotateY)
+	{
+		rotateY = ft_matrix_init(3, 3);
+		if (!rotateY)
+			return (FAILURE);
+	}
+	if (!rotateZ)
+	{
+		rotateZ = ft_matrix_init(3, 3);
+		if (!rotateZ)
+			return (FAILURE);
+	}
+	ft_matrix_rotateY(rotateY, s->angleY);
+	ft_matrix_rotateX(rotateX, s->angleX);
+	ft_matrix_rotateZ(rotateZ, s->angleZ);
+	ft_matrix_point_mul(rotateX, p, &px);
+	ft_matrix_point_mul(rotateY, &px, &py);
+	ft_matrix_point_mul(rotateZ, &py, projected);
+	return (SUCCESS);
+}
+
+
 void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 {
 	t_map		*new_map;
-	t_point		px;
-	t_point		py;
-	t_matrix	*rotateX;
-	t_matrix	*rotateY;
-	t_matrix	*rotateZ;
 
 	int		i;
 	int		j;
@@ -379,37 +401,85 @@ void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 	new_map = ft_init_map(map->w, map->h);
 	if (!new_map)
 		return ;
-	rotateX = ft_matrix_init(3, 3);
-	if (!rotateX)
-		return ;
-	rotateY = ft_matrix_init(3, 3);
-	if (!rotateY)
-		return ;
-	rotateZ = ft_matrix_init(3, 3);
-	if (!rotateZ)
-		return ;
-
-	ft_matrix_rotateY(rotateY, s->angleY);
-	ft_matrix_rotateX(rotateX, s->angleX);
-	ft_matrix_rotateZ(rotateZ, s->angleZ);
 	j = 0;
 	while (j < new_map->h)
 	{
 		i = 0;
 		while (i < new_map->w)
 		{
-			ft_matrix_point_mul(rotateX, &map->points[j * map->w + i], &px);
-			ft_matrix_point_mul(rotateY, &px, &py);
-			ft_matrix_point_mul(rotateZ, &py, &new_map->points[j * new_map->w + i]);
+			ft_project_point(&map->points[j * map->w + i], &new_map->points[j * new_map->w + i], s);	
 			i++;
 		}
 		j++;
 	}
 	ft_draw_projection(img, new_map, s);
-	ft_matrix_free(rotateX);
-	ft_matrix_free(rotateY);
-	ft_matrix_free(rotateZ);
 	ft_free_map(new_map);
+}
+
+void	ft_draw_side_view(t_image *img, t_setting *s)
+{
+	t_point cube[8];
+	t_point p_cube[8];
+
+
+	cube[0].x = -0.5f;
+	cube[0].y = 0.5f;
+	cube[0].z = 0.5f;
+	cube[0].color = C_RED;
+
+	cube[1].x = 0.5f;
+	cube[1].y = 0.5f;
+	cube[1].z = 0.5f;
+	cube[1].color = C_WHITE;
+
+	cube[2].x = 0.5f;
+	cube[2].y = 0.5f;
+	cube[2].z = -0.5f;
+	cube[2].color = C_WHITE;
+
+	cube[3].x = -0.5f;
+	cube[3].y = 0.5f;
+	cube[3].z = -0.5f;
+	cube[3].color = C_GREEN;
+	
+	cube[4].x = -0.5f;
+	cube[4].y = -0.5f;
+	cube[4].z = 0.5f;
+	cube[4].color = C_WHITE;
+
+	cube[5].x = 0.5f;
+	cube[5].y = -0.5f;
+	cube[5].z = 0.5f;
+	cube[5].color = C_WHITE;
+
+	cube[6].x = 0.5f;
+	cube[6].y = -0.5f;
+	cube[6].z = -0.5f;
+	cube[6].color = C_WHITE;
+
+	cube[7].x = -0.5f;
+	cube[7].y = -0.5f;
+	cube[7].z = -0.5f;
+	cube[7].color = C_WHITE;
+
+	for(int i=0; i< 8; i++)
+	{
+		ft_project_point(cube + i, p_cube + i, s);
+		p_cube[i].x = p_cube[i].x * 500 + img->w / 2;
+		p_cube[i].y = p_cube[i].y * 500 + img->h / 2;
+	}
+	for(int i=0; i<3; i++)
+	{
+		ft_draw_line(img, p_cube[i], p_cube[i+1]);
+	}
+	ft_draw_line(img, p_cube[0], p_cube[3]);
+	for(int i=4; i < 7; i++)
+	{
+		ft_draw_line(img, p_cube[i], p_cube[i+1]);
+	}
+	ft_draw_line(img, p_cube[4], p_cube[7]);
+
+
 }
 
 int	render_next_frame(t_vars *vars)
@@ -417,8 +487,10 @@ int	render_next_frame(t_vars *vars)
 	ft_free_image(vars->mlx, vars->layout->main);	
 	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
 	ft_reset_setting(0, vars->setting);	
-	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);	
+	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
+	//ft_draw_side_view(vars->layout->main, vars->setting);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
+	//mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->side->data, MAIN_W - SIDE_W, MAIN_H - SIDE_H);
 	return (0);
 }
 

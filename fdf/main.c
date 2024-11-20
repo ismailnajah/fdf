@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/20 14:16:45 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/20 21:33:42 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -504,7 +504,7 @@ int	ft_is_cube_clicked(int x, int y, t_vars *vars)
 	return (0); 
 }
 
-t_setting *ft_get_view_setting(int view)
+t_setting *ft_get_view_setting(int view, t_setting *old_s)
 {
 	t_setting	*s;
 
@@ -523,9 +523,16 @@ t_setting *ft_get_view_setting(int view)
 	}
 	if (view == FRONT_VIEW)
 	{
-		s->angleX = 0.0f;
+		s->angleX = 90.0f;
 		s->angleY = 90.0f;
 		s->angleZ = 0.0f;
+	}
+	if (old_s)
+	{
+		s->scale = old_s->scale;
+		s->x_off = old_s->x_off;
+		s->y_off = old_s->y_off;
+		s->z_off = old_s->z_off;
 	}
 	return (s);
 }
@@ -546,7 +553,7 @@ void	ft_change_view(int state, t_vars *vars)
 	if (!view)
 		return ;
 	s = vars->setting;
-	view_s = ft_get_view_setting(view);
+	view_s = ft_get_view_setting(view, s);
 	if (s->angleX != view_s->angleX)
 		s->angleX += (1 - 2 * (s->angleX > view_s->angleX)) * ANGLE_STEP;
 	if (s->angleY != view_s->angleY)

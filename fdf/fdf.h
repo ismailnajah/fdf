@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/20 10:59:43 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/20 14:09:38 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 # define MAX_ZOOM  8000
 # define MIN_ZOOM 200
 
+# define START_ANIMATION 1
+# define STOP_ANIMATION 0
+
 # define ANGLE_STEP 1
 # define SCALE_STEP (MAX_ZOOM - MIN_ZOOM) / 40
 # define OFFSET_STEP 10
@@ -40,8 +43,8 @@
 # define TOP_W (WIN_W - MAIN_W)
 # define TOP_H (WIN_H / 2)
 
-# define SIDE_W (WIN_W * 0.5)
-# define SIDE_H (WIN_H * 0.5)
+# define SIDE_W (WIN_W * 0.05)
+# define SIDE_H (WIN_W * 0.05)
 
 # define C_WHITE 0x00FFFFFF
 # define C_RED	 0x55FF0000
@@ -80,6 +83,8 @@ enum
 	KEY_SPACE = 49,
 	KEY_SCROLL_UP = 4,
 	KEY_SCROLL_DOWN = 5,
+	KEY_LEFT_CLICK = 1,
+	KEY_RIGHT_CLICK = 2,
 };
 
 //events codes
@@ -92,6 +97,15 @@ enum
 	ON_MOUSEMOVE = 6,
 	ON_EXPOSE = 12,
 	ON_DESTROY = 17
+};
+
+//views
+enum
+{
+	FRONT_VIEW = 1,
+	SIDE_VIEW,
+	TOP_VIEW,
+	DEFAULT_VIEW,
 };
 
 typedef struct s_image
@@ -147,6 +161,9 @@ typedef struct s_vars
 	t_map		*map;
 	t_layout	*layout;
 	t_setting	*setting;
+	t_point		*cube;
+	int			mouse_x;
+	int			mouse_y;
 }	t_vars;
 
 typedef struct	s_matrix

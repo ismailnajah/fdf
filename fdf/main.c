@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/20 11:29:36 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/20 14:16:45 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -416,84 +416,6 @@ void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 	ft_free_map(new_map);
 }
 
-void	ft_draw_side_view(t_image *img, t_setting *s)
-{
-	t_point cube[8];
-	t_point p_cube[8];
-
-
-	cube[0].x = -0.5f;
-	cube[0].y = 0.5f;
-	cube[0].z = 0.5f;
-	cube[0].color = C_RED;
-
-	cube[1].x = 0.5f;
-	cube[1].y = 0.5f;
-	cube[1].z = 0.5f;
-	cube[1].color = C_WHITE;
-
-	cube[2].x = 0.5f;
-	cube[2].y = 0.5f;
-	cube[2].z = -0.5f;
-	cube[2].color = C_WHITE;
-
-	cube[3].x = -0.5f;
-	cube[3].y = 0.5f;
-	cube[3].z = -0.5f;
-	cube[3].color = C_GREEN;
-	
-	cube[4].x = -0.5f;
-	cube[4].y = -0.5f;
-	cube[4].z = 0.5f;
-	cube[4].color = C_WHITE;
-
-	cube[5].x = 0.5f;
-	cube[5].y = -0.5f;
-	cube[5].z = 0.5f;
-	cube[5].color = C_WHITE;
-
-	cube[6].x = 0.5f;
-	cube[6].y = -0.5f;
-	cube[6].z = -0.5f;
-	cube[6].color = C_WHITE;
-
-	cube[7].x = -0.5f;
-	cube[7].y = -0.5f;
-	cube[7].z = -0.5f;
-	cube[7].color = C_WHITE;
-
-	for(int i=0; i< 8; i++)
-	{
-		ft_project_point(cube + i, p_cube + i, s);
-		p_cube[i].x = p_cube[i].x * 500 + img->w / 2;
-		p_cube[i].y = p_cube[i].y * 500 + img->h / 2;
-	}
-	for(int i=0; i<3; i++)
-	{
-		ft_draw_line(img, p_cube[i], p_cube[i+1]);
-	}
-	ft_draw_line(img, p_cube[0], p_cube[3]);
-	for(int i=4; i < 7; i++)
-	{
-		ft_draw_line(img, p_cube[i], p_cube[i+1]);
-	}
-	ft_draw_line(img, p_cube[4], p_cube[7]);
-
-
-}
-
-int	render_next_frame(t_vars *vars)
-{
-	ft_free_image(vars->mlx, vars->layout->main);	
-	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
-	ft_reset_setting(0, vars->setting);	
-	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
-	//ft_draw_side_view(vars->layout->main, vars->setting);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
-	//mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->side->data, MAIN_W - SIDE_W, MAIN_H - SIDE_H);
-	return (0);
-}
-
 t_setting	*init_setting(void)
 {
 	t_setting	*s;
@@ -511,7 +433,154 @@ t_setting	*init_setting(void)
 	return (s);
 }
 
+void	ft_draw_side_view(t_image *img, t_vars *vars)
+{
+	t_point cube[8];
 
+	t_setting *cube_setting;
+	cube_setting = init_setting();
+
+	cube[0].x = -0.5f;
+	cube[0].y = 0.5f;
+	cube[0].z = 0.5f;
+	cube[1].x = 0.5f;
+	cube[1].y = 0.5f;
+	cube[1].z = 0.5f;
+	cube[2].x = 0.5f;
+	cube[2].y = 0.5f;
+	cube[2].z = -0.5f;
+	cube[3].x = -0.5f;
+	cube[3].y = 0.5f;
+	cube[3].z = -0.5f;
+	cube[4].x = -0.5f;
+	cube[4].y = -0.5f;
+	cube[4].z = 0.5f;
+	cube[5].x = 0.5f;
+	cube[5].y = -0.5f;
+	cube[5].z = 0.5f;
+	cube[6].x = 0.5f;
+	cube[6].y = -0.5f;
+	cube[6].z = -0.5f;
+	cube[7].x = -0.5f;
+	cube[7].y = -0.5f;
+	cube[7].z = -0.5f;
+
+	for(int i=0; i< 8; i++)
+	{
+		ft_project_point(cube + i, vars->cube + i, cube_setting);
+		vars->cube[i].x = vars->cube[i].x * img->w * 0.5 + img->w / 2;
+		vars->cube[i].y = vars->cube[i].y * img->w * 0.5 + img->h / 2;
+		vars->cube[i].color = C_WHITE;
+	}
+	// side view
+	for(int i = 0; i < 4; i++)
+	{
+		ft_draw_line(img, vars->cube[i % 4], vars->cube[(i + 1) % 4]);
+	}
+	ft_draw_line(img, vars->cube[0], vars->cube[3]);
+	ft_draw_line(img, vars->cube[0], vars->cube[4]);
+	ft_draw_line(img, vars->cube[7], vars->cube[3]);
+	ft_draw_line(img, vars->cube[4], vars->cube[7]);
+	// top view
+	ft_draw_line(img, vars->cube[4], vars->cube[5]);
+	ft_draw_line(img, vars->cube[5], vars->cube[1]);
+	free(cube_setting);
+}
+
+int	ft_is_cube_clicked(int x, int y, t_vars *vars)
+{
+	t_point *cube;
+
+	if (x == -1 && y == -1)
+		return (DEFAULT_VIEW);
+	x = x - (WIN_W - vars->layout->side->w);//the cube in top right corner.
+	cube = vars->cube;
+	if (cube[4].x < x && x < cube[1].x && cube[5].y < y && y < cube[0].y)
+		return (TOP_VIEW);
+	if (cube[7].x < x && x < cube[3].x && cube[0].y < y && y < cube[3].y)
+		return (FRONT_VIEW);
+	if (cube[3].x < x && x < cube[2].x && cube[0].y < y && y < cube[3].y)
+		return (SIDE_VIEW);
+	return (0); 
+}
+
+t_setting *ft_get_view_setting(int view)
+{
+	t_setting	*s;
+
+	s = init_setting();
+	if (view == TOP_VIEW)
+	{
+		s->angleX = 0.0f;
+		s->angleY = 0.0f;
+		s->angleZ = 0.0f;
+	}
+	if (view == SIDE_VIEW)
+	{
+		s->angleX = 90.0f;
+		s->angleY = 0.0f;
+		s->angleZ = 0.0f;
+	}
+	if (view == FRONT_VIEW)
+	{
+		s->angleX = 0.0f;
+		s->angleY = 90.0f;
+		s->angleZ = 0.0f;
+	}
+	return (s);
+}
+
+void	ft_change_view(int state, t_vars *vars)
+{
+	static int	start;
+	int			view;
+	t_setting *view_s;
+	t_setting *s;
+
+	if (state)
+		start = START_ANIMATION;
+	if (!start)
+		return ;
+
+	view = ft_is_cube_clicked(vars->mouse_x, vars->mouse_y, vars);
+	if (!view)
+		return ;
+	s = vars->setting;
+	view_s = ft_get_view_setting(view);
+	if (s->angleX != view_s->angleX)
+		s->angleX += (1 - 2 * (s->angleX > view_s->angleX)) * ANGLE_STEP;
+	if (s->angleY != view_s->angleY)
+		s->angleY += (1 - 2 * (s->angleY > view_s->angleY)) * ANGLE_STEP;
+	if (s->angleZ != view_s->angleZ)
+		s->angleZ += (1 - 2 * (s->angleZ > view_s->angleZ)) * ANGLE_STEP;
+	if (s->scale != view_s->scale)
+		s->scale += (1 - 2 * (s->scale > view_s->scale)) * SCALE_STEP;
+	if (s->x_off != view_s->x_off)
+		s->x_off += (1 - 2 * (s->x_off > view_s->x_off)) * OFFSET_STEP;
+	if (s->y_off != view_s->y_off)
+		s->y_off += (1 - 2 * (s->y_off > view_s->y_off)) * OFFSET_STEP;
+	if (s->z_off != view_s->z_off)
+		s->z_off += (1 - 2 * (s->z_off > view_s->z_off)) * Z_OFFSET_STEP;
+	if (s->angleX == view_s->angleX && s->angleY == view_s->angleY
+			&& s->angleZ == view_s->angleZ && s->scale == view_s->scale
+			&& s->x_off == view_s->x_off && s->y_off == view_s->y_off
+			&& s->z_off == view_s->z_off)
+		start = STOP_ANIMATION;
+}
+
+int	render_next_frame(t_vars *vars)
+{
+	ft_free_image(vars->mlx, vars->layout->main);	
+	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
+	vars->layout->side = ft_init_image(vars->mlx, SIDE_W, SIDE_H);
+	ft_change_view(STOP_ANIMATION, vars);
+	ft_reset_setting(0, vars->setting);
+	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
+	ft_draw_side_view(vars->layout->side, vars);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->side->data, MAIN_W - SIDE_W, 0);
+	return (0);
+}
 
 int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
 {
@@ -528,8 +597,14 @@ int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
 		if (vars->setting->scale > MIN_ZOOM)
 			vars->setting->scale -= SCALE_STEP;
 	}
+	if (keycode == KEY_LEFT_CLICK)
+	{
+		vars->mouse_x = x;
+		vars->mouse_y = y;
+		ft_change_view(START_ANIMATION, vars);
+	}
 	//print_setting(vars->setting);
-	//printf("[ INFO ] (%d, %d) Mouse button (%d) clicked! (scale = %d)\n", x, y, keycode, scale);
+	//printf("[ INFO ] (%d, %d) Mouse button (%d) clicked!\n", x, y, keycode);
 	return (0);
 }
 
@@ -555,6 +630,8 @@ int	main(int ac, char **av)
 	vars.setting = init_setting();
 	if (!vars.setting)
 		return (5);
+	vars.cube = (t_point *)malloc(8 * sizeof(t_point));
+
 	mlx_hook(vars.win, ON_KEYDOWN, 1L<<0, ft_on_keydown, &vars);
 	mlx_mouse_hook(vars.win, ft_mouse_event, &vars);
 	mlx_hook(vars.win, ON_DESTROY, 0, ft_on_destroy, &vars);

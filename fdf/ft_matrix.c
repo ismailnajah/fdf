@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 09:22:52 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 19:19:31 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 10:12:51 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,5 +155,25 @@ void	ft_matrix_rotateZ(t_matrix *mat, float angle)
 }
 
 
+void	ft_project_point_v2(t_point *p, t_point *projected, t_setting *s)
+{
+	float	ax;
+	float	ay;
+	float	az;
+
+	ax = s->angleX;
+	ay = s->angleY;
+	az = s->angleZ;
+	projected->x = p->x * (ft_cos(az) * ft_cos(ay) - ft_sin(az) * ft_sin(ax) * ft_sin(ay));
+	projected->x += p->y * (-ft_cos(ax) * ft_sin(az));
+	projected->x += p->z * (ft_cos(az) * ft_sin(ay) + ft_sin(az) * ft_sin(ax) * ft_cos(ay));
+	projected->y = p->x * (ft_sin(az) * ft_cos(ay) + ft_cos(az) * ft_sin(ax) * ft_sin(ay));
+	projected->y += p->y * (ft_cos(az) * ft_cos(ax));
+	projected->y += p->z * (ft_sin(az) * ft_sin(ay) - ft_cos(az) * ft_sin(ax) * ft_cos(ay));
+	projected->z = p->x * (-ft_cos(ax) * ft_sin(ay));
+	projected->z += p->y * ft_sin(ax);
+	projected->z += p->z * (ft_cos(ax) * ft_cos(ay));
+	projected->color = p->color;
+}
 
 

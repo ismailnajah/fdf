@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/20 14:09:38 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 09:56:42 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@
 # define C_BLACK 0x00000000
 
 //default settings
-# define DEFAULT_ANGLE_X 58.0f
-# define DEFAULT_ANGLE_Y 40.0f
-# define DEFAULT_ANGLE_Z -22.0f
+# define DEFAULT_ANGLE_X 35.0f
+# define DEFAULT_ANGLE_Y 45.0f
+# define DEFAULT_ANGLE_Z -60.0f
 # define DEFAULT_SCALE 500
 # define DEFAULT_X_OFF (MAIN_W / 2)
 # define DEFAULT_Y_OFF (MAIN_H / 2)
@@ -194,6 +194,7 @@ void	ft_matrix_rotateX(t_matrix *mat, float angle);
 void	ft_matrix_rotateY(t_matrix *mat, float angle);
 void	ft_matrix_rotateZ(t_matrix *mat, float angle);
 
+void	ft_project_point_v2(t_point *p, t_point *projected, t_setting *s);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/20 21:33:42 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 10:10:12 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,6 +363,7 @@ int	ft_project_point(t_point *p, t_point *projected, t_setting *s)
 	t_point	px;
 	t_point py;
 
+	return (ft_project_point_v2(p, projected, s) , 1);
 	if (!rotateX)
 	{
 		rotateX = ft_matrix_init(3, 3);
@@ -384,8 +385,9 @@ int	ft_project_point(t_point *p, t_point *projected, t_setting *s)
 	ft_matrix_rotateY(rotateY, s->angleY);
 	ft_matrix_rotateX(rotateX, s->angleX);
 	ft_matrix_rotateZ(rotateZ, s->angleZ);
-	ft_matrix_point_mul(rotateX, p, &px);
-	ft_matrix_point_mul(rotateY, &px, &py);
+	
+	ft_matrix_point_mul(rotateY, p, &px);
+	ft_matrix_point_mul(rotateX, &px, &py);
 	ft_matrix_point_mul(rotateZ, &py, projected);
 	return (SUCCESS);
 }
@@ -523,9 +525,9 @@ t_setting *ft_get_view_setting(int view, t_setting *old_s)
 	}
 	if (view == FRONT_VIEW)
 	{
-		s->angleX = 90.0f;
+		s->angleX = 0.0f;
 		s->angleY = 90.0f;
-		s->angleZ = 0.0f;
+		s->angleZ = -90.0f;
 	}
 	if (old_s)
 	{

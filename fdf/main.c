@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 15:05:06 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 18:22:35 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ int ft_on_keydown(int keycode, t_vars *vars)
 int ft_on_destroy(t_vars *vars)
 {
 	ft_vars_free(vars);
-	ft_printf("Bye\n");
+	ft_printf("[ INFO  ] Window Closed\n");
 	exit(0);
 	return (0);
 }
@@ -224,15 +224,12 @@ void	ft_swap_point(t_point *a, t_point *b)
 	tmp = b->x;
 	b->x = a->x;
 	a->x = tmp;
-
 	tmp = b->y;
 	b->y = a->y;
 	a->y = tmp;
-
 	tmp = b->z;
 	b->z = a->z;
 	a->z = tmp;
-
 	c = b->color;
 	b->color = a->color;
 	a->color = c;
@@ -289,21 +286,25 @@ void	ft_draw_projected_cell(t_image *img, t_map *map, t_setting *s, int i, int j
 {
 	t_point	a;
 	t_point b;
-	
-	ft_scale_point(&a, map->points + (j * map->w + i), s);
+	t_point proj;	
+
+	ft_rotateXYZ_point(map->points + (j * map->w + i), &proj, s);	
+	ft_scale_point(&a, &proj, s);
 	if (i + 1 < map->w)
 	{
-		ft_scale_point(&b, map->points + (j * map->w + i + 1), s);
+		ft_rotateXYZ_point(map->points + (j * map->w + i + 1), &proj, s);	
+		ft_scale_point(&b, &proj, s);
 		ft_draw_line(img, a, b);
 	}
 	if (j + 1 < map->h)
 	{
-		ft_scale_point(&b, map->points + ((j + 1) * map->w + i), s);
+		ft_rotateXYZ_point(map->points + ((j + 1) * map->w + i), &proj, s);	
+		ft_scale_point(&b, &proj, s);
 		ft_draw_line(img, a, b);
 	}
 }
 
-void	ft_draw_projection(t_image *img, t_map *map, t_setting *s)
+void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 {
 	int	i;
 	int j;
@@ -314,39 +315,12 @@ void	ft_draw_projection(t_image *img, t_map *map, t_setting *s)
 		i = 0;
 		while (i < map->w)
 		{
+
 			ft_draw_projected_cell(img, map, s, i, j);
 			i++;
 		}
 		j++;
 	}
-}
-
-void	ft_draw_main_view(t_image *img, t_vars *vars)
-{
-	static t_map		*new_map;
-	int		i;
-	int		j;
-	t_point	*p;
-
-	if (new_map == NULL)
-	{
-		new_map = ft_map_init(vars->map->w, vars->map->h);
-		if (!new_map)
-			return ;
-	}
-	j = 0;
-	while (j < new_map->h)
-	{
-		i = 0;
-		while (i < new_map->w)
-		{
-			p = vars->map->points + (j * vars->map->w + i);
-			ft_rotateXYZ_point(p, new_map->points + (j * new_map->w + i), vars->setting);	
-			i++;
-		}
-		j++;
-	}
-	ft_draw_projection(img, new_map, vars->setting);
 }
 
 t_setting	*init_setting(void)
@@ -516,7 +490,7 @@ int	render_next_frame(t_vars *vars)
 	vars->layout->cube_view = ft_init_image(vars->mlx, CUBE_W, CUBE_H);
 	ft_change_view(STOP_ANIMATION, vars);
 	ft_reset_setting(0, vars->setting);
-	ft_draw_main_view(vars->layout->main, vars);
+	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
 	ft_draw_cube_view(vars->layout->cube_view, vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->cube_view->data, MAIN_W - CUBE_W, 0);

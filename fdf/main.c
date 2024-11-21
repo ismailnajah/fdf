@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 10:10:12 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 10:37:23 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,12 +310,22 @@ void	ft_draw_line_dda(t_image *img, t_point a, t_point b)
 	}
 } 
 
+void ft_draw_line_bresenham(t_image *img, t_point a, t_point b)
+{
+	(void) img;
+	(void) a;
+	(void) b;
+	//TODO: implement bresenham algorithm.
+}
+
 void	ft_draw_line(t_image *img, t_point a, t_point b)
 {
 	//linear interpolation
 	ft_draw_line_lerp(img, a, b);
 	//DDA
 	//ft_draw_line_dda(img, a, b);
+	//Bresenham's line algorithm
+	//ft_draw_line_bresenham(img, a, b);
 }
 
 void	ft_draw_projection(t_image *img, t_map *map, t_setting *s)
@@ -355,67 +365,31 @@ void	ft_draw_projection(t_image *img, t_map *map, t_setting *s)
 	}
 }
 
-int	ft_project_point(t_point *p, t_point *projected, t_setting *s)
-{
-	static t_matrix *rotateX;
-	static t_matrix *rotateY;
-	static t_matrix *rotateZ;
-	t_point	px;
-	t_point py;
-
-	return (ft_project_point_v2(p, projected, s) , 1);
-	if (!rotateX)
-	{
-		rotateX = ft_matrix_init(3, 3);
-		if (!rotateX)
-			return (FAILURE);
-	}
-	if (!rotateY)
-	{
-		rotateY = ft_matrix_init(3, 3);
-		if (!rotateY)
-			return (FAILURE);
-	}
-	if (!rotateZ)
-	{
-		rotateZ = ft_matrix_init(3, 3);
-		if (!rotateZ)
-			return (FAILURE);
-	}
-	ft_matrix_rotateY(rotateY, s->angleY);
-	ft_matrix_rotateX(rotateX, s->angleX);
-	ft_matrix_rotateZ(rotateZ, s->angleZ);
-	
-	ft_matrix_point_mul(rotateY, p, &px);
-	ft_matrix_point_mul(rotateX, &px, &py);
-	ft_matrix_point_mul(rotateZ, &py, projected);
-	return (SUCCESS);
-}
-
-
 void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 {
-	t_map		*new_map;
+	static t_map		*new_map;
 
 	int		i;
 	int		j;
 
-	new_map = ft_init_map(map->w, map->h);
-	if (!new_map)
-		return ;
+	if (new_map == NULL)
+	{
+		new_map = ft_init_map(map->w, map->h);
+		if (!new_map)
+			return ;
+	}
 	j = 0;
 	while (j < new_map->h)
 	{
 		i = 0;
 		while (i < new_map->w)
 		{
-			ft_project_point(&map->points[j * map->w + i], &new_map->points[j * new_map->w + i], s);	
+			ft_rotateXYZ_point(&map->points[j * map->w + i], &new_map->points[j * new_map->w + i], s);	
 			i++;
 		}
 		j++;
 	}
 	ft_draw_projection(img, new_map, s);
-	ft_free_map(new_map);
 }
 
 t_setting	*init_setting(void)
@@ -435,11 +409,13 @@ t_setting	*init_setting(void)
 	return (s);
 }
 
-void	ft_draw_side_view(t_image *img, t_vars *vars)
+t_setting *cube_setting;
+
+void	ft_draw_cube_view(t_image *img, t_vars *vars)
 {
 	t_point cube[8];
-
 	t_setting *cube_setting;
+
 	cube_setting = init_setting();
 
 	cube[0].x = -0.5f;
@@ -469,7 +445,7 @@ void	ft_draw_side_view(t_image *img, t_vars *vars)
 
 	for(int i=0; i< 8; i++)
 	{
-		ft_project_point(cube + i, vars->cube + i, cube_setting);
+		ft_rotateXYZ_point(cube + i, vars->cube + i, cube_setting);
 		vars->cube[i].x = vars->cube[i].x * img->w * 0.5 + img->w / 2;
 		vars->cube[i].y = vars->cube[i].y * img->w * 0.5 + img->h / 2;
 		vars->cube[i].color = C_WHITE;
@@ -585,7 +561,7 @@ int	render_next_frame(t_vars *vars)
 	ft_change_view(STOP_ANIMATION, vars);
 	ft_reset_setting(0, vars->setting);
 	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
-	ft_draw_side_view(vars->layout->side, vars);
+	ft_draw_cube_view(vars->layout->side, vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->side->data, MAIN_W - SIDE_W, 0);
 	return (0);
@@ -624,6 +600,7 @@ int	main(int ac, char **av)
 	if (ac != 2)
 		return (1);
 	vars.map = ft_get_map_from_file(av[1]);
+	cube_setting = init_setting();
 	if (!vars.map)
 		return (1);
 	//ft_debug_map(map);

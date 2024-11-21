@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 09:56:42 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 10:21:59 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,14 +187,8 @@ t_map	*ft_init_map(int w, int h);
 t_map	*ft_get_map_from_file(char *path);
 
 
-void	*ft_matrix_free(t_matrix *mat);
-t_matrix	*ft_matrix_init(int w, int h);
-void	ft_matrix_point_mul(t_matrix *mat, t_point *p, t_point *out);
-void	ft_matrix_rotateX(t_matrix *mat, float angle);
-void	ft_matrix_rotateY(t_matrix *mat, float angle);
-void	ft_matrix_rotateZ(t_matrix *mat, float angle);
 
-void	ft_project_point_v2(t_point *p, t_point *projected, t_setting *s);
+void	ft_rotateXYZ_point(t_point *p, t_point *projected, t_setting *s);
 
 
 #endif

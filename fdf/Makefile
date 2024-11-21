@@ -7,7 +7,7 @@ INCLUDE = .
 
 SRC =  main.c\
 	   ft_parse_map.c\
-	   ft_matrix.c
+	   ft_math.c
 
 
 LIBFTDIR = ./libft

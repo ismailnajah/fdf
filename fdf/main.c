@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 10:37:23 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 14:17:38 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ void* ft_free_layout(void *mlx, t_layout *layout)
 	if (!layout)
 		return (NULL);
 	ft_free_image(mlx, layout->main);
-	ft_free_image(mlx, layout->top);
-	ft_free_image(mlx, layout->side);
+	ft_free_image(mlx, layout->cube_view);
 	free(layout);
 	return (NULL);
 }
@@ -67,17 +66,14 @@ t_layout *init_layout(void* mlx)
 {
 	t_layout *layout;
 
-	layout = (t_layout*)ft_calloc(1, sizeof(t_layout));
+	layout = (t_layout*)malloc(sizeof(t_layout));
 	if(!layout)
 		return (NULL);
 	layout->main = ft_init_image(mlx, MAIN_W, MAIN_H);
 	if (!layout->main)
 		return (ft_free_layout(mlx, layout));
-	layout->top = ft_init_image(mlx, TOP_W, TOP_H);
-	if (!layout->top)
-		return (ft_free_layout(mlx, layout));
-	layout->side = ft_init_image(mlx, SIDE_W, SIDE_H);
-	if (!layout->side)
+	layout->cube_view = ft_init_image(mlx, CUBE_W, CUBE_H);
+	if (!layout->cube_view)
 		return (ft_free_layout(mlx, layout));
 	return (layout);
 }
@@ -145,13 +141,13 @@ int ft_on_keydown(int keycode, t_vars *vars)
 		mlx_destroy_window(vars->mlx, vars->win);
 		exit(0);
 	}
-	if (keycode == KEY_W)
-		vars->setting->angleX = ft_clamp(vars->setting->angleX + ANGLE_STEP, -360.0f, 360.0f);
-	if (keycode == KEY_S)
-		vars->setting->angleX = ft_clamp(vars->setting->angleX - ANGLE_STEP, -360.0f, 360.0f);
-	if (keycode == KEY_D)
-		vars->setting->angleY = ft_clamp(vars->setting->angleY + ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_A)
+		vars->setting->angleX = ft_clamp(vars->setting->angleX + ANGLE_STEP, -360.0f, 360.0f);
+	if (keycode == KEY_D)
+		vars->setting->angleX = ft_clamp(vars->setting->angleX - ANGLE_STEP, -360.0f, 360.0f);
+	if (keycode == KEY_S)
+		vars->setting->angleY = ft_clamp(vars->setting->angleY + ANGLE_STEP, -360.0f, 360.0f);
+	if (keycode == KEY_W)
 		vars->setting->angleY = ft_clamp(vars->setting->angleY - ANGLE_STEP, -360.0f, 360.0f);
 	if (keycode == KEY_Q)
 		vars->setting->angleZ = ft_clamp(vars->setting->angleZ + ANGLE_STEP, -360.0f, 360.0f);
@@ -226,10 +222,11 @@ unsigned int ft_color_lerp(unsigned int c1, unsigned int c2, float t)
 	return create_trgb(0, r, g, b);
 }
 
-void ft_swap_point(t_point *a, t_point *b)
+void	ft_swap_point(t_point *a, t_point *b)
 {
 	float			tmp;
 	unsigned int	c;
+
 	tmp = b->x;
 	b->x = a->x;
 	a->x = tmp;
@@ -246,21 +243,30 @@ void ft_swap_point(t_point *a, t_point *b)
 	b->color = a->color;
 	a->color = c;
 }
-// draw a line;
-void ft_draw_line_lerp(t_image *img, t_point a, t_point b)
+
+int	ft_sort_point(t_point *a, t_point *b)
+{
+	if (fabs(a->x - b->x) < fabs(a->y - b->y))
+	{
+		if (a->y > b->y)
+			ft_swap_point(a, b);	
+		return (1);
+	}
+	else if (a->x > b->x)
+		ft_swap_point(a,b);
+	return (0);
+}
+
+void ft_draw_line(t_image *img, t_point a, t_point b)
 {
 	float y;
 	float x;
-	unsigned int c;
 
-	if (fabs(a.x - b.x) < fabs(a.y - b.y))
+	if (ft_sort_point(&a, &b))
 	{
-		if (a.y > b.y)
-			ft_swap_point(&a, &b);
 		y = a.y;
 		while (y <= b.y && a.y != b.y)
 		{
-			c = ft_color_lerp(a.color, b.color, (float)y / b.y);
 			x = a.x + (y - a.y) * ((b.x - a.x) / (b.y - a.y));
 			my_mlx_pixel_put(img, x, y, ft_color_lerp(a.color, b.color, (float)y / b.y));
 			y += 1;
@@ -268,8 +274,6 @@ void ft_draw_line_lerp(t_image *img, t_point a, t_point b)
 	} 
 	else
 	{
-		if (a.x > b.x)
-			ft_swap_point(&a, &b);
 		x = a.x;
 		while (x <= b.x && a.x != b.x)
 		{
@@ -279,102 +283,60 @@ void ft_draw_line_lerp(t_image *img, t_point a, t_point b)
 		}
 	}
 }
-// TODO: fix the order of render (always go back to front);
-void	ft_draw_line_dda(t_image *img, t_point a, t_point b)
-{
-	float	dx;
-	float	dy;
-	float	x;
-	float	y;
-	float	steps;
-	int		i;
 
-	dx = b.x - a.x;
-	dy = b.y - a.y;
-	if(fabs(dx) > fabs(dy))
-		steps = dx;
-	else
-		steps = dy;
-	i = 0;
-	x = a.x;//(a.x > b.x) * b.x + (a.x <= b.x) * a.x;
-	y = a.y;//(a.x > b.x) * b.y + (a.x <= b.x) * a.y;
-	printf("[ INFO ] drawing a line from (%.2f, %.2f) to (%.2f, %.2f)\n", a.x, a.y, b.x, b.y);
-	printf("[ INFO ] x=%.2f y=%.2f steps=%.2f dx=%.2f dy=%.2f\n", x, y, steps, dx, dy);
-	while (i < steps)
-	{
-		printf("");
-		my_mlx_pixel_put(img, lround(x), lround(y), ft_color_lerp(a.color, b.color, x / steps));
-		x = x + dx / steps;
-		y = y + dy / steps;
-		i++;
-	}
-} 
-
-void ft_draw_line_bresenham(t_image *img, t_point a, t_point b)
+void	ft_scale_point(t_point *a, t_point *p, t_setting *s)
 {
-	(void) img;
-	(void) a;
-	(void) b;
-	//TODO: implement bresenham algorithm.
+	a->x = p->x * s->scale + s->x_off;
+	a->y = p->y * s->scale + s->y_off;
+	a->color = p->color;
 }
 
-void	ft_draw_line(t_image *img, t_point a, t_point b)
+void	ft_draw_projected_cell(t_image *img, t_map *map, t_setting *s, int i, int j)
 {
-	//linear interpolation
-	ft_draw_line_lerp(img, a, b);
-	//DDA
-	//ft_draw_line_dda(img, a, b);
-	//Bresenham's line algorithm
-	//ft_draw_line_bresenham(img, a, b);
+	t_point	a;
+	t_point b;
+	
+	ft_scale_point(&a, map->points + (j * map->w + i), s);
+	if (i + 1 < map->w)
+	{
+		ft_scale_point(&b, map->points + (j * map->w + i + 1), s);
+		ft_draw_line(img, a, b);
+	}
+	if (j + 1 < map->h)
+	{
+		ft_scale_point(&b, map->points + ((j + 1) * map->w + i), s);
+		ft_draw_line(img, a, b);
+	}
 }
 
 void	ft_draw_projection(t_image *img, t_map *map, t_setting *s)
 {
 	int	i;
 	int j;
-	t_point a;
-	t_point b;
-
+	
 	j = 0;
 	while (j < map->h)
 	{
 		i = 0;
 		while (i < map->w)
 		{
-			a.x = map->points[j * map->w + i].x * s->scale + s->x_off;
-			a.y = map->points[j * map->w + i].y * s->scale + s->y_off;
-			a.color = map->points[j * map->w + i].color;
-
-			if (i + 1 < map->w)
-			{
-				b.x = map->points[j * map->w + i + 1].x * s->scale + s->x_off;
-				b.y = map->points[j * map->w + i + 1].y * s->scale + s->y_off;
-				b.color = map->points[j * map->w + i + 1].color;
-				ft_draw_line(img, a, b);
-			}
-			if (j + 1 < map->h)
-			{
-				b.x = map->points[(j + 1) * map->w + i].x * s->scale + s->x_off;
-				b.y = map->points[(j + 1) * map->w + i].y * s->scale + s->y_off;
-				b.color = map->points[(j + 1) * map->w + i].color;
-				ft_draw_line(img, a, b);
-			}
+			ft_draw_projected_cell(img, map, s, i, j);
 			i++;
 		}
 		j++;
 	}
 }
 
-void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
+void	ft_draw_main_view(t_image *img, t_vars *vars)
 {
 	static t_map		*new_map;
-
 	int		i;
 	int		j;
+	t_point	*p;
 
 	if (new_map == NULL)
 	{
-		new_map = ft_init_map(map->w, map->h);
+		new_map = ft_init_map(vars->map->w, vars->map->h);
 		if (!new_map)
 			return ;
 	}
@@ -384,12 +346,13 @@ void	ft_draw_main_view(t_image *img, t_map *map, t_setting *s)
 		i = 0;
 		while (i < new_map->w)
 		{
-			ft_rotateXYZ_point(&map->points[j * map->w + i], &new_map->points[j * new_map->w + i], s);	
+			p = vars->map->points + (j * vars->map->w + i);
+			ft_rotateXYZ_point(p, new_map->points + (j * new_map->w + i), vars->setting);	
 			i++;
 		}
 		j++;
 	}
-	ft_draw_projection(img, new_map, s);
+	ft_draw_projection(img, new_map, vars->setting);
 }
 
 t_setting	*init_setting(void)
@@ -471,7 +434,7 @@ int	ft_is_cube_clicked(int x, int y, t_vars *vars)
 
 	if (x == -1 && y == -1)
 		return (DEFAULT_VIEW);
-	x = x - (WIN_W - vars->layout->side->w);//the cube in top right corner.
+	x = x - (WIN_W - vars->layout->cube_view->w);//the cube in top right corner.
 	cube = vars->cube;
 	if (cube[4].x < x && x < cube[1].x && cube[5].y < y && y < cube[0].y)
 		return (TOP_VIEW);
@@ -555,15 +518,16 @@ void	ft_change_view(int state, t_vars *vars)
 
 int	render_next_frame(t_vars *vars)
 {
-	ft_free_image(vars->mlx, vars->layout->main);	
+	ft_free_image(vars->mlx, vars->layout->main);
+	ft_free_image(vars->mlx, vars->layout->cube_view);
 	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
-	vars->layout->side = ft_init_image(vars->mlx, SIDE_W, SIDE_H);
+	vars->layout->cube_view = ft_init_image(vars->mlx, CUBE_W, CUBE_H);
 	ft_change_view(STOP_ANIMATION, vars);
 	ft_reset_setting(0, vars->setting);
-	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
-	ft_draw_cube_view(vars->layout->side, vars);
+	ft_draw_main_view(vars->layout->main, vars);
+	ft_draw_cube_view(vars->layout->cube_view, vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->side->data, MAIN_W - SIDE_W, 0);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->cube_view->data, MAIN_W - CUBE_W, 0);
 	return (0);
 }
 

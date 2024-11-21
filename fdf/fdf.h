@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 10:21:59 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 12:38:07 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,8 @@
 # define MAIN_W (WIN_W * 1)
 # define MAIN_H WIN_H
 
-# define TOP_W (WIN_W - MAIN_W)
-# define TOP_H (WIN_H / 2)
-
-# define SIDE_W (WIN_W * 0.05)
-# define SIDE_H (WIN_W * 0.05)
+# define CUBE_W (WIN_W * 0.05)
+# define CUBE_H (WIN_W * 0.05)
 
 # define C_WHITE 0x00FFFFFF
 # define C_RED	 0x55FF0000
@@ -134,13 +131,10 @@ typedef struct s_map
 	t_point	*points;
 }	t_map;
 
-
-
 typedef struct s_layout
 {
 	t_image	*main; // the main image where the fdf is rendered
-	t_image	*top;  // top view of the fdf 
-	t_image	*side; // side view of the fdf
+	t_image	*cube_view; // side view of the fdf
 }	t_layout;
 
 typedef	struct s_setting
@@ -166,13 +160,6 @@ typedef struct s_vars
 	int			mouse_y;
 }	t_vars;
 
-typedef struct	s_matrix
-{
-	int	w;
-	int	h;
-	float	*values;
-}	t_matrix;
-
 int	create_trgb(int t, int r, int g, int b);
 int	get_t(int trgb);
 int	get_r(int trgb);
@@ -186,9 +173,6 @@ void	*ft_free_map(t_map *map);
 t_map	*ft_init_map(int w, int h);
 t_map	*ft_get_map_from_file(char *path);
 
-
-
 void	ft_rotateXYZ_point(t_point *p, t_point *projected, t_setting *s);
-
 
 #endif

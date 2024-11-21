@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 12:38:07 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 15:03:49 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,11 @@ int	get_r(int trgb);
 int	get_g(int trgb);
 int	get_b(int trgb);
 
-int ft_fill_image(t_image *img, int w, int h, size_t color);
+void	*ft_vars_free(t_vars *vars);
 
-void	ft_debug_map(t_map *map);
-void	*ft_free_map(t_map *map);
-t_map	*ft_init_map(int w, int h);
+void	ft_map_debug(t_map *map);
+void	*ft_map_free(t_map *map);
+t_map	*ft_map_init(int w, int h);
 t_map	*ft_get_map_from_file(char *path);
 
 void	ft_rotateXYZ_point(t_point *p, t_point *projected, t_setting *s);

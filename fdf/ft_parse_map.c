@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/19 20:34:46 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 15:00:31 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	ft_get_map_resolution(char *path, int *w, int *h)
 	return (close(fd), SUCCESS);
 }
 
-t_map	*ft_init_map(int w, int h)
+t_map	*ft_map_init(int w, int h)
 {
 	t_map	*map;
 
@@ -69,7 +69,7 @@ t_map	*ft_init_map(int w, int h)
 	return (map);
 }
 
-void	*ft_free_map(t_map *map)
+void	*ft_map_free(t_map *map)
 {
 	free(map->points);
 	map->points = NULL;
@@ -77,7 +77,7 @@ void	*ft_free_map(t_map *map)
 	return (NULL);
 }
 
-void	*ft_free_words(char **words)
+void	*ft_words_free(char **words)
 {
 	int	i;
 
@@ -116,7 +116,7 @@ unsigned int	ft_hex_to_int(char *hex)
 	return (color);
 }
 
-unsigned int	ft_parse_color(char *color_str)
+unsigned int	ft_color_parse(char *color_str)
 {
 	if (!color_str)
 		return (C_WHITE);
@@ -125,7 +125,7 @@ unsigned int	ft_parse_color(char *color_str)
 	return (ft_hex_to_int(color_str + 2));
 }
 
-void	ft_parse_point(t_map *map, int i, int j, char *point_str)
+void	ft_point_parse(t_map *map, int i, int j, char *point_str)
 {
 	char	**words;
 	int		w;
@@ -141,8 +141,8 @@ void	ft_parse_point(t_map *map, int i, int j, char *point_str)
 	if (!words)
 		return ;	
 	map->points[j * map->w + i].z = ft_atoi(words[0]);
-	map->points[j * map->w + i].color = ft_parse_color(words[1]);
-	words = ft_free_words(words);
+	map->points[j * map->w + i].color = ft_color_parse(words[1]);
+	words = ft_words_free(words);
 }
 
 void	ft_get_min_max_z(t_map *map, int *min, int *max)
@@ -163,7 +163,7 @@ void	ft_get_min_max_z(t_map *map, int *min, int *max)
 }
 
 
-int	ft_parse_map(int fd, t_map *map)
+int	ft_map_parse(int fd, t_map *map)
 {
 	int			i;
 	int			j;
@@ -183,17 +183,17 @@ int	ft_parse_map(int fd, t_map *map)
 		i = 0;
 		while (words[i] && words[i][0] != '\n')
 		{
-			ft_parse_point(map, i, j, words[i]);
+			ft_point_parse(map, i, j, words[i]);
 			i++;
 		}
-		words = ft_free_words(words);
+		words = ft_words_free(words);
 		line = get_next_line(fd);
 		j++;
 	}
 	return (SUCCESS);
 }
 
-void ft_debug_map(t_map *map)
+void ft_map_debug(t_map *map)
 {
 	int i;
 	int j;
@@ -246,16 +246,13 @@ t_map	*ft_get_map_from_file(char *path)
 		return (ft_printf("[ ERROR ] Invalid map.\n"), NULL);
 	else
 		ft_printf("[ INFO  ] Loading the map %s (width: %d | height: %d)\n", path, w, h);
-	map = ft_init_map(w, h);
+	map = ft_map_init(w, h);
 	if (!map)
-	{
-		ft_printf("[ ERROR ] Failed to allocate the map.");
-		return (NULL);
-	}
+		return (ft_printf("[ ERROR ] Failed to allocate the map."), NULL);
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
-		return (ft_printf("[ ERROR ] %s could not be opened: %s\n", path, strerror(errno)), ft_free_map(map));
-	ft_parse_map(fd, map);
+		return (ft_printf("[ ERROR ] %s could not be opened: %s\n", path, strerror(errno)), ft_map_free(map));
+	ft_map_parse(fd, map);
 	ft_normalize_z(map);
 	close(fd);
 	ft_printf("[ INFO  ] Loading done.\n");

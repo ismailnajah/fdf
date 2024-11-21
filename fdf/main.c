@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 14:17:38 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/21 15:05:06 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void my_mlx_pixel_put(t_image *img, int x, int y, int color)
 	*(unsigned int*) dst = color;
 }
 
-void	*ft_free_image(void *mlx, t_image *img)
+void	*ft_image_free(void *mlx, t_image *img)
 {
 	if (!img)
 		return (NULL);
@@ -46,23 +46,23 @@ t_image	*ft_init_image(void *mlx, int width, int height)
 		return (ft_abort(img));
 	img->addr = mlx_get_data_addr(img->data, &img->bits_per_pixel, &img->line_length, &img->endian);
 	if (!img->addr)
-		return (ft_free_image(mlx, img));
+		return (ft_image_free(mlx, img));
 	img->w = width;
 	img->h = height;
 	return (img);
 }
 
-void* ft_free_layout(void *mlx, t_layout *layout)
+void* ft_layout_free(void *mlx, t_layout *layout)
 {
 	if (!layout)
 		return (NULL);
-	ft_free_image(mlx, layout->main);
-	ft_free_image(mlx, layout->cube_view);
+	ft_image_free(mlx, layout->main);
+	ft_image_free(mlx, layout->cube_view);
 	free(layout);
 	return (NULL);
 }
 
-t_layout *init_layout(void* mlx)
+t_layout *ft_layout_init(void* mlx)
 {
 	t_layout *layout;
 
@@ -71,10 +71,10 @@ t_layout *init_layout(void* mlx)
 		return (NULL);
 	layout->main = ft_init_image(mlx, MAIN_W, MAIN_H);
 	if (!layout->main)
-		return (ft_free_layout(mlx, layout));
+		return (ft_layout_free(mlx, layout));
 	layout->cube_view = ft_init_image(mlx, CUBE_W, CUBE_H);
 	if (!layout->cube_view)
-		return (ft_free_layout(mlx, layout));
+		return (ft_layout_free(mlx, layout));
 	return (layout);
 }
 
@@ -135,10 +135,7 @@ int ft_on_keydown(int keycode, t_vars *vars)
 {
 	if (keycode == KEY_ESC)
 	{
-		ft_free_layout(vars->mlx, vars->layout);
-		free(vars->setting);
-		ft_free_map(vars->map);
-		mlx_destroy_window(vars->mlx, vars->win);
+		ft_vars_free(vars);
 		exit(0);
 	}
 	if (keycode == KEY_A)
@@ -175,10 +172,7 @@ int ft_on_keydown(int keycode, t_vars *vars)
 
 int ft_on_destroy(t_vars *vars)
 {
-	ft_free_layout(vars->mlx, vars->layout);
-	free(vars->setting);
-	ft_free_map(vars->map);
-	mlx_destroy_window(vars->mlx, vars->win);
+	ft_vars_free(vars);
 	ft_printf("Bye\n");
 	exit(0);
 	return (0);
@@ -336,7 +330,7 @@ void	ft_draw_main_view(t_image *img, t_vars *vars)
 
 	if (new_map == NULL)
 	{
-		new_map = ft_init_map(vars->map->w, vars->map->h);
+		new_map = ft_map_init(vars->map->w, vars->map->h);
 		if (!new_map)
 			return ;
 	}
@@ -371,8 +365,6 @@ t_setting	*init_setting(void)
 	s->z_off = DEFAULT_Z_OFF;
 	return (s);
 }
-
-t_setting *cube_setting;
 
 void	ft_draw_cube_view(t_image *img, t_vars *vars)
 {
@@ -518,8 +510,8 @@ void	ft_change_view(int state, t_vars *vars)
 
 int	render_next_frame(t_vars *vars)
 {
-	ft_free_image(vars->mlx, vars->layout->main);
-	ft_free_image(vars->mlx, vars->layout->cube_view);
+	ft_image_free(vars->mlx, vars->layout->main);
+	ft_image_free(vars->mlx, vars->layout->cube_view);
 	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
 	vars->layout->cube_view = ft_init_image(vars->mlx, CUBE_W, CUBE_H);
 	ft_change_view(STOP_ANIMATION, vars);
@@ -552,40 +544,57 @@ int	ft_mouse_event(int keycode, int x, int y, t_vars *vars)
 		vars->mouse_y = y;
 		ft_change_view(START_ANIMATION, vars);
 	}
-	//print_setting(vars->setting);
-	//printf("[ INFO ] (%d, %d) Mouse button (%d) clicked!\n", x, y, keycode);
 	return (0);
+}
+
+void	*ft_vars_free(t_vars *vars)
+{
+	if (vars->cube)
+		free(vars->cube);
+	if (vars->setting)
+		free(vars->setting);
+	if (vars->layout)
+		ft_layout_free(vars->mlx, vars->layout);
+	if (vars->map)
+		ft_map_free(vars->map);
+	if (vars->win)
+		mlx_destroy_window(vars->mlx, vars->win);
+	free(vars->mlx);// potential leaks here cuz mlx has a field for font which is an image instance;
+	free(vars);
+	return (NULL);
+}
+
+t_vars	*ft_vars_init(char *map_path)
+{
+	t_vars *vars;
+
+	vars = (t_vars *)malloc(sizeof(t_vars));
+	if (!vars)
+		return (NULL);
+	vars->mlx = mlx_init();	
+	if (!vars->mlx)
+		return (ft_vars_free(vars));
+	vars->win = mlx_new_window(vars->mlx, WIN_W, WIN_H, "Fil de Fer");
+	vars->map = ft_get_map_from_file(map_path);
+	vars->layout = ft_layout_init(vars->mlx);
+	vars->setting = init_setting();
+	vars->cube = (t_point *)malloc(8 * sizeof(t_point));
+	if (!vars->win || !vars->map || !vars->layout || !vars->setting || !vars->cube)
+		return (ft_vars_free(vars));
+	return (vars);
 }
 
 int	main(int ac, char **av)
 {
-	t_vars	vars;
+	t_vars	*vars;
 
 	if (ac != 2)
 		return (1);
-	vars.map = ft_get_map_from_file(av[1]);
-	cube_setting = init_setting();
-	if (!vars.map)
-		return (1);
-	//ft_debug_map(map);
-	vars.mlx = mlx_init();
-	if (!vars.mlx)
-		return (2);
-	vars.win = mlx_new_window(vars.mlx, WIN_W, WIN_H, "Fil de Fer");
-	if (!vars.win)
-		return (3);
-	vars.layout = init_layout(vars.mlx);
-	if (!vars.layout)
-		return (4);
-	vars.setting = init_setting();
-	if (!vars.setting)
-		return (5);
-	vars.cube = (t_point *)malloc(8 * sizeof(t_point));
-
-	mlx_hook(vars.win, ON_KEYDOWN, 1L<<0, ft_on_keydown, &vars);
-	mlx_mouse_hook(vars.win, ft_mouse_event, &vars);
-	mlx_hook(vars.win, ON_DESTROY, 0, ft_on_destroy, &vars);
-	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
-	mlx_loop(vars.mlx);
+	vars = ft_vars_init(av[ac - 1]);
+	mlx_hook(vars->win, ON_KEYDOWN, 1L<<0, ft_on_keydown, vars);
+	mlx_mouse_hook(vars->win, ft_mouse_event, vars);
+	mlx_hook(vars->win, ON_DESTROY, 0, ft_on_destroy, vars);
+	mlx_loop_hook(vars->mlx, render_next_frame, vars);
+	mlx_loop(vars->mlx);
 	return (0);
 }

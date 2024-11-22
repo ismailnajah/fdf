@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 08:52:52 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 15:22:02 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@
 # include <math.h>
 # include <stdio.h>
 # include "libft/libft.h"
+#include "mlx.h"
 
-# define MAX_ZOOM  8000
+# define MAX_ZOOM 8000
 # define MIN_ZOOM 200
 
-# define START_ANIMATION 1
-# define STOP_ANIMATION 0
 
 # define ANGLE_STEP 1
 # define SCALE_STEP (MAX_ZOOM - MIN_ZOOM) / 40
@@ -58,7 +57,14 @@
 # define DEFAULT_Y_OFF (MAIN_H / 2)
 # define DEFAULT_Z_OFF 1.0f
 
-
+// animation state
+enum
+{
+	STOP_ANIMATION,
+	START_ANIMATION,
+	UPDATE_ANIMATION,
+	RESET_ANIMATION,
+};
 
 //keys codes
 enum 
@@ -166,7 +172,10 @@ int	get_r(int trgb);
 int	get_g(int trgb);
 int	get_b(int trgb);
 
-void	*ft_vars_free(t_vars *vars);
+void ft_draw_line(t_image *img, t_point a, t_point b);
+
+void	ft_view_change(int state, t_vars *vars);
+int		ft_vars_free(t_vars *vars);
 
 void	ft_map_debug(t_map *map);
 void	*ft_map_free(t_map *map);
@@ -174,5 +183,10 @@ t_map	*ft_map_init(int w, int h);
 t_map	*ft_get_map_from_file(char *path);
 
 void	ft_rotateXYZ_point(t_point *p, t_point *projected, t_setting *s);
+
+
+t_setting	*ft_setting_init(void);
+void	ft_draw_cube_view(t_image *img, t_vars *vars);
+int		ft_is_cube_clicked(int x, int y, t_vars *vars);
 
 #endif

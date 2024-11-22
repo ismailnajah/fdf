@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 09:22:52 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 10:18:10 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 15:34:29 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,13 @@ float	ft_cos(float new_angle)
 	static float	angle;
 	static float	cos_angle;
 
-	//convert to radiant
 	new_angle = (PI * new_angle) / 180;
 	if (flag == 0)
 	{
 		flag = 1;
 		cos_angle = 1;
 	}
-	if (1 && new_angle == angle)
+	if (new_angle == angle)
 		return (cos_angle);
 	angle = new_angle;
 	cos_angle = cos(angle);
@@ -40,7 +39,7 @@ float	ft_sin(float new_angle)
 	static float	sin_angle;
 
 	new_angle = (PI * new_angle) / 180;
-	if (1 && new_angle == angle)
+	if (new_angle == angle)
 		return (sin_angle);
 	angle = new_angle;
 	sin_angle = sin(angle);

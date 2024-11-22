@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 15:22:02 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 17:43:11 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define ANGLE_STEP 1
 # define SCALE_STEP (MAX_ZOOM - MIN_ZOOM) / 40
 # define OFFSET_STEP 10
-# define Z_OFFSET_STEP 0.05f
+# define Z_STEP 0.05f
 
 # define FACT 120
 # define WIN_W (16 * FACT)
@@ -166,27 +166,66 @@ typedef struct s_vars
 	int			mouse_y;
 }	t_vars;
 
+//main.c
+int	ft_vars_free(t_vars *vars);
+
+//ft_color.c
 int	create_trgb(int t, int r, int g, int b);
 int	get_t(int trgb);
 int	get_r(int trgb);
 int	get_g(int trgb);
 int	get_b(int trgb);
 
-void ft_draw_line(t_image *img, t_point a, t_point b);
+//ft_draw.c
+void	ft_draw_pixel(t_image *img, int x, int y, int color);
+void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j);
+void	ft_draw_main_view(t_vars *vars);
+void	ft_draw_line(t_image *img, t_point a, t_point b);
 
-void	ft_view_change(int state, t_vars *vars);
-int		ft_vars_free(t_vars *vars);
+//ft_handle_event.c
+int	ft_on_keydown(int keycode, t_vars *vars);
+int	ft_on_destroy(t_vars *vars);
+int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars);
 
+//ft_parse_map.c
 void	ft_map_debug(t_map *map);
 void	*ft_map_free(t_map *map);
 t_map	*ft_map_init(int w, int h);
 t_map	*ft_get_map_from_file(char *path);
+void	ft_get_min_max_z(t_map *map, int *min, int *max);
 
-void	ft_rotateXYZ_point(t_point *p, t_point *projected, t_setting *s);
+//ft_image.c
+void			*ft_image_free(void *mlx, t_image *img);
+t_image			*ft_image_init(void *mlx, int width, int height);
+void			ft_image_clear(t_image *img);
+void			*ft_layout_free(void *mlx, t_layout *layout);
+t_layout		*ft_layout_init(void *mlx);
 
+//ft_math.c
+float			ft_fmod(float value, float div);
+void			ft_angle_change(float *angle, int direction);
+void			ft_rotate_xyz_point(t_point *p, t_point *projected, t_setting *s);
 
-t_setting	*ft_setting_init(void);
-void	ft_draw_cube_view(t_image *img, t_vars *vars);
-int		ft_is_cube_clicked(int x, int y, t_vars *vars);
+//ft_setting.c
+t_setting		*ft_setting_init(void);
+t_setting		ft_setting_of_view(int view, t_setting *old_s);
+t_setting		ft_setting_default(void);
+void			ft_setting_animate(t_setting *s, t_setting *e);
+void			print_setting(t_setting *s);
+
+//ft_point.c
+void			ft_view_change(int state, t_vars *vars);
+int				ft_point_sort(t_point *a, t_point *b);
+void			ft_point_scale(t_point *a, t_point *p, t_setting *s);
+
+//ft_utils.c
+unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
+void			ft_scale_z(t_map *map, float z_off);
+unsigned int	ft_hex_to_int(char *hex);
+void			ft_normalize_z(t_map *map);
+
+//ft_cube.c
+void			ft_draw_cube_view(t_image *img, t_vars *vars);
+int				ft_is_cube_clicked(int x, int y, t_vars *vars);
 
 #endif

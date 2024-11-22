@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 15:00:31 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 17:43:05 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,28 +94,6 @@ void	*ft_words_free(char **words)
 	return (NULL);
 }
 
-unsigned int	ft_hex_to_int(char *hex)
-{
-	unsigned int	color;
-	int				i;
-	char			c;
-   
-	color = 0;
-	i = 0;
-	while (hex[i] && hex[i] != '\n')
-	{
-		c = ft_toupper(hex[i]);
-		if (ft_isdigit(c))
-			color = color * 16 + c - '0';
-		else if ('A' <= c && c <= 'F')
-			color = color * 16 + 10 + c - 'A';
-		else
-			return (C_WHITE);
-		i++;
-	}
-	return (color);
-}
-
 unsigned int	ft_color_parse(char *color_str)
 {
 	if (!color_str)
@@ -161,7 +139,6 @@ void	ft_get_min_max_z(t_map *map, int *min, int *max)
 		i++;
 	}
 }
-
 
 int	ft_map_parse(int fd, t_map *map)
 {
@@ -215,21 +192,6 @@ void ft_map_debug(t_map *map)
 		fflush(NULL);
 		ft_printf("\n");
 		j++;
-	}
-}
-
-void	ft_normalize_z(t_map *map)
-{
-	int i;
-	int min;
-	int max;
-
-	ft_get_min_max_z(map, &min, &max);
-	i = 0;
-	while (i < map->h * map->w && max != min)
-	{
-		map->points[i].z = (((float)(map->points[i].z - min) / (float)(max - min)) - 0.5f) / 4;
-		i++;
 	}
 }
 

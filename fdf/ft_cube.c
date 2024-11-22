@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:14:20 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 15:17:32 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 17:34:02 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_draw_cube_view(t_image *img, t_vars *vars)
 
 	for(int i=0; i< 8; i++)
 	{
-		ft_rotateXYZ_point(cube + i, vars->cube + i, cube_setting);
+		ft_rotate_xyz_point(cube + i, vars->cube + i, cube_setting);
 		vars->cube[i].x = vars->cube[i].x * img->w * 0.5 + img->w / 2;
 		vars->cube[i].y = vars->cube[i].y * img->w * 0.5 + img->h / 2;
 		vars->cube[i].color = C_WHITE;

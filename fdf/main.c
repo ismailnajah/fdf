@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 08:48:47 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 09:00:35 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,35 +411,29 @@ int	ft_is_cube_clicked(int x, int y, t_vars *vars)
 	return (0); 
 }
 
-t_setting *ft_get_view_setting(int view, t_setting *old_s)
+t_setting ft_get_view_setting(int view, t_setting *old_s)
 {
-	t_setting	*s;
+	static t_setting	s;
 
-	s = init_setting();
-	if (view == TOP_VIEW)
-	{
-		s->angleX = 0.0f;
-		s->angleY = 0.0f;
-		s->angleZ = 0.0f;
-	}
-	if (view == SIDE_VIEW)
-	{
-		s->angleX = 90.0f;
-		s->angleY = 0.0f;
-		s->angleZ = 0.0f;
-	}
-	if (view == FRONT_VIEW)
-	{
-		s->angleX = 0.0f;
-		s->angleY = 90.0f;
-		s->angleZ = -90.0f;
-	}
 	if (old_s)
 	{
-		s->scale = old_s->scale;
-		s->x_off = old_s->x_off;
-		s->y_off = old_s->y_off;
-		s->z_off = old_s->z_off;
+		s.scale = old_s->scale;
+		s.x_off = old_s->x_off;
+		s.y_off = old_s->y_off;
+		s.z_off = old_s->z_off;
+	}
+	if (view == TOP_VIEW)
+	{
+		s.angleX = 0.0f;
+		s.angleY = 0.0f;
+		s.angleZ = 0.0f;
+	}
+	if (view == SIDE_VIEW)
+		s.angleX = 90.0f;
+	if (view == FRONT_VIEW)
+	{
+		s.angleY = 90.0f;
+		s.angleZ = -90.0f;
 	}
 	return (s);
 }
@@ -448,7 +442,7 @@ void	ft_change_view(int state, t_vars *vars)
 {
 	static int	start;
 	int			view;
-	t_setting *view_s;
+	t_setting view_s;
 	t_setting *s;
 
 	if (state)
@@ -460,24 +454,24 @@ void	ft_change_view(int state, t_vars *vars)
 		return ;
 	s = vars->setting;
 	view_s = ft_get_view_setting(view, s);
-	if (s->angleX != view_s->angleX)
-		s->angleX += (1 - 2 * (s->angleX > view_s->angleX)) * ANGLE_STEP;
-	if (s->angleY != view_s->angleY)
-		s->angleY += (1 - 2 * (s->angleY > view_s->angleY)) * ANGLE_STEP;
-	if (s->angleZ != view_s->angleZ)
-		s->angleZ += (1 - 2 * (s->angleZ > view_s->angleZ)) * ANGLE_STEP;
-	if (s->scale != view_s->scale)
-		s->scale += (1 - 2 * (s->scale > view_s->scale)) * SCALE_STEP;
-	if (s->x_off != view_s->x_off)
-		s->x_off += (1 - 2 * (s->x_off > view_s->x_off)) * OFFSET_STEP;
-	if (s->y_off != view_s->y_off)
-		s->y_off += (1 - 2 * (s->y_off > view_s->y_off)) * OFFSET_STEP;
-	if (s->z_off != view_s->z_off)
-		s->z_off += (1 - 2 * (s->z_off > view_s->z_off)) * Z_OFFSET_STEP;
-	if (s->angleX == view_s->angleX && s->angleY == view_s->angleY
-			&& s->angleZ == view_s->angleZ && s->scale == view_s->scale
-			&& s->x_off == view_s->x_off && s->y_off == view_s->y_off
-			&& s->z_off == view_s->z_off)
+	if (s->angleX != view_s.angleX)
+		s->angleX += (1 - 2 * (s->angleX > view_s.angleX)) * ANGLE_STEP;
+	if (s->angleY != view_s.angleY)
+		s->angleY += (1 - 2 * (s->angleY > view_s.angleY)) * ANGLE_STEP;
+	if (s->angleZ != view_s.angleZ)
+		s->angleZ += (1 - 2 * (s->angleZ > view_s.angleZ)) * ANGLE_STEP;
+	if (s->scale != view_s.scale)
+		s->scale += (1 - 2 * (s->scale > view_s.scale)) * SCALE_STEP;
+	if (s->x_off != view_s.x_off)
+		s->x_off += (1 - 2 * (s->x_off > view_s.x_off)) * OFFSET_STEP;
+	if (s->y_off != view_s.y_off)
+		s->y_off += (1 - 2 * (s->y_off > view_s.y_off)) * OFFSET_STEP;
+	if (s->z_off != view_s.z_off)
+		s->z_off += (1 - 2 * (s->z_off > view_s.z_off)) * Z_OFFSET_STEP;
+	if (s->angleX == view_s.angleX && s->angleY == view_s.angleY
+			&& s->angleZ == view_s.angleZ && s->scale == view_s.scale
+			&& s->x_off == view_s.x_off && s->y_off == view_s.y_off
+			&& s->z_off == view_s.z_off)
 		start = STOP_ANIMATION;
 }
 

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 15:03:49 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 08:52:52 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ typedef struct s_map
 typedef struct s_layout
 {
 	t_image	*main; // the main image where the fdf is rendered
-	t_image	*cube_view; // side view of the fdf
+	t_image	*cube_view; // the cube image in top right
 }	t_layout;
 
 typedef	struct s_setting

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/21 18:22:35 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/22 08:48:47 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -455,7 +455,6 @@ void	ft_change_view(int state, t_vars *vars)
 		start = START_ANIMATION;
 	if (!start)
 		return ;
-
 	view = ft_is_cube_clicked(vars->mouse_x, vars->mouse_y, vars);
 	if (!view)
 		return ;
@@ -482,14 +481,30 @@ void	ft_change_view(int state, t_vars *vars)
 		start = STOP_ANIMATION;
 }
 
+void	ft_image_clear(t_image *img)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	while (j < img->h)
+	{
+		i = 0;
+		while (i < img->w)
+		{
+			my_mlx_pixel_put(img, i, j, C_BLACK);
+			i++;
+		}
+		j++;
+	}
+}
+
 int	render_next_frame(t_vars *vars)
 {
-	ft_image_free(vars->mlx, vars->layout->main);
-	ft_image_free(vars->mlx, vars->layout->cube_view);
-	vars->layout->main = ft_init_image(vars->mlx, MAIN_W, MAIN_H);
-	vars->layout->cube_view = ft_init_image(vars->mlx, CUBE_W, CUBE_H);
+	ft_image_clear(vars->layout->main);
+	ft_image_clear(vars->layout->cube_view);
 	ft_change_view(STOP_ANIMATION, vars);
-	ft_reset_setting(0, vars->setting);
+	ft_reset_setting(STOP_ANIMATION, vars->setting);
 	ft_draw_main_view(vars->layout->main, vars->map, vars->setting);
 	ft_draw_cube_view(vars->layout->cube_view, vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->layout->main->data, 0, 0);

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/23 11:55:21 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/23 12:16:25 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,7 @@ void	ft_draw_pixel(t_image *img, int x, int y, int color);
 void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j);
 void	ft_draw_main_view(t_vars *vars);
 void	ft_draw_line(t_image *img, t_point a, t_point b);
+
 
 //ft_handle_event.c
 int	ft_on_keydown(int keycode, t_vars *vars);

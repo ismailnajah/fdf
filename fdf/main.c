@@ -6,14 +6,12 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/23 11:56:39 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/23 12:40:41 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-// potential leaks here cuz mlx has 
-// a field for font which is an image instance;	
 int	ft_vars_free(t_vars *vars)
 {
 	if (vars->cube)
@@ -27,7 +25,8 @@ int	ft_vars_free(t_vars *vars)
 	if (vars->win)
 		mlx_destroy_window(vars->mlx, vars->win);
 	if (vars->mlx)
-		free(vars->mlx);
+		mlx_destroy_display(vars->mlx);
+	free(vars->mlx);
 	return (0);
 }
 

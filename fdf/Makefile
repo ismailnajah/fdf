@@ -2,7 +2,7 @@ NAME = fdf
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -Imlx -fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address -g3
 INCLUDE = .
 
 SRC =  main.c\

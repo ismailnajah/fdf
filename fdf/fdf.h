@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 17:43:11 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/23 11:33:50 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define OFFSET_STEP 10
 # define Z_STEP 0.05f
 
-# define FACT 120
+# define FACT 70
 # define WIN_W (16 * FACT)
 # define WIN_H (9 * FACT)
 

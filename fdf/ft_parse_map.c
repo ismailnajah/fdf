@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 17:43:05 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/23 11:15:06 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,8 @@ void	ft_point_parse(t_map *map, int i, int j, char *point_str)
 {
 	char	**words;
 	int		w;
-	int		h;
 
 	w = (map->w != 1) * (map->w - 1) + 1 * (map->w == 1);
-	h = (map->h != 1) * (map->h - 1) + 1 * (map->h == 1);
 	map->points[j * map->w + i].x = ((float)i / w - 0.5f);
 	map->points[j * map->w + i].y = ((float)j / w - 0.5f);
 	map->points[j * map->w + i].z = 0;

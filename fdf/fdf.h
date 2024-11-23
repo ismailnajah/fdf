@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/23 11:33:50 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/23 11:55:21 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,32 @@ enum
 };
 
 //keys codes
+#ifdef __linux__
+enum 
+{
+	KEY_ESC = 65307,
+	KEY_UP = 65362,
+	KEY_DOWN = 65364,
+	KEY_LEFT = 65361,
+	KEY_RIGHT = 65363,
+	KEY_W = 119,
+	KEY_S = 115,
+	KEY_A = 97,
+	KEY_D = 100,
+	KEY_E = 101,
+	KEY_Q = 113,
+	KEY_V = 118,
+	KEY_PLUS = 61,
+	KEY_MINUS = 45,
+	KEY_SPACE = 32,
+	KEY_SCROLL_UP = 4,
+	KEY_SCROLL_DOWN = 5,
+	KEY_LEFT_CLICK = 1,
+	KEY_RIGHT_CLICK = 2,
+};
+
+#else
+
 enum 
 {
 	KEY_ESC = 53,
@@ -89,6 +115,8 @@ enum
 	KEY_LEFT_CLICK = 1,
 	KEY_RIGHT_CLICK = 2,
 };
+
+#endif
 
 //events codes
 enum 

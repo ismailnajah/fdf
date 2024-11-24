@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:27:58 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:37:55 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_on_keydown(int keycode, t_vars *vars)
 	}
 	if (keycode == KEY_SPACE)
 		ft_view_change(RESET_ANIMATION, vars);
-	return (0);
+	return (ft_text_field_sync_value(vars->camera));
 }
 
 int	ft_on_destroy(t_vars *vars)

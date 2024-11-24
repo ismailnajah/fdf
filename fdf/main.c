@@ -6,12 +6,12 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:20:51 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:35:41 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <sys/time.h>
+
 int global_mode(int m)
 {
 	static int mode;
@@ -31,13 +31,6 @@ int text_field_cursor(int m)
 		return (cursor);
 	cursor = m;
 	return (m);
-}
-
-long long get_current_time() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-
-    return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000);
 }
 
 int	ft_vars_free(t_vars *vars)

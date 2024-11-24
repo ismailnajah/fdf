@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 21:42:33 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:01:27 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@
 # define C_RED	 0x55FF0000
 # define C_GREEN 0x5500FF00
 # define C_BLUE  0x550000FF
+# define C_GREY  0x00181818
 # define C_BLACK 0x00000000
 
 //default settings
@@ -65,7 +66,8 @@
 # define DEFAULT_Y_OFF (MAIN_H / 2)
 # define DEFAULT_Z_OFF 1.0f
 
-//key events modes like vim
+# define GET_CURSOR_POS -1
+//modes like vim
 enum
 {
 	NORMAL,
@@ -233,12 +235,13 @@ typedef struct s_vars
 //main.c
 int	ft_vars_free(t_vars *vars);
 int	global_mode(int m);
+int text_field_cursor(int m);
 
 //ft_text_field.c
 void			ft_label(t_vars *vars, int x, int y, char *text);
 t_text_field	*ft_text_field_init(t_camera *s);
 void			ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y);
-int				ft_text_field_update_value(int key, t_camera *s, int reset_cursor);
+int				ft_text_field_update_value(int key, t_camera *s);
 void			ft_camera_update_value(t_camera *s, int i);
 
 //ft_color.c

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 11:12:57 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 21:16:59 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 22:41:54 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,12 @@ void	ft_label(t_vars *vars, int x, int y, char *text)
 	mlx_string_put(vars->mlx, vars->win, x, y, C_WHITE, text);
 }
 
-int	ft_text_field_update_value(int key, t_camera *c, int cursor_start)
+int	ft_text_field_update_value(int key, t_camera *c)
 {
-	static int cursor;
+	int	cursor;
 	int i;
 
-	if (cursor_start)
-	{
-		cursor = 0;
-		return (0);
-	}
+	cursor = text_field_cursor(GET_CURSOR_POS);
 	if (key != KEY_BACK_SPACE && key != KEY_ENTER && key != '-' && (key < '0' || '9' < key))
 		return (1);
 	i = 0;
@@ -36,20 +32,20 @@ int	ft_text_field_update_value(int key, t_camera *c, int cursor_start)
 		{
 			if (key == KEY_BACK_SPACE)
 			{
-				cursor = cursor - 1 * (cursor > 0);
+				cursor = text_field_cursor(cursor - 1 * (cursor > 0));
 				c->field[i].text[cursor] = '\0';
 			}
 			else if(key == KEY_ENTER)
 			{
 				c->field[i].focused = FALSE;
 				global_mode(NORMAL);
-				cursor = 0;
+				cursor = text_field_cursor(0);
 				c->option[i] = atoi(c->field[i].text);
 			}
 			else if (cursor < TEXT_FIELD_MAX_CHAR)
 			{
 				c->field[i].text[cursor] = key;
-				cursor++;
+				cursor = text_field_cursor(cursor + 1);
 				c->field[i].text[cursor] = '\0';
 				break;
 			}
@@ -73,7 +69,7 @@ void	ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y)
 		if (f->x <= mouse_x && mouse_x <= f->x + f->w && f->y <= mouse_y && mouse_y <= f->y + f->h)
 		{
 			f->focused = TRUE;
-			f->text[0] = '\0';
+			text_field_cursor(ft_strlen(f->text));
 			focused_index = i;
 		}
 		else
@@ -85,7 +81,7 @@ void	ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y)
 	else
 	{
 		global_mode(NORMAL);
-		ft_text_field_update_value(0, NULL, 1);
+		text_field_cursor(0);
 	}
 }
 

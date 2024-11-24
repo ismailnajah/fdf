@@ -6,12 +6,12 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 21:44:49 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:20:51 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
+#include <sys/time.h>
 int global_mode(int m)
 {
 	static int mode;
@@ -21,6 +21,23 @@ int global_mode(int m)
 	if (m == INSERT)
 		mode = m;
 	return (mode);
+}
+
+int text_field_cursor(int m)
+{
+	static int cursor;
+
+	if (m == GET_CURSOR_POS)
+		return (cursor);
+	cursor = m;
+	return (m);
+}
+
+long long get_current_time() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+
+    return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000);
 }
 
 int	ft_vars_free(t_vars *vars)
@@ -64,10 +81,7 @@ void	ft_text_field_border_draw(t_image *img, t_text_field *f)
 	t_point	b;
 	unsigned int color;
 
-	if (f->focused)
-		color = C_GREEN;
-	else
-		color = C_WHITE;
+	color = C_GREEN * f->focused + C_WHITE;
 	a.x = f->x;
 	a.y = f->y;
 	a.color = color;
@@ -84,6 +98,36 @@ void	ft_text_field_border_draw(t_image *img, t_text_field *f)
 	a.x = f->x;
 	a.y = f->y;
 	ft_draw_line(img, a, b);
+}
+
+void	ft_render_text_fields_cursor(t_vars *vars, int frames)
+{
+	static int off;
+	int i;
+	int cursor_pos;
+	t_point cursor_s;
+	t_point cursor_e;
+
+	i = 0;
+	cursor_pos = text_field_cursor(GET_CURSOR_POS);
+	cursor_s.color = C_WHITE;
+	cursor_e.color = C_WHITE;
+	cursor_s.x = vars->camera->field[i].x + 5 + cursor_pos * 6;
+	cursor_e.x = cursor_s.x;
+	while (i < OPTION_COUNT)
+	{
+		if (vars->camera->field[i].focused)
+		{
+			cursor_s.y = vars->camera->field[i].y + 5;
+			cursor_e.y = cursor_s.y + vars->camera->field[i].h - 10;
+			break;
+		}
+		i++;
+	}
+	if (frames % 300 == 0)
+		off = !off;
+	if (i < OPTION_COUNT && !off)
+		ft_draw_line(vars->layout->menu, cursor_s, cursor_e);
 }
 
 void	ft_render_text_fields_borders(t_vars *vars)
@@ -145,6 +189,7 @@ int	ft_camera_changed(t_camera *c, t_camera *old)
 int	render_next_frame(t_vars *vars)
 {
 	static t_camera old;
+	static int	frames;
 
 	if (ft_camera_changed(vars->camera, &old))
 	{
@@ -159,11 +204,13 @@ int	render_next_frame(t_vars *vars)
 			vars->layout->cube_view->data, WIN_W - CUBE_W, 0);
 	}	
 	//menu
+	ft_image_clear(vars->layout->menu, C_GREY);
 	ft_render_text_fields_borders(vars);
+	ft_render_text_fields_cursor(vars, frames);
 	mlx_put_image_to_window(vars->mlx, vars->win,
 		vars->layout->menu->data, 0, 0);
 	ft_render_labels_and_values(vars);
-
+	frames = (frames + 1) % 100000;
 	return (0);
 }
 

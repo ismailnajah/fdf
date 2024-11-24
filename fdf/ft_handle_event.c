@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 20:59:00 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 22:39:48 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_on_keydown(int keycode, t_vars *vars)
 		exit(0);
 	}
 	if (global_mode(GET_MODE) == INSERT)
-		return (ft_text_field_update_value(keycode, vars->camera, 0));
+		return (ft_text_field_update_value(keycode, vars->camera));
 	if (keycode == KEY_A || keycode == KEY_D)
 		ft_angle_change(&vars->camera->option[ANGLE_X], keycode == KEY_D);
 	if (keycode == KEY_S || keycode == KEY_W)

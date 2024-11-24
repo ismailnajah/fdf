@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/23 12:16:25 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 08:06:15 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@
 # include "libft/libft.h"
 #include "mlx.h"
 
+
+# define PI 3.14159265358979311600
+
 # define MAX_ZOOM 8000
 # define MIN_ZOOM 200
-
 
 # define ANGLE_STEP 1
 # define SCALE_STEP (MAX_ZOOM - MIN_ZOOM) / 40

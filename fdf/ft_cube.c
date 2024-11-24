@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:14:20 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 17:34:02 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:02:18 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void	ft_draw_cube_view(t_image *img, t_vars *vars)
 {
 	t_point cube[8];
-	t_setting *cube_setting;
+	t_camera *cube_camera;
 
-	cube_setting = ft_setting_init();
+	cube_camera = ft_camera_init();
 
 	cube[0].x = -0.5f;
 	cube[0].y = 0.5f;
@@ -46,7 +46,7 @@ void	ft_draw_cube_view(t_image *img, t_vars *vars)
 
 	for(int i=0; i< 8; i++)
 	{
-		ft_rotate_xyz_point(cube + i, vars->cube + i, cube_setting);
+		ft_rotate_xyz_point(cube + i, vars->cube + i, cube_camera);
 		vars->cube[i].x = vars->cube[i].x * img->w * 0.5 + img->w / 2;
 		vars->cube[i].y = vars->cube[i].y * img->w * 0.5 + img->h / 2;
 		vars->cube[i].color = C_WHITE;
@@ -63,7 +63,7 @@ void	ft_draw_cube_view(t_image *img, t_vars *vars)
 	// top view
 	ft_draw_line(img, vars->cube[4], vars->cube[5]);
 	ft_draw_line(img, vars->cube[5], vars->cube[1]);
-	free(cube_setting);
+	ft_camera_free(cube_camera);
 }
 
 int	ft_is_cube_clicked(int x, int y, t_vars *vars)

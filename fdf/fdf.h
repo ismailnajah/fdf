@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 19:05:52 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:42:33 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,24 +205,18 @@ enum
 	ANGLE_X,
 	ANGLE_Y,
 	ANGLE_Z,
-	SCALE,
 	X_OFF,
 	Y_OFF,
 	Z_OFF,
-	SETTING_COUNT,
+	SCALE,
+	OPTION_COUNT,
 };
 
-typedef	struct s_setting
+typedef	struct s_camera
 {
-	float	angleX;
-	float	angleY;
-	float	angleZ;
-	int		scale;
-	int		x_off;
-	int		y_off;
-	float	z_off;
 	t_text_field *field;
-}	t_setting;
+	float	option[OPTION_COUNT];
+}	t_camera;
 
 typedef struct s_vars
 {
@@ -230,7 +224,7 @@ typedef struct s_vars
 	void		*win;
 	t_map		*map;
 	t_layout	*layout;
-	t_setting	*setting;
+	t_camera	*camera;
 	t_point		*cube;
 	int			mouse_x;
 	int			mouse_y;
@@ -241,12 +235,11 @@ int	ft_vars_free(t_vars *vars);
 int	global_mode(int m);
 
 //ft_text_field.c
-void	ft_label(t_vars *vars, int x, int y, char *text);
-void	ft_text_field_init(t_setting *s);
-float	ft_setting_get(t_setting *s, int i);
-void	ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y);
-int		ft_text_field_update_value(int key, t_setting *s, int reset_cursor);
-void	ft_setting_update_value(t_setting *s, int i);
+void			ft_label(t_vars *vars, int x, int y, char *text);
+t_text_field	*ft_text_field_init(t_camera *s);
+void			ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y);
+int				ft_text_field_update_value(int key, t_camera *s, int reset_cursor);
+void			ft_camera_update_value(t_camera *s, int i);
 
 //ft_color.c
 int	create_trgb(int t, int r, int g, int b);
@@ -284,19 +277,20 @@ t_layout		*ft_layout_init(void *mlx);
 //ft_math.c
 float			ft_fmod(float value, float div);
 void			ft_angle_change(float *angle, int direction);
-void			ft_rotate_xyz_point(t_point *p, t_point *projected, t_setting *s);
+void			ft_rotate_xyz_point(t_point *p, t_point *projected, t_camera *s);
 
-//ft_setting.c
-t_setting		*ft_setting_init(void);
-t_setting		ft_setting_of_view(int view, t_setting *old_s);
-t_setting		ft_setting_default(void);
-void			ft_setting_animate(t_setting *s, t_setting *e);
-void			print_setting(t_setting *s);
+//ft_camera.c
+t_camera		*ft_camera_init(void);
+void			*ft_camera_free(t_camera *c);
+t_camera		ft_camera_of_view(int view, t_camera *old_s);
+t_camera		ft_camera_default(void);
+void			ft_camera_animate(t_camera *s, t_camera *e);
+void			print_camera(t_camera *s);
 
 //ft_point.c
 void			ft_view_change(int state, t_vars *vars);
 int				ft_point_sort(t_point *a, t_point *b);
-void			ft_point_scale(t_point *a, t_point *p, t_setting *s);
+void			ft_point_scale(t_point *a, t_point *p, t_camera *c);
 
 //ft_utils.c
 unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);

@@ -15,7 +15,7 @@ SRC =  main.c\
 	   ft_color.c\
 	   ft_point.c\
 	   ft_image.c\
-	   ft_setting.c\
+	   ft_camera.c\
 	   ft_utils.c
 
 OBJ := $(SRC:.c=.o)

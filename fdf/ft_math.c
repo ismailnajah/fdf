@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 09:22:52 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 08:05:56 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:00:31 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,15 @@ float	ft_sin(float new_angle)
 	return (sin_angle);
 }
 
-void	ft_rotate_xyz_point(t_point *p, t_point *rot, t_setting *s)
+void	ft_rotate_xyz_point(t_point *p, t_point *rot, t_camera *c)
 {
 	float	ax;
 	float	ay;
 	float	az;
 
-	ax = s->angleX;
-	ay = s->angleY;
-	az = s->angleZ;
+	ax = c->option[ANGLE_X];
+	ay = c->option[ANGLE_Y];
+	az = c->option[ANGLE_Z];
 	rot->x = p->x * (ft_cos(az) * ft_cos(ay) - ft_sin(az)
 			* ft_sin(ax) * ft_sin(ay));
 	rot->x += p->y * (-ft_cos(ax) * ft_sin(az));

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:54 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 17:33:15 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:04:17 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int	ft_point_sort(t_point *a, t_point *b)
 	return (0);
 }
 
-void	ft_point_scale(t_point *a, t_point *p, t_setting *s)
+void	ft_point_scale(t_point *a, t_point *p, t_camera *c)
 {
-	a->x = p->x * s->scale + s->x_off;
-	a->y = p->y * s->scale + s->y_off;
+	a->x = p->x * c->option[SCALE] + c->option[X_OFF];
+	a->y = p->y * c->option[SCALE] + c->option[Y_OFF];
 	a->color = p->color;
 }

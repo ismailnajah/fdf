@@ -6,36 +6,49 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 16:09:07 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:40:59 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+int	ft_camera_compare(t_camera *a, t_camera *b)
+{
+	int i;
+
+	i = 0;
+	while (i < OPTION_COUNT - 2)// do not include scale and z_off
+	{
+		if (a->option[i] != b->option[i])
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+}
+
 void	ft_view_change(int state, t_vars *vars)
 {
 	static int	animation_state;
 	int			view;
-	t_setting	view_s;
-	t_setting	*s;
+	t_camera	view_c;
+	t_camera	*c;
 
 	if (state)
 		animation_state = state;
 	if (animation_state == STOP_ANIMATION)
 		return ;
-	s = vars->setting;
+	c = vars->camera;
 	if (animation_state == RESET_ANIMATION)
-		view_s = ft_setting_default();
+		view_c = ft_camera_default();
 	else if (animation_state == UPDATE_ANIMATION)
 	{
 		view = ft_is_cube_clicked(vars->mouse_x, vars->mouse_y, vars);
 		if (!view)
 			return ;
-		view_s = ft_setting_of_view(view, s);
+		view_c = ft_camera_of_view(view, c);
 	}
-	ft_setting_animate(s, &view_s);
-	if (s->angleX == view_s.angleX && s->angleY == view_s.angleY
-		&& s->angleZ == view_s.angleZ && s->x_off == view_s.x_off && s->y_off == view_s.y_off)
+	ft_camera_animate(c, &view_c);
+	if (ft_camera_compare(c, &view_c))
 		animation_state = STOP_ANIMATION;
 }
 

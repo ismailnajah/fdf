@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 18:45:21 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:44:49 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int	ft_vars_free(t_vars *vars)
 {
 	if (vars->cube)
 		free(vars->cube);
-	if (vars->setting)
-		free(vars->setting);
+	if (vars->camera)
+		ft_camera_free(vars->camera);
 	if (vars->layout)
 		ft_layout_free(vars->mlx, vars->layout);
 	if (vars->map)
@@ -51,9 +51,9 @@ int	ft_vars_init(t_vars *vars, char *map_path)
 		return (ft_vars_free(vars), FAILURE);
 	vars->win = mlx_new_window(vars->mlx, WIN_W, WIN_H, "Fil de Fer");
 	vars->layout = ft_layout_init(vars->mlx);
-	vars->setting = ft_setting_init();
+	vars->camera = ft_camera_init();
 	vars->cube = (t_point *)malloc(8 * sizeof(t_point));
-	if (!vars->win || !vars->layout || !vars->setting || !vars->cube)
+	if (!vars->win || !vars->layout || !vars->camera || !vars->cube)
 		return (ft_vars_free(vars));
 	return (SUCCESS);
 }
@@ -91,9 +91,9 @@ void	ft_render_text_fields_borders(t_vars *vars)
 	t_text_field	*fields;
 	int	i;
 
-	fields = vars->setting->field;
+	fields = vars->camera->field;
 	i = 0;
-	while (i < SETTING_COUNT)
+	while (i < OPTION_COUNT)
 	{
 		ft_text_field_border_draw(vars->layout->menu, &fields[i]);
 		i++;
@@ -104,75 +104,49 @@ void	ft_render_labels_and_values(t_vars *vars)
 {
 	static char **labels_str;
 	char buff[10];
-	t_setting *s;
+	t_camera *c;
 	int i;
 
 	if (!labels_str)
-	{
-		labels_str = ft_split("X-anlge [A/D],Y-angle [W/S],Z-angle [Q/E],Scale [Wheel],X-offset [LEFT/RIGHT],Y-offset [UP/DOWN],Z-offset [-/+]", ',');
-	}
-	s = vars->setting;
+		labels_str = ft_split("X-anlge [A/D],Y-angle [W/S],Z-angle [Q/E],X-offset [LEFT/RIGHT],Y-offset [UP/DOWN],Z-offset [-/+],Scale [Wheel]", ',');
+	c = vars->camera;
 	i = 0;
-	while (i < SETTING_COUNT)
+	while (i < OPTION_COUNT)
 	{
-		ft_label(vars, 20, s->field[i].y + s->field[i].h / 2 + 5, labels_str[i]);
-		sprintf(buff, "%d", (int)ft_setting_get(s, i));
-		if (s->field[i].focused)
-			ft_label(vars, s->field[i].x + 5, s->field[i].y + s->field[i].h / 2 + 5, s->field[i].text);
+		ft_label(vars, 20, c->field[i].y + c->field[i].h / 2 + 5, labels_str[i]);
+		sprintf(buff, "%d", (int)c->option[i]);
+		if (c->field[i].focused)
+			ft_label(vars, c->field[i].x + 5, c->field[i].y + c->field[i].h / 2 + 5, c->field[i].text);
 		else
-			ft_label(vars, s->field[i].x + 5, s->field[i].y + s->field[i].h / 2 + 5, buff);
+			ft_label(vars, c->field[i].x + 5, c->field[i].y + c->field[i].h / 2 + 5, buff);
 		i++;
 	}
 }
 
-int	ft_setting_is_changed(t_setting *s, t_setting *old)
+int	ft_camera_changed(t_camera *c, t_camera *old)
 {
 	int changed;
+	int	i;
 
+	i = 0;
 	changed = 0;
-	if (s->angleX != old->angleX)
+	while (i < OPTION_COUNT)
 	{
-		changed++;
-		old->angleX = s->angleX;
-	}	
-	if (s->angleY != old->angleY)
-	{
-		changed++;
-		old->angleY = s->angleY;
-	}
-	if (s->angleZ != old->angleZ)
-	{
-		changed++;
-		old->angleZ = s->angleZ;
-	}
-	if (s->scale != old->scale)
-	{
-		changed++;
-		old->scale = s->scale;
-	}
-	if (s->x_off != old->angleX)
-	{
-		changed++;
-		old->x_off = s->x_off;
-	}
-	if (s->y_off != old->y_off)
-	{
-		changed++;
-		old->y_off = s->y_off;
-	}
-	if (s->z_off != old->z_off)
-	{
-		changed++;
-		old->z_off = s->z_off;
+		if (c->option[i] != old->option[i])
+		{
+			old->option[i] = c->option[i];
+			changed++;
+		}
+		i++;
 	}
 	return (changed > 0);
 }
 
 int	render_next_frame(t_vars *vars)
 {
-	static t_setting s;
+	static t_camera old;
 
-	if (ft_setting_is_changed(vars->setting, &s))
+	if (ft_camera_changed(vars->camera, &old))
 	{
 		ft_image_clear(vars->layout->main, C_BLACK);
 		ft_image_clear(vars->layout->cube_view, C_BLACK);

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 11:12:57 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 22:41:54 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:27:31 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_text_field_update_value(int key, t_camera *c)
 	return (0);
 }
 
-void	ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y)
+void	ft_text_field_focused(t_camera	*c, int mouse_x, int mouse_y)
 {
 	int i;
 	int focused_index;
@@ -65,7 +65,7 @@ void	ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y)
 	focused_index = -1;
 	while (i < OPTION_COUNT)
 	{
-		f = fields + i;
+		f = &c->field[i];
 		if (f->x <= mouse_x && mouse_x <= f->x + f->w && f->y <= mouse_y && mouse_y <= f->y + f->h)
 		{
 			f->focused = TRUE;
@@ -73,7 +73,10 @@ void	ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y)
 			focused_index = i;
 		}
 		else
+		{
 			f->focused = FALSE;
+			sprintf(f->text, "%d", (int) c->option[i]);
+		}
 		i++;
 	}
 	if (focused_index >= 0)

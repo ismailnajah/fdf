@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 22:39:48 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:27:58 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)
 	{
 		vars->mouse_x = x;
 		vars->mouse_y = y;
-		ft_text_field_focused(vars->camera->field, x, y);
+		ft_text_field_focused(vars->camera, x, y);
 		ft_view_change(UPDATE_ANIMATION, vars);
 	}
 	return (0);

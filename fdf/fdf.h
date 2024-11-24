@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:01:27 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:26:35 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,10 +239,10 @@ int text_field_cursor(int m);
 
 //ft_text_field.c
 void			ft_label(t_vars *vars, int x, int y, char *text);
-t_text_field	*ft_text_field_init(t_camera *s);
-void			ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y);
+t_text_field	*ft_text_field_init(t_camera *c);
+void			ft_text_field_focused(t_camera *c, int mouse_x, int mouse_y);
 int				ft_text_field_update_value(int key, t_camera *s);
-void			ft_camera_update_value(t_camera *s, int i);
+void			ft_camera_update_value(t_camera *c, int i);
 
 //ft_color.c
 int	create_trgb(int t, int r, int g, int b);

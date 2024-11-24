@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 08:06:15 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 16:12:56 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 # include <math.h>
 # include <stdio.h>
 # include "libft/libft.h"
-#include "mlx.h"
-
+# include "mlx.h"
 
 # define PI 3.14159265358979311600
 
@@ -38,11 +37,17 @@
 # define WIN_W (16 * FACT)
 # define WIN_H (9 * FACT)
 
-# define MAIN_W (WIN_W * 1)
+# define MAIN_W (WIN_W * 0.8)
 # define MAIN_H WIN_H
 
 # define CUBE_W (WIN_W * 0.05)
 # define CUBE_H (WIN_W * 0.05)
+
+# define MENU_W (WIN_W * 0.20)
+# define MENU_H WIN_H
+
+# define TEXT_FIELD_W  (MENU_W * 0.40)
+# define TEXT_FIELD_H  30
 
 # define C_WHITE 0x00FFFFFF
 # define C_RED	 0x55FF0000
@@ -54,7 +59,7 @@
 # define DEFAULT_ANGLE_X 35.0f
 # define DEFAULT_ANGLE_Y 45.0f
 # define DEFAULT_ANGLE_Z -60.0f
-# define DEFAULT_SCALE 500
+# define DEFAULT_SCALE 300
 # define DEFAULT_X_OFF (MAIN_W / 2)
 # define DEFAULT_Y_OFF (MAIN_H / 2)
 # define DEFAULT_Z_OFF 1.0f
@@ -171,7 +176,30 @@ typedef struct s_layout
 {
 	t_image	*main; // the main image where the fdf is rendered
 	t_image	*cube_view; // the cube image in top right
+	t_image *menu;
 }	t_layout;
+
+typedef struct s_text_field
+{
+	int	x;
+	int	y;
+	int w;
+	int h;
+	int focused;
+	char text[5];
+}	t_text_field;
+
+enum
+{
+	ANGLE_X,
+	ANGLE_Y,
+	ANGLE_Z,
+	SCALE,
+	X_OFF,
+	Y_OFF,
+	Z_OFF,
+	SETTING_COUNT,
+};
 
 typedef	struct s_setting
 {
@@ -182,6 +210,7 @@ typedef	struct s_setting
 	int		x_off;
 	int		y_off;
 	float	z_off;
+	t_text_field *field;
 }	t_setting;
 
 typedef struct s_vars
@@ -198,6 +227,12 @@ typedef struct s_vars
 
 //main.c
 int	ft_vars_free(t_vars *vars);
+
+//ft_text_component.c
+void	ft_label(t_vars *vars, int x, int y, char *text);
+char	*ft_text_field(t_vars *vars, int x, int y);
+void	ft_text_field_init(t_setting *s);
+float	ft_setting_get(t_setting *s, int i);
 
 //ft_color.c
 int	create_trgb(int t, int r, int g, int b);
@@ -228,7 +263,7 @@ void	ft_get_min_max_z(t_map *map, int *min, int *max);
 //ft_image.c
 void			*ft_image_free(void *mlx, t_image *img);
 t_image			*ft_image_init(void *mlx, int width, int height);
-void			ft_image_clear(t_image *img);
+void			ft_image_clear(t_image *img, unsigned int color);
 void			*ft_layout_free(void *mlx, t_layout *layout);
 t_layout		*ft_layout_init(void *mlx);
 

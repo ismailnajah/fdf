@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 17:42:10 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 16:09:07 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,7 @@ void	ft_view_change(int state, t_vars *vars)
 	}
 	ft_setting_animate(s, &view_s);
 	if (s->angleX == view_s.angleX && s->angleY == view_s.angleY
-		&& s->angleZ == view_s.angleZ && s->scale == view_s.scale
-		&& s->x_off == view_s.x_off && s->y_off == view_s.y_off
-		&& s->z_off == view_s.z_off)
+		&& s->angleZ == view_s.angleZ && s->x_off == view_s.x_off && s->y_off == view_s.y_off)
 		animation_state = STOP_ANIMATION;
 }
 

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:01:47 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 17:24:47 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 15:43:58 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_image	*ft_image_init(void *mlx, int width, int height)
 	return (img);
 }
 
-void	ft_image_clear(t_image *img)
+void	ft_image_clear(t_image *img, unsigned int color)
 {
 	int	i;
 	int	j;
@@ -51,7 +51,7 @@ void	ft_image_clear(t_image *img)
 		i = 0;
 		while (i < img->w)
 		{
-			ft_draw_pixel(img, i, j, C_BLACK);
+			ft_draw_pixel(img, i, j, color);
 			i++;
 		}
 		j++;
@@ -64,6 +64,7 @@ void	*ft_layout_free(void *mlx, t_layout *layout)
 		return (NULL);
 	ft_image_free(mlx, layout->main);
 	ft_image_free(mlx, layout->cube_view);
+	ft_image_free(mlx, layout->menu);
 	free(layout);
 	return (NULL);
 }
@@ -80,6 +81,10 @@ t_layout	*ft_layout_init(void *mlx)
 		return (ft_layout_free(mlx, layout));
 	layout->cube_view = ft_image_init(mlx, CUBE_W, CUBE_H);
 	if (!layout->cube_view)
+		return (ft_layout_free(mlx, layout));	
+	layout->menu = ft_image_init(mlx, MENU_W, MENU_H);
+	if (!layout->menu)
 		return (ft_layout_free(mlx, layout));
+	ft_image_clear(layout->menu, 0x00181818);
 	return (layout);
 }

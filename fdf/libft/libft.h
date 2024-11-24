@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:18:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/17 14:15:30 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 14:22:43 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@
 
 # define SUCCESS 1
 # define FAILURE 0
+
+# define TRUE 1
+# define FALSE 0
 
 # define ERROR_HAPPENED 1
 # define ERROR_GET 0

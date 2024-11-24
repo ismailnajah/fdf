@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:42:09 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/22 16:51:04 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 16:01:53 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_setting	*ft_setting_init(void)
 	s->x_off = DEFAULT_X_OFF;
 	s->y_off = DEFAULT_Y_OFF;
 	s->z_off = DEFAULT_Z_OFF;
+	ft_text_field_init(s);
 	return (s);
 }
 
@@ -81,8 +82,6 @@ void	ft_setting_animate(t_setting *s, t_setting *e)
 		s->x_off += (1 - 2 * (s->x_off > e->x_off)) * OFFSET_STEP;
 	if (s->y_off != e->y_off)
 		s->y_off += (1 - 2 * (s->y_off > e->y_off)) * OFFSET_STEP;
-	if (s->z_off != e->z_off)
-		s->z_off += (1 - 2 * (s->z_off > e->z_off)) * Z_STEP;
 }
 
 void	print_setting(t_setting *s)

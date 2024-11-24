@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/23 11:57:46 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 15:57:25 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ int	ft_on_keydown(int keycode, t_vars *vars)
 	if (keycode == KEY_LEFT || keycode == KEY_RIGHT)
 		vars->setting->x_off += (1 - 2 * (keycode == KEY_LEFT)) * OFFSET_STEP;
 	if (keycode == KEY_PLUS || keycode == KEY_MINUS)
+	{
 		ft_scale_z(vars->map, 1 + (1 - 2 * (keycode == KEY_PLUS)) * Z_STEP);
+		vars->setting->z_off -= (1 - 2 * (keycode == KEY_PLUS));
+	}
 	if (keycode == KEY_V)
 		print_setting(vars->setting);
 	if (keycode == KEY_SPACE)

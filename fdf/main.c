@@ -6,11 +6,22 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 15:49:41 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 18:45:21 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+int global_mode(int m)
+{
+	static int mode;
+
+	if (m == NORMAL)
+		mode = m;
+	if (m == INSERT)
+		mode = m;
+	return (mode);
+}
 
 int	ft_vars_free(t_vars *vars)
 {
@@ -98,36 +109,87 @@ void	ft_render_labels_and_values(t_vars *vars)
 
 	if (!labels_str)
 	{
-		labels_str = ft_split("X-axis anlge,Y-axis angle,Z-axis angle,Scale,X-offset,Y-offset,Z-offset", ',');
+		labels_str = ft_split("X-anlge [A/D],Y-angle [W/S],Z-angle [Q/E],Scale [Wheel],X-offset [LEFT/RIGHT],Y-offset [UP/DOWN],Z-offset [-/+]", ',');
 	}
 	s = vars->setting;
 	i = 0;
 	while (i < SETTING_COUNT)
 	{
 		ft_label(vars, 20, s->field[i].y + s->field[i].h / 2 + 5, labels_str[i]);
-		sprintf(buff, "%.2f", ft_setting_get(s, i));
-		ft_label(vars, MENU_W - s->field[i].w + 20, s->field[i].y + s->field[i].h / 2 + 5, buff);
+		sprintf(buff, "%d", (int)ft_setting_get(s, i));
+		if (s->field[i].focused)
+			ft_label(vars, s->field[i].x + 5, s->field[i].y + s->field[i].h / 2 + 5, s->field[i].text);
+		else
+			ft_label(vars, s->field[i].x + 5, s->field[i].y + s->field[i].h / 2 + 5, buff);
 		i++;
 	}
 }
 
+int	ft_setting_is_changed(t_setting *s, t_setting *old)
+{
+	int changed;
+
+	changed = 0;
+	if (s->angleX != old->angleX)
+	{
+		changed++;
+		old->angleX = s->angleX;
+	}	
+	if (s->angleY != old->angleY)
+	{
+		changed++;
+		old->angleY = s->angleY;
+	}
+	if (s->angleZ != old->angleZ)
+	{
+		changed++;
+		old->angleZ = s->angleZ;
+	}
+	if (s->scale != old->scale)
+	{
+		changed++;
+		old->scale = s->scale;
+	}
+	if (s->x_off != old->angleX)
+	{
+		changed++;
+		old->x_off = s->x_off;
+	}
+	if (s->y_off != old->y_off)
+	{
+		changed++;
+		old->y_off = s->y_off;
+	}
+	if (s->z_off != old->z_off)
+	{
+		changed++;
+		old->z_off = s->z_off;
+	}
+	return (changed > 0);
+}
+
 int	render_next_frame(t_vars *vars)
 {
-	ft_image_clear(vars->layout->main, C_BLACK);
-	ft_image_clear(vars->layout->cube_view, C_BLACK);
-	ft_view_change(STOP_ANIMATION, vars);
-	ft_draw_main_view(vars);
-	ft_draw_cube_view(vars->layout->cube_view, vars);
-	
+	static t_setting s;
+
+	if (ft_setting_is_changed(vars->setting, &s))
+	{
+		ft_image_clear(vars->layout->main, C_BLACK);
+		ft_image_clear(vars->layout->cube_view, C_BLACK);
+		ft_view_change(STOP_ANIMATION, vars);
+		ft_draw_main_view(vars);
+		ft_draw_cube_view(vars->layout->cube_view, vars);
+		mlx_put_image_to_window(vars->mlx, vars->win,
+			vars->layout->main->data, MENU_W, 0);
+		mlx_put_image_to_window(vars->mlx, vars->win,
+			vars->layout->cube_view->data, WIN_W - CUBE_W, 0);
+	}	
+	//menu
 	ft_render_text_fields_borders(vars);
 	mlx_put_image_to_window(vars->mlx, vars->win,
-		vars->layout->main->data, MENU_W, 0);
-	mlx_put_image_to_window(vars->mlx, vars->win,
-		vars->layout->cube_view->data, WIN_W - CUBE_W, 0);
-	mlx_put_image_to_window(vars->mlx, vars->win,
 		vars->layout->menu->data, 0, 0);
-
 	ft_render_labels_and_values(vars);
+
 	return (0);
 }
 

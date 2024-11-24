@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 15:57:25 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 18:32:47 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	ft_on_keydown(int keycode, t_vars *vars)
 		ft_vars_free(vars);
 		exit(0);
 	}
+	if (global_mode(GET_MODE) == INSERT)
+		return (ft_text_field_update_value(keycode, vars->setting, 0));
 	if (keycode == KEY_A || keycode == KEY_D)
 		ft_angle_change(&vars->setting->angleX, keycode == KEY_D);
 	if (keycode == KEY_S || keycode == KEY_W)
@@ -65,6 +67,7 @@ int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)
 	{
 		vars->mouse_x = x;
 		vars->mouse_y = y;
+		ft_text_field_focused(vars->setting->field, x, y);
 		ft_view_change(UPDATE_ANIMATION, vars);
 	}
 	return (0);

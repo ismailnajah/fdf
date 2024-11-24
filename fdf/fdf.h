@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 16:12:56 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 19:05:52 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,9 @@
 # define MENU_W (WIN_W * 0.20)
 # define MENU_H WIN_H
 
-# define TEXT_FIELD_W  (MENU_W * 0.40)
+# define TEXT_FIELD_W  (MENU_W * 0.20)
 # define TEXT_FIELD_H  30
+# define TEXT_FIELD_MAX_CHAR 6
 
 # define C_WHITE 0x00FFFFFF
 # define C_RED	 0x55FF0000
@@ -64,6 +65,14 @@
 # define DEFAULT_Y_OFF (MAIN_H / 2)
 # define DEFAULT_Z_OFF 1.0f
 
+//key events modes like vim
+enum
+{
+	NORMAL,
+	INSERT,
+	GET_MODE,
+};
+
 // animation state
 enum
 {
@@ -77,6 +86,8 @@ enum
 #ifdef __linux__
 enum 
 {
+	KEY_ENTER = 65293,
+	KEY_BACK_SPACE = 65288,
 	KEY_ESC = 65307,
 	KEY_UP = 65362,
 	KEY_DOWN = 65364,
@@ -186,7 +197,7 @@ typedef struct s_text_field
 	int w;
 	int h;
 	int focused;
-	char text[5];
+	char text[TEXT_FIELD_MAX_CHAR];
 }	t_text_field;
 
 enum
@@ -227,12 +238,15 @@ typedef struct s_vars
 
 //main.c
 int	ft_vars_free(t_vars *vars);
+int	global_mode(int m);
 
-//ft_text_component.c
+//ft_text_field.c
 void	ft_label(t_vars *vars, int x, int y, char *text);
-char	*ft_text_field(t_vars *vars, int x, int y);
 void	ft_text_field_init(t_setting *s);
 float	ft_setting_get(t_setting *s, int i);
+void	ft_text_field_focused(t_text_field *fields, int mouse_x, int mouse_y);
+int		ft_text_field_update_value(int key, t_setting *s, int reset_cursor);
+void	ft_setting_update_value(t_setting *s, int i);
 
 //ft_color.c
 int	create_trgb(int t, int r, int g, int b);

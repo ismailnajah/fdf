@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 11:12:57 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:39:53 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/24 23:51:11 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	ft_text_field_update_value(int key, t_camera *c)
 				global_mode(NORMAL);
 				cursor = text_field_cursor(0);
 				c->option[i] = atoi(c->field[i].text);
+				sprintf(c->field[i].text, "%d", (int)c->option[i]);
 			}
 			else if (cursor < TEXT_FIELD_MAX_CHAR)
 			{

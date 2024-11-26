@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 19:23:29 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/26 20:08:06 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,9 +242,10 @@ int	render_next_frame(t_vars *vars)
 {
 	static t_camera old;
 	static int	frames;
-	static unsigned int color;
+	static unsigned int lp_color;
+	static unsigned int hp_color;
 
-	if (ft_camera_changed(vars->camera, &old) || vars->lp_color != color)
+	if (ft_camera_changed(vars->camera, &old) || vars->lp_color != lp_color || vars->hp_color != hp_color)
 	{
 		ft_image_clear(vars->layout->main, C_BLACK);
 		ft_image_clear(vars->layout->cube_view, C_BLACK);
@@ -255,11 +256,12 @@ int	render_next_frame(t_vars *vars)
 			vars->layout->main->data, MENU_W, 0);
 		mlx_put_image_to_window(vars->mlx, vars->win,
 			vars->layout->cube_view->data, WIN_W - CUBE_W, 0);
-		color = vars->lp_color;
+		lp_color = vars->lp_color;
+		hp_color = vars->lp_color;
 	}
 	if (color_option_focused(0) == 1)
 		vars->lp_color = vars->color_picker->sat_cursor->color;
-	else if (color_option_focused(0) == 2)
+	else
 		vars->hp_color = vars->color_picker->sat_cursor->color;
 	ft_image_clear(vars->layout->menu, C_GREY);
 	if (vars->color_picker->visible)

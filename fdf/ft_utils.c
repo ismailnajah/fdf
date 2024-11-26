@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 21:40:59 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/26 17:29:30 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,23 @@ unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t)
 void	ft_scale_z(t_map *map, float z_off)
 {
 	int		i;
+	float min;
+	float max;
 
+	min = map->points[0].z;
+	max = map->points[0].z;
 	i = 0;
 	while (i < map->w * map->h && z_off != 0.0f)
 	{
 		map->points[i].z /= z_off;
+		if (max < map->points[i].z)
+			max = map->points[i].z;
+		if (min > map->points[i].z)
+			min = map->points[i].z;
 		i++;
 	}
+	map->minZ = min + 0.5f;
+	map->maxZ = max + 0.5f;
 }
 
 unsigned int	ft_hex_to_int(char *hex)
@@ -103,12 +113,14 @@ void	ft_normalize_z(t_map *map)
 	int i;
 	int min;
 	int max;
-
+	
 	ft_get_min_max_z(map, &min, &max);
 	i = 0;
 	while (i < map->h * map->w && max != min)
 	{
-		map->points[i].z = (((float)(map->points[i].z - min) / (float)(max - min)) - 0.5f) / 4;
+		map->points[i].z = ((float)(map->points[i].z - min) / (float)(max - min)) - 0.5f;
 		i++;
 	}
+	map->minZ = min / (float)(max - min);
+	map->maxZ = max / (float)(max - min);
 }

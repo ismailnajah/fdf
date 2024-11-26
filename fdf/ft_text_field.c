@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 11:12:57 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:51:11 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/26 18:55:44 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ t_text_field	*ft_text_field_init(t_camera *c)
 		field[i].w = TEXT_FIELD_W;
 		field[i].h = TEXT_FIELD_H;
 		field[i].x = MENU_W - TEXT_FIELD_W - 20;
-		field[i].y = 10 + (TEXT_FIELD_H + 10) * i;
+		field[i].y = 50 + (TEXT_FIELD_H + 10) * i;
 		field[i].focused = FALSE;
 		sprintf(field[i].text, "%d", (int)c->option[i]);
 		i++;

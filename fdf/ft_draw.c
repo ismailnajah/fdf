@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:12:32 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 20:06:52 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/26 17:28:11 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,26 +54,28 @@ void	ft_draw_line(t_image *img, t_point a, t_point b)
 void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j)
 {
 	t_point		a;
-	t_point		b;
 	t_point		proj;
+	t_point		*o;
 	t_map		*map;
 	t_camera	*c;
 
 	map = vars->map;
 	c = vars->camera;
+	o = &map->points[j * map->w + i];
+	o->color = ft_color_lerp(vars->lp_color, vars->hp_color, (((o->z + 0.5f) - map->minZ) / (map->maxZ - map->minZ)));
 	ft_rotate_xyz_point(map->points + (j * map->w + i), &proj, c);
 	ft_point_scale(&a, &proj, c);
 	if (i + 1 < map->w)
 	{
 		ft_rotate_xyz_point(map->points + (j * map->w + i + 1), &proj, c);
-		ft_point_scale(&b, &proj, c);
-		ft_draw_line(img, a, b);
+		ft_point_scale(&proj, &proj, c);
+		ft_draw_line(img, a, proj);
 	}
 	if (j + 1 < map->h)
 	{
 		ft_rotate_xyz_point(map->points + ((j + 1) * map->w + i), &proj, c);
-		ft_point_scale(&b, &proj, c);
-		ft_draw_line(img, a, b);
+		ft_point_scale(&proj, &proj, c);
+		ft_draw_line(img, a, proj);
 	}
 }
 

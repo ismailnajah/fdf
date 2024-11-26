@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 15:38:45 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/26 19:24:41 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,19 @@
 # define MENU_W (WIN_W * 0.20)
 # define MENU_H WIN_H
 
+# define COLOR_W 50
+# define LP_COLOR_X MENU_W / 2
+# define LP_COLOR_Y	MENU_H / 2 - COLOR_W
+# define HP_COLOR_Y MENU_H / 2 + 10 
+
 # define TEXT_FIELD_W  (MENU_W * 0.20)
 # define TEXT_FIELD_H  30
 # define TEXT_FIELD_MAX_CHAR 6
 
 # define C_WHITE 0x00FFFFFF
-# define C_RED	 0x55FF0000
-# define C_GREEN 0x5500FF00
-# define C_BLUE  0x550000FF
+# define C_RED	 0x00FF0000
+# define C_GREEN 0x0000FF00
+# define C_BLUE  0x000000FF
 # define C_GREY  0x00181818
 # define C_BLACK 0x00000000
 
@@ -182,6 +187,8 @@ typedef struct s_map
 {
 	int	w;
 	int	h;
+	float maxZ;
+	float minZ;
 	t_point	*points;
 }	t_map;
 
@@ -240,6 +247,7 @@ typedef	struct s_camera
 	float	option[OPTION_COUNT];
 }	t_camera;
 
+
 typedef struct s_vars
 {
 	void			*mlx;
@@ -249,14 +257,18 @@ typedef struct s_vars
 	t_camera		*camera;
 	t_color_picker	*color_picker;
 	t_point			*cube;
+	unsigned int	lp_color;
+	unsigned int	hp_color;
 	int				mouse_x;
 	int				mouse_y;
+	int				mouse_up;
 }	t_vars;
 
 //main.c
 int	ft_vars_free(t_vars *vars);
 int	global_mode(int m);
 int text_field_cursor(int m);
+int	color_option_focused(int m);
 
 //ft_text_field.c
 void			ft_label(t_vars *vars, int x, int y, char *text);
@@ -277,6 +289,7 @@ int	get_b(int trgb);
 t_color_picker	*ft_color_picker_init(int x, int y);
 void	ft_color_picker_draw(t_image *img, t_color_picker *cp);
 int		ft_color_picker_focused(t_color_picker *cp, int x, int y);
+void	ft_border_draw(t_image *img, t_point a, int w, int h);
 
 //ft_draw.c
 void	ft_draw_pixel(t_image *img, int x, int y, int color);

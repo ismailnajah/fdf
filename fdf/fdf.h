@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:40:25 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/26 15:38:45 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # define OFFSET_STEP 10
 # define Z_STEP 0.05f
 
-# define FACT 70
+# define FACT 120
 # define WIN_W (16 * FACT)
 # define WIN_H (9 * FACT)
 
@@ -202,6 +202,26 @@ typedef struct s_text_field
 	char text[TEXT_FIELD_MAX_CHAR];
 }	t_text_field;
 
+typedef struct s_rectangle
+{
+	int					x;
+	int					y;
+	int					w;
+	int					h;
+}	t_rectangle;
+
+typedef struct s_color_picker
+{
+	int				x;
+	int				y;
+	int				visible;
+	t_rectangle		*hue;
+	t_rectangle		*sat;
+	t_point			*hue_cursor;
+	t_point			*sat_cursor;
+
+}	t_color_picker;
+
 enum
 {
 	ANGLE_X,
@@ -222,14 +242,15 @@ typedef	struct s_camera
 
 typedef struct s_vars
 {
-	void		*mlx;
-	void		*win;
-	t_map		*map;
-	t_layout	*layout;
-	t_camera	*camera;
-	t_point		*cube;
-	int			mouse_x;
-	int			mouse_y;
+	void			*mlx;
+	void			*win;
+	t_map			*map;
+	t_layout		*layout;
+	t_camera		*camera;
+	t_color_picker	*color_picker;
+	t_point			*cube;
+	int				mouse_x;
+	int				mouse_y;
 }	t_vars;
 
 //main.c
@@ -252,6 +273,11 @@ int	get_r(int trgb);
 int	get_g(int trgb);
 int	get_b(int trgb);
 
+//ft_color_picker
+t_color_picker	*ft_color_picker_init(int x, int y);
+void	ft_color_picker_draw(t_image *img, t_color_picker *cp);
+int		ft_color_picker_focused(t_color_picker *cp, int x, int y);
+
 //ft_draw.c
 void	ft_draw_pixel(t_image *img, int x, int y, int color);
 void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j);
@@ -263,6 +289,8 @@ void	ft_draw_line(t_image *img, t_point a, t_point b);
 int	ft_on_keydown(int keycode, t_vars *vars);
 int	ft_on_destroy(t_vars *vars);
 int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars);
+int	ft_on_mouse_up(int button, int x, int y, t_vars *vars);
+int	ft_on_mouse_move(int x, int y, t_vars *vars);
 
 //ft_parse_map.c
 void	ft_map_debug(t_map *map);

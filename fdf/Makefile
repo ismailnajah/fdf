@@ -8,6 +8,7 @@ INCLUDE = .
 SRC =  main.c\
 	   ft_draw.c\
 	   ft_text_field.c\
+	   ft_color_picker.c\
 	   ft_handle_event.c\
 	   ft_parse_map.c\
 	   ft_math.c\

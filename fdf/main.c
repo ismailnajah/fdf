@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:35:41 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/26 15:18:27 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	ft_vars_init(t_vars *vars, char *map_path)
 	vars->win = mlx_new_window(vars->mlx, WIN_W, WIN_H, "Fil de Fer");
 	vars->layout = ft_layout_init(vars->mlx);
 	vars->camera = ft_camera_init();
+	vars->color_picker = ft_color_picker_init(10, MENU_H * 0.7);
 	vars->cube = (t_point *)malloc(8 * sizeof(t_point));
 	if (!vars->win || !vars->layout || !vars->camera || !vars->cube)
 		return (ft_vars_free(vars));
@@ -195,15 +196,18 @@ int	render_next_frame(t_vars *vars)
 			vars->layout->main->data, MENU_W, 0);
 		mlx_put_image_to_window(vars->mlx, vars->win,
 			vars->layout->cube_view->data, WIN_W - CUBE_W, 0);
-	}	
-	//menu
+	}
+
+//menu	
 	ft_image_clear(vars->layout->menu, C_GREY);
+	if (vars->color_picker->visible)
+		ft_color_picker_draw(vars->layout->menu, vars->color_picker);
 	ft_render_text_fields_borders(vars);
 	ft_render_text_fields_cursor(vars, frames);
 	mlx_put_image_to_window(vars->mlx, vars->win,
 		vars->layout->menu->data, 0, 0);
 	ft_render_labels_and_values(vars);
-	frames = (frames + 1) % 100000;
+	frames = (frames + 1) % 1000;
 	return (0);
 }
 
@@ -216,6 +220,8 @@ int	main(int ac, char **av)
 	if (ft_vars_init(&vars, av[ac - 1]) == FAILURE)
 		return (2);
 	mlx_hook(vars.win, ON_KEYDOWN, 1L << 0, ft_on_keydown, &vars);
+	mlx_hook(vars.win, ON_MOUSEUP, 1L << 3, ft_on_mouse_up, &vars);
+	mlx_hook(vars.win, ON_MOUSEMOVE, 1L << 6, ft_on_mouse_move, &vars);
 	mlx_mouse_hook(vars.win, ft_on_mouse_event, &vars);
 	mlx_hook(vars.win, ON_DESTROY, 0, ft_on_destroy, &vars);
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);

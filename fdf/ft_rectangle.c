@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 15:23:40 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 15:36:00 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:12:47 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,3 @@ t_rectangle	*ft_rectangle_init(int x, int y, int w, int h)
 	rec->h = h;
 	return (rec);
 }
-
-

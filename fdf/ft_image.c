@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:01:47 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 23:00:50 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:11:58 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_layout	*ft_layout_init(void *mlx)
 		return (ft_layout_free(mlx, layout));
 	layout->cube_view = ft_image_init(mlx, CUBE_W, CUBE_H);
 	if (!layout->cube_view)
-		return (ft_layout_free(mlx, layout));	
+		return (ft_layout_free(mlx, layout));
 	layout->menu = ft_image_init(mlx, MENU_W, MENU_H);
 	if (!layout->menu)
 		return (ft_layout_free(mlx, layout));

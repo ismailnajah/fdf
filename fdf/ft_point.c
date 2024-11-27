@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:54 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 10:37:56 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:12:22 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_point_copy(t_point	*dst, t_point *src)
 	dst->color = src->color;
 }
 
-t_point *ft_point_init(float x, float y, float z, unsigned int color)
+t_point	*ft_point_init(float x, float y, float z, unsigned int color)
 {
 	t_point	*p;
 

@@ -6,11 +6,20 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 15:29:06 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 17:06:50 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:28:57 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+unsigned int	ft_color_parse(char *color_str)
+{
+	if (!color_str)
+		return (C_WHITE);
+	if (color_str[0] != '0' || (color_str[1] != 'x' && color_str[1] != 'X'))
+		return (C_WHITE);
+	return (ft_hex_to_int(color_str + 2));
+}
 
 void	ft_color_option_focused(t_vars *vars, int x, int y)
 {

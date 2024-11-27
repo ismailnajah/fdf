@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 17:07:37 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 19:15:00 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,13 +224,13 @@ typedef	struct s_camera
 	float	option[OPTION_COUNT];
 }	t_camera;
 
-typedef struct s_color_opt
+typedef struct s_color_option
 {
 	t_point			*hue;
 	t_point			*sat;
 	int				focused;
 	unsigned int	color;
-}	t_color_opt;
+}	t_color_option;
 
 typedef struct s_vars
 {
@@ -241,8 +241,8 @@ typedef struct s_vars
 	t_point			*cube;
 	t_camera		*camera;
 	t_color_picker	*color_picker;
-	t_color_opt		*low_p;
-	t_color_opt		*high_p;
+	t_color_option	*low_p;
+	t_color_option	*high_p;
 	char			**labels;
 	int				mouse_x;
 	int				mouse_y;
@@ -250,23 +250,26 @@ typedef struct s_vars
 	int				tf_cursor;
 }	t_vars;
 
-//main.c
+//ft_vars.c
+int	ft_is_vars_changed(t_vars *vars);
 int	ft_vars_free(t_vars *vars);
-int	global_mode(int m);
-int text_field_cursor(int m);
-void	*ft_color_opt_free(t_color_opt *opt);
+int	ft_vars_init(t_vars *vars, char *map_path);
 
 //ft_label.c
+void	ft_label_draw(t_vars *vars);
 void	ft_label(t_vars *vars, int x, int y, char *text);
 char	**ft_labels_init(void);
 
 //ft_text_field.c
-void			ft_label(t_vars *vars, int x, int y, char *text);
 t_text_field	*ft_text_field_init(t_camera *c);
 void			ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y);
 int				ft_text_field_event(int key, t_vars *vars);
 void			ft_camera_update_value(t_camera *c, int i);
 int				ft_text_field_sync_value(t_camera *c);
+
+//ft_text_field_draw.c
+void	ft_text_field_draw(t_vars *vars);
+
 
 //ft_color.c
 int	create_trgb(int t, int r, int g, int b);
@@ -281,12 +284,17 @@ void	ft_color_picker_draw(t_image *img, t_color_picker *cp);
 void	ft_border_draw(t_image *img, t_point a, int w, int h);
 void	*ft_color_picker_free(t_color_picker *cp);
 
+//ft_color_option.c
+void	*ft_color_option_free(t_color_option *opt);
+t_color_option	*ft_color_option_init(t_color_picker *cp);
+void	ft_color_option_draw(t_image *img, t_point p, int w);
+
 //ft_color_utils.c
 int				ft_color_picker_focused(t_color_picker *cp, int x, int y);
 unsigned int	next_color(unsigned int color);
 unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
 void			ft_color_option_focused(t_vars *vars, int x, int y);
-
+unsigned int	ft_color_parse(char *color_str);
 
 //ft_draw.c
 void	ft_draw_pixel(t_image *img, int x, int y, int color);
@@ -294,13 +302,17 @@ void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j);
 void	ft_draw_main_view(t_vars *vars);
 void	ft_draw_line(t_image *img, t_point a, t_point b);
 
-
 //ft_handle_event.c
 int	ft_on_keydown(int keycode, t_vars *vars);
 int	ft_on_destroy(t_vars *vars);
 int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars);
 int	ft_on_mouse_up(int button, int x, int y, t_vars *vars);
 int	ft_on_mouse_move(int x, int y, t_vars *vars);
+
+//ft_map.c
+t_map	*ft_map_init(int w, int h);
+void	*ft_map_free(t_map *map);
+void	ft_get_min_max_z(t_map *map, int *min, int *max);
 
 //ft_parse_map.c
 void	ft_map_debug(t_map *map);

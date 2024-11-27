@@ -6,13 +6,17 @@ CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address -g3
 INCLUDE = .
 
 SRC =  main.c\
+	   ft_vars.c\
 	   ft_handle_event.c\
 	   ft_draw.c\
 	   ft_text_field.c\
+	   ft_text_field_draw.c\
 	   ft_color_picker.c\
+	   ft_color_option.c\
 	   ft_color_utils.c\
 	   ft_color.c\
 	   ft_label.c\
+	   ft_map.c\
 	   ft_parse_map.c\
 	   ft_math.c\
 	   ft_cube.c\

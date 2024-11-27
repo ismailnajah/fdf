@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:08:34 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 14:09:46 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 18:37:06 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,35 @@
 void	ft_label(t_vars *vars, int x, int y, char *text)
 {
 	mlx_string_put(vars->mlx, vars->win, x, y, C_WHITE, text);
+}
+
+void	ft_label_draw(t_vars *vars)
+{
+	static char	buff[14];
+	t_camera	*c;
+	int			i;
+	int			label_y;
+
+	c = vars->camera;
+	i = 0;
+	while (i < OPTION_COUNT)
+	{
+		label_y = c->field[i].y + c->field[i].h / 2 + 5;
+		ft_label(vars, 20, label_y, vars->labels[i]);
+		sprintf(buff, "%d", (int)c->option[i]);
+		if (c->field[i].focused)
+			ft_label(vars, c->field[i].x + 5, label_y, c->field[i].text);
+		else
+			ft_label(vars, c->field[i].x + 5, label_y, buff);
+		i++;
+	}
+	ft_label(vars, MENU_W * 0.2, MENU_H / 2 - 20, "Low  Point Color");
+	ft_label(vars, MENU_W * 0.2, MENU_H / 2 + 40, "High Point Color");
+	sprintf(buff, "0x");
+	sprintf(buff + 2, "%.6X", vars->low_p->color);
+	ft_label(vars, MENU_W * 0.7, MENU_H / 2 - 20, buff);
+	sprintf(buff + 2, "%.6X", vars->high_p->color);
+	ft_label(vars, MENU_W * 0.7, MENU_H / 2 + 40, buff);
 }
 
 char	**ft_labels_init(void)

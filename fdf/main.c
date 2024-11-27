@@ -6,224 +6,16 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 14:09:30 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 19:10:11 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	ft_vars_free(t_vars *vars)
-{
-	if (vars->cube)
-		free(vars->cube);
-	if (vars->camera)
-		ft_camera_free(vars->camera);
-	if (vars->layout)
-		ft_layout_free(vars->mlx, vars->layout);
-	if (vars->map)
-		ft_map_free(vars->map);
-	if (vars->win)
-		mlx_destroy_window(vars->mlx, vars->win);
-	if (vars->mlx)
-		mlx_destroy_display(vars->mlx);
-	ft_color_picker_free(vars->color_picker);
-	free(vars->labels);
-	ft_color_opt_free(vars->low_p);
-	ft_color_opt_free(vars->high_p);
-	free(vars->mlx);
-	return (0);
-}
-
-void	*ft_color_opt_free(t_color_opt *opt)
-{
-	if (!opt)
-		return (NULL);
-	free(opt->hue);
-	free(opt->sat);
-	free(opt);
-	return (NULL);
-}
-
-t_color_opt *ft_color_opt_init(t_color_picker *cp)
-{
-	t_color_opt	*opt;
-
-	if (!cp)
-		return (NULL);
-	opt = (t_color_opt *)malloc(sizeof(t_color_opt));
-	if (!opt)
-		return (NULL);
-	opt->hue = ft_point_init(0, 0, 0, C_WHITE);
-	opt->sat = ft_point_init(0, 0, 0, C_WHITE);
-	opt->focused = FALSE;
-	opt->color = cp->sat_cursor->color;
-	if (!opt->hue || !opt->sat)
-		return (ft_color_opt_free(opt));
-	ft_point_copy(opt->hue, cp->hue_cursor);
-	ft_point_copy(opt->sat, cp->sat_cursor);
-	return (opt);
-}
-
-
-int	ft_vars_init(t_vars *vars, char *map_path)
-{
-	vars->map = ft_get_map_from_file(map_path);
-	if (!vars->map)
-		return (FAILURE);
-	vars->mlx = mlx_init();
-	if (!vars->mlx)
-		return (ft_vars_free(vars), FAILURE);
-	vars->win = mlx_new_window(vars->mlx, WIN_W, WIN_H, "Fil de Fer");
-	vars->layout = ft_layout_init(vars->mlx);
-	vars->camera = ft_camera_init();
-	vars->color_picker = ft_color_picker_init(10, MENU_H * 0.7);
-	vars->cube = (t_point *)malloc(8 * sizeof(t_point));
-	vars->low_p = ft_color_opt_init(vars->color_picker);
-	vars->high_p = ft_color_opt_init(vars->color_picker);
-	vars->labels = ft_labels_init();
-	if (!vars->win || !vars->layout || !vars->camera || !vars->cube
-		|| !vars->low_p || !vars->high_p || !vars->labels)
-		return (ft_vars_free(vars), FAILURE);
-	return (SUCCESS);
-}
-
-void	ft_text_field_draw_border(t_image *img, t_text_field *f)
-{
-	t_point a;
-	t_point	b;
-	unsigned int color;
-
-	color = C_GREEN * f->focused + C_WHITE;
-	a.x = f->x;
-	a.y = f->y;
-	a.color = color;
-	b.x = f->x + f->w;
-	b.y = f->y;
-	b.color = color;
-	ft_draw_line(img, a, b);
-	a.x = f->x + f->w;
-	a.y = f->y + f->h;
-	ft_draw_line(img, b, a);
-	b.x = f->x;
-	b.y = f->y + f->h;
-	ft_draw_line(img, a, b);
-	a.x = f->x;
-	a.y = f->y;
-	ft_draw_line(img, a, b);
-}
-
-void	ft_text_field_draw_cursor(t_vars *vars, int frames)
-{
-	static int off;
-	int i;
-	t_point cursor_s;
-	t_point cursor_e;
-
-	i = 0;
-	cursor_s.color = C_WHITE;
-	cursor_e.color = C_WHITE;
-	cursor_s.x = vars->camera->field[i].x + 5 + vars->tf_cursor * 6;
-	cursor_e.x = cursor_s.x;
-	while (i < OPTION_COUNT)
-	{
-		if (vars->camera->field[i].focused)
-		{
-			cursor_s.y = vars->camera->field[i].y + 5;
-			cursor_e.y = cursor_s.y + vars->camera->field[i].h - 10;
-			break;
-		}
-		i++;
-	}
-	off = !off * (frames % 200 == 0) + off * (frames % 200 != 0);
-	if (i < OPTION_COUNT && !off)
-		ft_draw_line(vars->layout->menu, cursor_s, cursor_e);
-}
-
-void	ft_text_field_draw(t_vars *vars)
-{
-	static int frames;
-	t_text_field	*fields;
-	int	i;
-
-	fields = vars->camera->field;
-	i = 0;
-	while (i < OPTION_COUNT)
-	{
-		ft_text_field_draw_border(vars->layout->menu, &fields[i]);
-		i++;
-	}
-	ft_text_field_draw_cursor(vars, frames);
-	frames = (frames + 1) % 1000;
-}
-
-void	ft_render_labels_and_values(t_vars *vars)
-{
-	static char buff[14];
-	t_camera *c;
-	int i;
-
-	c = vars->camera;
-	i = 0;
-	while (i < OPTION_COUNT)
-	{
-		ft_label(vars, 20, c->field[i].y + c->field[i].h / 2 + 5, vars->labels[i]);
-		sprintf(buff, "%d", (int)c->option[i]);
-		if (c->field[i].focused)
-			ft_label(vars, c->field[i].x + 5, c->field[i].y + c->field[i].h / 2 + 5, c->field[i].text);
-		else
-			ft_label(vars, c->field[i].x + 5, c->field[i].y + c->field[i].h / 2 + 5, buff);
-		i++;
-	}
-	ft_label(vars, MENU_W * 0.2, MENU_H / 2 - 20, "Low  Point Color");
-	ft_label(vars, MENU_W * 0.2, MENU_H / 2 + 40, "High Point Color");
-	sprintf(buff, "0x");
-	sprintf(buff + 2, "%.6X", vars->low_p->color);
-	ft_label(vars, MENU_W * 0.7, MENU_H / 2 - 20, buff);
-	sprintf(buff + 2, "%.6X", vars->high_p->color);
-	ft_label(vars, MENU_W * 0.7, MENU_H / 2 + 40, buff);
-} 
-
-int	ft_is_camera_changed(t_camera *c, t_camera *old)
-{
-	int changed;
-	int	i;
-
-	i = 0;
-	changed = 0;
-	while (i < OPTION_COUNT)
-	{
-		if (c->option[i] != old->option[i])
-		{
-			old->option[i] = c->option[i];
-			changed++;
-		}
-		i++;
-	}
-	return (changed > 0);
-}
-
-void	ft_render_color_opt(t_image *img, t_point p, int w)
-{
-	int x;
-	int y;
-
-	y = p.y + 1;
-	while (y < p.y + w)
-	{
-		x = p.x + 1;
-		while (x < p.x + w)
-		{
-			ft_draw_pixel(img, x, y, p.color);
-			x++;
-		}
-		y++;
-	}
-}
-
 void	ft_render_color_options(t_vars *vars)
 {
-	t_point p;
-	
+	t_point	p;
+
 	p.x = LP_COLOR_X;
 	p.y = LP_COLOR_Y;
 	p.color = C_WHITE;
@@ -231,51 +23,18 @@ void	ft_render_color_options(t_vars *vars)
 		p.color = C_GREEN;
 	ft_border_draw(vars->layout->menu, p, COLOR_W, COLOR_W);
 	p.color = vars->low_p->color;
-	ft_render_color_opt(vars->layout->menu, p, COLOR_W);
-	p.y = HP_COLOR_Y;;
+	ft_color_option_draw(vars->layout->menu, p, COLOR_W);
+	p.y = HP_COLOR_Y;
 	p.color = C_WHITE;
 	if (vars->high_p->focused)
 		p.color = C_GREEN;
 	ft_border_draw(vars->layout->menu, p, COLOR_W, COLOR_W);
 	p.color = vars->high_p->color;
-	ft_render_color_opt(vars->layout->menu, p, COLOR_W);
+	ft_color_option_draw(vars->layout->menu, p, COLOR_W);
 }
 
-int	ft_is_vars_changed(t_vars	*vars)
+void	render_next_frame_menu(t_vars *vars)
 {
-	static unsigned int	lp_color;
-	static unsigned int	hp_color;
-	static t_camera 	old;
-	int					changed;
-
-	changed = 0;
-	if (vars->low_p->color != lp_color)
-	{
-		lp_color = vars->low_p->color;
-		changed++;
-	}
-	if (vars->high_p->color != hp_color)
-	{
-		hp_color = vars->high_p->color;
-		changed++;
-	}
-	return (changed || ft_is_camera_changed(vars->camera, &old));
-}
-
-int	render_next_frame(t_vars *vars)
-{
-	if (ft_is_vars_changed(vars))
-	{
-		ft_image_clear(vars->layout->main, C_BLACK);
-		ft_image_clear(vars->layout->cube_view, C_BLACK);
-		ft_view_change(STOP_ANIMATION, vars);
-		ft_draw_main_view(vars);
-		ft_draw_cube_view(vars->layout->cube_view, vars);
-		mlx_put_image_to_window(vars->mlx, vars->win,
-			vars->layout->main->data, MENU_W, 0);
-		mlx_put_image_to_window(vars->mlx, vars->win,
-			vars->layout->cube_view->data, WIN_W - CUBE_W, 0);
-	}
 	if (vars->low_p->focused)
 	{
 		ft_point_copy(vars->low_p->hue, vars->color_picker->hue_cursor);
@@ -294,7 +53,24 @@ int	render_next_frame(t_vars *vars)
 	ft_text_field_draw(vars);
 	mlx_put_image_to_window(vars->mlx, vars->win,
 		vars->layout->menu->data, 0, 0);
-	ft_render_labels_and_values(vars);
+	ft_label_draw(vars);
+}
+
+int	render_next_frame(t_vars *vars)
+{
+	if (ft_is_vars_changed(vars))
+	{
+		ft_image_clear(vars->layout->main, C_BLACK);
+		ft_image_clear(vars->layout->cube_view, C_BLACK);
+		ft_view_change(STOP_ANIMATION, vars);
+		ft_draw_main_view(vars);
+		ft_draw_cube_view(vars->layout->cube_view, vars);
+		mlx_put_image_to_window(vars->mlx, vars->win,
+			vars->layout->main->data, MENU_W, 0);
+		mlx_put_image_to_window(vars->mlx, vars->win,
+			vars->layout->cube_view->data, WIN_W - CUBE_W, 0);
+	}
+	render_next_frame_menu(vars);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 17:38:16 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 20:34:14 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	ft_get_map_resolution(char *path, int *w, int *h)
 			if (*w > 0)
 				*h += 1;
 			if (byte_read == 0)
-				break ;
+				break;
 			if (old_w != -1 && old_w != *w)
 				return (close(fd), FAILURE);
 			old_w = *w;
@@ -69,7 +69,7 @@ void	*ft_words_free(char **words)
 	return (NULL);
 }
 
-void	ft_point_parse(t_map *map, int i, int j, char *point_str)
+void	ft_parse_point(t_map *map, int i, int j, char *point_str)
 {
 	char	**words;
 	int		w;
@@ -87,30 +87,40 @@ void	ft_point_parse(t_map *map, int i, int j, char *point_str)
 	words = ft_words_free(words);
 }
 
-int	ft_map_parse(int fd, t_map *map)
+int	ft_parse_line(t_map *map, char *line, int j)
 {
-	int		i;
-	int		j;
-	char	*line;
 	char	**words;
+	int		i;
+
+	words = ft_split(line, ' ');
+	if (!words)
+		return (ft_printf("[ ERROR ] unable to parse the map."), FAILURE);
+	i = 0;
+	while (words[i] && words[i][0] != '\n')
+	{
+		ft_parse_point(map, i, j, words[i]);
+		i++;
+	}
+	ft_words_free(words);
+	return (SUCCESS);
+}
+
+int	ft_parse_map(int fd, t_map *map)
+{
+	char	*line;
+	int		j;
+	int		ret;
 
 	line = get_next_line(fd);
 	if (!line)
-		return (ft_printf("[ ERROR ] unable to parse the map."), FAILURE);
+		return (ft_printf("[ ERROR ] unable to parse the map.\n"), FAILURE);
 	j = 0;
 	while (line)
 	{
-		words = ft_split(line, ' ');
+		ret = ft_parse_line(map, line, j);
 		free(line);
-		if (!words)
-			return (ft_printf("[ ERROR ] unable to parse the map."), FAILURE);
-		i = 0;
-		while (words[i] && words[i][0] != '\n')
-		{
-			ft_point_parse(map, i, j, words[i]);
-			i++;
-		}
-		words = ft_words_free(words);
+		if (!ret)
+			return (FAILURE);
 		line = get_next_line(fd);
 		j++;
 	}
@@ -136,7 +146,8 @@ t_map	*ft_get_map_from_file(char *path)
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
 		return (ft_printf("[ ERROR ]\n"), ft_map_free(map));
-	ft_map_parse(fd, map);
+	if (!ft_parse_map(fd, map))
+		return (ft_map_free(map), NULL);
 	ft_normalize_z(map);
 	close(fd);
 	ft_printf("[ INFO  ] Loading done.\n");

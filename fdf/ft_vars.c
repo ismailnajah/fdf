@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:30:04 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 19:11:24 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 19:54:52 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,3 @@ int	ft_vars_init(t_vars *vars, char *map_path)
 		return (ft_vars_free(vars), FAILURE);
 	return (SUCCESS);
 }
-
-

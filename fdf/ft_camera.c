@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:42:09 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 21:46:40 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 16:13:26 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_camera	ft_camera_default(void)
 t_camera	ft_camera_of_view(int view, t_camera *old)
 {
 	static t_camera	c;
-	int	i;
+	int				i;
 
 	i = 0;
 	while (old && i < OPTION_COUNT)
@@ -81,15 +81,19 @@ t_camera	ft_camera_of_view(int view, t_camera *old)
 
 void	ft_camera_animate(t_camera *s, t_camera *e)
 {
-	int i;
+	int		i;
+	float	*s_opt;
+	float	*e_opt;
 
+	s_opt = s->option;
+	e_opt = e->option;
 	i = 0;
-	while (i < OPTION_COUNT - 2) // ignore scale and z_offset
+	while (i < OPTION_COUNT - 2)
 	{
-		if (s->option[i] != e->option[i] && i <= ANGLE_Z)
-			ft_angle_change(&s->option[i], s->option[i] > e->option[i]);
-		else if (s->option[i] != e->option[i])
-			s->option[i] += (1 - 2 * (s->option[i] > e->option[i])) * OFFSET_STEP;
+		if (s_opt[i] != e_opt[i] && i <= ANGLE_Z)
+			ft_angle_change(&s_opt[i], s_opt[i] > e_opt[i]);
+		else if (s_opt[i] != e_opt[i])
+			s_opt[i] += (1 - 2 * (s_opt[i] > e_opt[i])) * OFFSET_STEP;
 		i++;
 	}
 }

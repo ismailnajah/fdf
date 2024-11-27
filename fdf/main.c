@@ -6,32 +6,11 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 12:44:53 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 13:59:55 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-int global_mode(int m)
-{
-	static int mode;
-
-	if (m == NORMAL)
-		mode = m;
-	if (m == INSERT)
-		mode = m;
-	return (mode);
-}
-
-int text_field_cursor(int m)
-{
-	static int cursor;
-
-	if (m == GET_CURSOR_POS)
-		return (cursor);
-	cursor = m;
-	return (m);
-}
 
 int	ft_vars_free(t_vars *vars)
 {
@@ -125,7 +104,7 @@ int	ft_vars_init(t_vars *vars, char *map_path)
 	return (SUCCESS);
 }
 
-void	ft_text_field_border_draw(t_image *img, t_text_field *f)
+void	ft_text_field_draw_border(t_image *img, t_text_field *f)
 {
 	t_point a;
 	t_point	b;
@@ -150,19 +129,17 @@ void	ft_text_field_border_draw(t_image *img, t_text_field *f)
 	ft_draw_line(img, a, b);
 }
 
-void	ft_render_text_fields_cursor(t_vars *vars, int frames)
+void	ft_text_field_draw_cursor(t_vars *vars, int frames)
 {
 	static int off;
 	int i;
-	int cursor_pos;
 	t_point cursor_s;
 	t_point cursor_e;
 
 	i = 0;
-	cursor_pos = text_field_cursor(GET_CURSOR_POS);
 	cursor_s.color = C_WHITE;
 	cursor_e.color = C_WHITE;
-	cursor_s.x = vars->camera->field[i].x + 5 + cursor_pos * 6;
+	cursor_s.x = vars->camera->field[i].x + 5 + vars->tf_cursor * 6;
 	cursor_e.x = cursor_s.x;
 	while (i < OPTION_COUNT)
 	{
@@ -179,8 +156,9 @@ void	ft_render_text_fields_cursor(t_vars *vars, int frames)
 		ft_draw_line(vars->layout->menu, cursor_s, cursor_e);
 }
 
-void	ft_render_text_fields_borders(t_vars *vars)
+void	ft_text_field_draw(t_vars *vars)
 {
+	static int frames;
 	t_text_field	*fields;
 	int	i;
 
@@ -188,9 +166,11 @@ void	ft_render_text_fields_borders(t_vars *vars)
 	i = 0;
 	while (i < OPTION_COUNT)
 	{
-		ft_text_field_border_draw(vars->layout->menu, &fields[i]);
+		ft_text_field_draw_border(vars->layout->menu, &fields[i]);
 		i++;
 	}
+	ft_text_field_draw_cursor(vars, frames);
+	frames = (frames + 1) % 1000;
 }
 
 void	ft_render_labels_and_values(t_vars *vars)
@@ -301,8 +281,6 @@ int	ft_is_vars_changed(t_vars	*vars)
 
 int	render_next_frame(t_vars *vars)
 {
-	static int	frames;
-
 	if (ft_is_vars_changed(vars))
 	{
 		ft_image_clear(vars->layout->main, C_BLACK);
@@ -330,12 +308,10 @@ int	render_next_frame(t_vars *vars)
 	ft_image_clear(vars->layout->menu, C_GREY);
 	ft_color_picker_draw(vars->layout->menu, vars->color_picker);
 	ft_render_color_options(vars);
-	ft_render_text_fields_borders(vars);
-	ft_render_text_fields_cursor(vars, frames);
+	ft_text_field_draw(vars);
 	mlx_put_image_to_window(vars->mlx, vars->win,
 		vars->layout->menu->data, 0, 0);
 	ft_render_labels_and_values(vars);
-	frames = (frames + 1) % 1000;
 	return (0);
 }
 

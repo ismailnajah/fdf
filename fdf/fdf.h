@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 13:20:13 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 13:49:20 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,6 +247,7 @@ typedef struct s_vars
 	int				mouse_x;
 	int				mouse_y;
 	int				global_mode;
+	int				tf_cursor;
 }	t_vars;
 
 //main.c
@@ -259,7 +260,7 @@ void	*ft_color_opt_free(t_color_opt *opt);
 void			ft_label(t_vars *vars, int x, int y, char *text);
 t_text_field	*ft_text_field_init(t_camera *c);
 void			ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y);
-int				ft_text_field_update_value(int key, t_vars *vars);
+int				ft_text_field_event(int key, t_vars *vars);
 void			ft_camera_update_value(t_camera *c, int i);
 int				ft_text_field_sync_value(t_camera *c);
 

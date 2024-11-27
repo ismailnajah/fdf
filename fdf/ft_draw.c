@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:12:32 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 11:05:33 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 16:45:16 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,21 @@ void	ft_draw_line(t_image *img, t_point a, t_point b)
 	}
 }
 
+unsigned int	ft_get_point_color(t_vars *vars, float z)
+{
+	unsigned int	lp_color;
+	unsigned int	hp_color;
+	float			min;
+	float			max;
+
+	lp_color = vars->low_p->color;
+	hp_color = vars->high_p->color;
+	min = vars->map->minZ;
+	max = vars->map->maxZ;
+	return (ft_color_lerp(lp_color, hp_color,
+			((z + 0.5f) - min) / (max - min)));
+}
+
 void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j)
 {
 	t_point		a;
@@ -63,7 +78,7 @@ void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j)
 	c = vars->camera;
 	o = &map->points[j * map->w + i];
 	if (vars->low_p->focused || vars->high_p->focused)
-		o->color = ft_color_lerp(vars->low_p->color, vars->high_p->color, (((o->z + 0.5f) - map->minZ) / (map->maxZ - map->minZ)));
+		o->color = ft_get_point_color(vars, o->z);
 	ft_rotate_xyz_point(map->points + (j * map->w + i), &proj, c);
 	ft_point_scale(&a, &proj, c);
 	if (i + 1 < map->w)
@@ -84,7 +99,7 @@ void	ft_draw_main_view(t_vars *vars)
 {
 	int	i;
 	int	j;
-	
+
 	j = 0;
 	while (j < vars->map->h)
 	{

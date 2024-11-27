@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 15:41:21 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:07:37 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,14 +278,14 @@ int	get_b(int trgb);
 //ft_color_picker
 t_color_picker	*ft_color_picker_init(int x, int y);
 void	ft_color_picker_draw(t_image *img, t_color_picker *cp);
-int		ft_color_picker_focused(t_color_picker *cp, int x, int y);
 void	ft_border_draw(t_image *img, t_point a, int w, int h);
 void	*ft_color_picker_free(t_color_picker *cp);
 
 //ft_color_utils.c
-int	ft_color_picker_focused(t_color_picker *cp, int x, int y);
+int				ft_color_picker_focused(t_color_picker *cp, int x, int y);
 unsigned int	next_color(unsigned int color);
 unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
+void			ft_color_option_focused(t_vars *vars, int x, int y);
 
 
 //ft_draw.c

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 15:30:06 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:09:46 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_camera_compare(t_camera *a, t_camera *b)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < OPTION_COUNT - 2)
@@ -55,8 +55,8 @@ void	ft_view_change(int state, t_vars *vars)
 void	ft_scale_z(t_map *map, float z_off)
 {
 	int		i;
-	float min;
-	float max;
+	float	min;
+	float	max;
 
 	min = map->points[0].z;
 	max = map->points[0].z;
@@ -79,7 +79,7 @@ unsigned int	ft_hex_to_int(char *hex)
 	unsigned int	color;
 	int				i;
 	char			c;
-   
+
 	color = 0;
 	i = 0;
 	while (hex[i] && hex[i] != '\n')
@@ -98,15 +98,15 @@ unsigned int	ft_hex_to_int(char *hex)
 
 void	ft_normalize_z(t_map *map)
 {
-	int i;
-	int min;
-	int max;
-	
+	int	i;
+	int	min;
+	int	max;
+
 	ft_get_min_max_z(map, &min, &max);
 	i = 0;
 	while (i < map->h * map->w && max != min)
 	{
-		map->points[i].z = ((float)(map->points[i].z - min) / (float)(max - min)) - 0.5f;
+		map->points[i].z = (map->points[i].z - min) / (max - min) - 0.5f;
 		i++;
 	}
 	map->minZ = min / (float)(max - min);

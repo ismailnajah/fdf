@@ -6,11 +6,32 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 15:29:06 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 15:42:50 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:06:50 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+void	ft_color_option_focused(t_vars *vars, int x, int y)
+{
+	vars->low_p->focused = FALSE;
+	vars->high_p->focused = FALSE;
+	if (LP_COLOR_X < x && x < LP_COLOR_X + COLOR_W)
+	{
+		if (LP_COLOR_Y < y && y < LP_COLOR_Y + COLOR_W)
+		{
+			vars->low_p->focused = TRUE;
+			ft_point_copy(vars->color_picker->sat_cursor, vars->low_p->sat);
+			ft_point_copy(vars->color_picker->hue_cursor, vars->low_p->hue);
+		}
+		else if (HP_COLOR_Y < y && y < HP_COLOR_Y + COLOR_W)
+		{
+			vars->high_p->focused = TRUE;
+			ft_point_copy(vars->color_picker->sat_cursor, vars->high_p->sat);
+			ft_point_copy(vars->color_picker->hue_cursor, vars->high_p->hue);
+		}
+	}
+}
 
 int	ft_color_picker_focused(t_color_picker *cp, int x, int y)
 {

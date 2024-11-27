@@ -6,29 +6,19 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:40:17 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 17:31:52 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 10:03:30 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-t_point *ft_point_init(float x, float y, float z, unsigned int color)
-{
-	t_point	*p;
-
-	p = (t_point *)malloc(sizeof(t_point));
-	p->x = x;
-	p->y = y;
-	p->z = z;
-	p->color = color;
-	return (p);
-}
 
 t_rectangle *ft_rectangle_init(int x, int y, int w, int h)
 {
 	t_rectangle	*rec;
 
 	rec = (t_rectangle *)malloc(sizeof(t_rectangle));
+	if (!rec)
+		return (NULL);
 	rec->x = x;
 	rec->y = y;
 	rec->w = w;
@@ -97,10 +87,11 @@ unsigned int ft_color_picker_hue(t_image *img, t_color_picker *cp)
 {
 	int x;
 	int y;
+	int	pos;
 
 	x = cp->hue_cursor->x + cp->hue->w / 2;
 	y = cp->hue_cursor->y;
-	int pos = (y * img->line_length + x * (img->bits_per_pixel / 8));
+	pos = (y * img->line_length + x * (img->bits_per_pixel / 8));
 	return (img->addr[pos]);
 }
 
@@ -179,15 +170,27 @@ int	ft_color_picker_focused(t_color_picker *cp, int x, int y)
 	if (ft_is_inside_rectangle(cp->hue, x, y))
 	{
 		cp->hue_cursor->y = y;
-		return (1);
+		return (CP_HUE);
 	}
 	else if (ft_is_inside_rectangle(cp->sat, x, y))
 	{
 		cp->sat_cursor->x = x;
 		cp->sat_cursor->y = y;
-		return (2);
+		return (CP_SAT);
 	}
-	return (0);
+	return (FALSE);
+}
+
+void	*ft_color_picker_free(t_color_picker *cp)
+{
+	if (!cp)
+		return (NULL);
+	free(cp->sat);
+	free(cp->sat_cursor);
+	free(cp->hue);
+	free(cp->hue_cursor);
+	free(cp);
+	return (NULL);
 }
 
 t_color_picker	*ft_color_picker_init(int x, int y)
@@ -195,13 +198,16 @@ t_color_picker	*ft_color_picker_init(int x, int y)
 	t_color_picker	*cp;
 
 	cp = (t_color_picker *)malloc(sizeof(t_color_picker));
+	if (!cp)
+		return (NULL);
 	cp->x = x;
 	cp->y = y;
-	cp->visible = TRUE;
+	cp->focused = FALSE;
 	cp->sat = ft_rectangle_init(cp->x, cp->y, 300, 300);
 	cp->sat_cursor= ft_point_init(cp->sat->x + 1, cp->sat->y + 1, 0, C_WHITE);
-
 	cp->hue = ft_rectangle_init(cp->sat->x + cp->sat->w + 20, cp->sat->y, MENU_W * 0.1, cp->sat->h);
 	cp->hue_cursor = ft_point_init(cp->hue->x, cp->hue->y + 1 /2, 0, C_WHITE);
+	if (!cp->sat || !cp->sat_cursor || !cp->hue || !cp->hue_cursor)
+		return (NULL);
 	return (cp);
 }

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:12:32 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 20:06:04 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 11:05:33 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ void	ft_draw_cell(t_image *img, t_vars *vars, int i, int j)
 	map = vars->map;
 	c = vars->camera;
 	o = &map->points[j * map->w + i];
-	if (color_option_focused(0))
-		o->color = ft_color_lerp(vars->lp_color, vars->hp_color, (((o->z + 0.5f) - map->minZ) / (map->maxZ - map->minZ)));
+	if (vars->low_p->focused || vars->high_p->focused)
+		o->color = ft_color_lerp(vars->low_p->color, vars->high_p->color, (((o->z + 0.5f) - map->minZ) / (map->maxZ - map->minZ)));
 	ft_rotate_xyz_point(map->points + (j * map->w + i), &proj, c);
 	ft_point_scale(&a, &proj, c);
 	if (i + 1 < map->w)

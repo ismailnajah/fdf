@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 19:26:34 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 11:07:03 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,24 @@ int	ft_on_destroy(t_vars *vars)
 	return (0);
 }
 
-void	ft_color_option_focused(int x, int y)
+void	ft_color_option_focused(t_vars *vars, int x, int y)
 {
+	vars->low_p->focused = FALSE;
+	vars->high_p->focused = FALSE;
 	if (LP_COLOR_X < x && x < LP_COLOR_X + COLOR_W)
 	{
 		if (LP_COLOR_Y < y && y < LP_COLOR_Y + COLOR_W)
-			color_option_focused(1);
+		{
+			vars->low_p->focused = TRUE;
+			ft_point_copy(vars->color_picker->sat_cursor, vars->low_p->sat);
+			ft_point_copy(vars->color_picker->hue_cursor, vars->low_p->hue);
+		}
 		else if (HP_COLOR_Y < y && y < HP_COLOR_Y + COLOR_W)
-			color_option_focused(2);
+		{
+			vars->high_p->focused = TRUE;
+			ft_point_copy(vars->color_picker->sat_cursor, vars->high_p->sat);
+			ft_point_copy(vars->color_picker->hue_cursor, vars->high_p->hue);
+		}
 	}
 }
 
@@ -76,8 +86,9 @@ int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)
 	{
 		vars->mouse_x = x;
 		vars->mouse_y = y;
-		vars->mouse_up = ft_color_picker_focused(vars->color_picker, x, y);
-		ft_color_option_focused(x, y);
+		vars->color_picker->focused = ft_color_picker_focused(vars->color_picker, x, y);
+		if (!vars->color_picker->focused)
+			ft_color_option_focused(vars, x, y);
 		ft_text_field_focused(vars->camera, x, y);
 		ft_view_change(UPDATE_ANIMATION, vars);
 	}
@@ -89,19 +100,19 @@ int	ft_on_mouse_up(int button, int x, int y, t_vars *vars)
 	(void)x;
 	(void)y;
 	if (button == KEY_LEFT_CLICK)
-		vars->mouse_up = 0;
+		vars->color_picker->focused = FALSE;
 	return (0);
 }
 
 int	ft_on_mouse_move(int x, int y, t_vars *vars)
 {
-	if (vars->color_picker->visible && vars->mouse_up)
+	if (vars->color_picker->focused)
 	{
 		if (y <= vars->color_picker->y)
 			y = vars->color_picker->y + 1;
 		if (y >= vars->color_picker->y + vars->color_picker->hue->h)
 			y = vars->color_picker->y + vars->color_picker->hue->h - 1;
-		if (vars->mouse_up == 1)
+		if (vars->color_picker->focused == CP_HUE)
 			x = vars->color_picker->hue->x + vars->color_picker->hue->w / 2;
 		else
 		{

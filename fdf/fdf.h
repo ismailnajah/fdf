@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 19:24:41 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 11:08:18 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,15 @@
 # define MENU_W (WIN_W * 0.20)
 # define MENU_H WIN_H
 
+# define CP_HUE 1
+# define CP_SAT 2
 # define COLOR_W 50
 # define LP_COLOR_X MENU_W / 2
 # define LP_COLOR_Y	MENU_H / 2 - COLOR_W
 # define HP_COLOR_Y MENU_H / 2 + 10 
+# define LOW_P_OPT 1
+# define HIGH_P_OPT 2
+
 
 # define TEXT_FIELD_W  (MENU_W * 0.20)
 # define TEXT_FIELD_H  30
@@ -90,7 +95,6 @@ enum
 };
 
 //keys codes
-#ifdef __linux__
 enum 
 {
 	KEY_ENTER = 65293,
@@ -115,33 +119,6 @@ enum
 	KEY_LEFT_CLICK = 1,
 	KEY_RIGHT_CLICK = 2,
 };
-
-#else
-
-enum 
-{
-	KEY_ESC = 53,
-	KEY_UP = 126,
-	KEY_DOWN = 125,
-	KEY_LEFT = 123,
-	KEY_RIGHT = 124,
-	KEY_W = 13,
-	KEY_S = 1,
-	KEY_A = 0,
-	KEY_D = 2,
-	KEY_E = 14,
-	KEY_Q = 12,
-	KEY_V = 9,
-	KEY_PLUS = 24,
-	KEY_MINUS = 27,
-	KEY_SPACE = 49,
-	KEY_SCROLL_UP = 4,
-	KEY_SCROLL_DOWN = 5,
-	KEY_LEFT_CLICK = 1,
-	KEY_RIGHT_CLICK = 2,
-};
-
-#endif
 
 //events codes
 enum 
@@ -221,7 +198,7 @@ typedef struct s_color_picker
 {
 	int				x;
 	int				y;
-	int				visible;
+	int				focused;
 	t_rectangle		*hue;
 	t_rectangle		*sat;
 	t_point			*hue_cursor;
@@ -247,6 +224,13 @@ typedef	struct s_camera
 	float	option[OPTION_COUNT];
 }	t_camera;
 
+typedef struct s_color_opt
+{
+	t_point			*hue;
+	t_point			*sat;
+	int				focused;
+	unsigned int	color;
+}	t_color_opt;
 
 typedef struct s_vars
 {
@@ -254,21 +238,21 @@ typedef struct s_vars
 	void			*win;
 	t_map			*map;
 	t_layout		*layout;
+	t_point			*cube;
 	t_camera		*camera;
 	t_color_picker	*color_picker;
-	t_point			*cube;
-	unsigned int	lp_color;
-	unsigned int	hp_color;
+	t_color_opt		*low_p;
+	t_color_opt		*high_p;
+	char			**labels;
 	int				mouse_x;
 	int				mouse_y;
-	int				mouse_up;
+	int				global_mode;
 }	t_vars;
 
 //main.c
 int	ft_vars_free(t_vars *vars);
 int	global_mode(int m);
 int text_field_cursor(int m);
-int	color_option_focused(int m);
 
 //ft_text_field.c
 void			ft_label(t_vars *vars, int x, int y, char *text);
@@ -290,6 +274,7 @@ t_color_picker	*ft_color_picker_init(int x, int y);
 void	ft_color_picker_draw(t_image *img, t_color_picker *cp);
 int		ft_color_picker_focused(t_color_picker *cp, int x, int y);
 void	ft_border_draw(t_image *img, t_point a, int w, int h);
+void	*ft_color_picker_free(t_color_picker *cp);
 
 //ft_draw.c
 void	ft_draw_pixel(t_image *img, int x, int y, int color);
@@ -311,6 +296,7 @@ void	*ft_map_free(t_map *map);
 t_map	*ft_map_init(int w, int h);
 t_map	*ft_get_map_from_file(char *path);
 void	ft_get_min_max_z(t_map *map, int *min, int *max);
+void	*ft_words_free(char **words);
 
 //ft_image.c
 void			*ft_image_free(void *mlx, t_image *img);
@@ -333,11 +319,13 @@ void			ft_camera_animate(t_camera *s, t_camera *e);
 void			print_camera(t_camera *s);
 
 //ft_point.c
-void			ft_view_change(int state, t_vars *vars);
+t_point			*ft_point_init(float x, float y, float z, unsigned int color);
 int				ft_point_sort(t_point *a, t_point *b);
 void			ft_point_scale(t_point *a, t_point *p, t_camera *c);
+void			ft_point_copy(t_point	*dst, t_point *src);
 
 //ft_utils.c
+void			ft_view_change(int state, t_vars *vars);
 unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
 void			ft_scale_z(t_map *map, float z_off);
 unsigned int	ft_hex_to_int(char *hex);

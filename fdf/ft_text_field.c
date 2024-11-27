@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 11:12:57 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 18:55:44 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 09:15:40 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,7 @@ void	ft_text_field_focused(t_camera	*c, int mouse_x, int mouse_y)
 			focused_index = i;
 		}
 		else
-		{
 			f->focused = FALSE;
-			sprintf(f->text, "%d", (int) c->option[i]);
-		}
 		i++;
 	}
 	if (focused_index >= 0)

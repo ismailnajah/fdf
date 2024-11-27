@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 11:07:03 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 13:24:09 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	ft_on_keydown(int keycode, t_vars *vars)
 		ft_vars_free(vars);
 		exit(0);
 	}
-	if (global_mode(GET_MODE) == INSERT)
-		return (ft_text_field_update_value(keycode, vars->camera));
+	if (vars->global_mode == INSERT)
+		return (ft_text_field_update_value(keycode, vars));
 	if (keycode == KEY_A || keycode == KEY_D)
 		ft_angle_change(&vars->camera->option[ANGLE_X], keycode == KEY_D);
 	if (keycode == KEY_S || keycode == KEY_W)
@@ -89,7 +89,7 @@ int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)
 		vars->color_picker->focused = ft_color_picker_focused(vars->color_picker, x, y);
 		if (!vars->color_picker->focused)
 			ft_color_option_focused(vars, x, y);
-		ft_text_field_focused(vars->camera, x, y);
+		ft_text_field_focused(vars, x, y);
 		ft_view_change(UPDATE_ANIMATION, vars);
 	}
 	return (ft_text_field_sync_value(vars->camera));

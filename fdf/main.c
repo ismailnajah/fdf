@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 10:58:55 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 12:44:53 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int	ft_vars_free(t_vars *vars)
 		mlx_destroy_display(vars->mlx);
 	ft_color_picker_free(vars->color_picker);
 	free(vars->labels);
-	free(vars->low_p);
-	free(vars->high_p);
+	ft_color_opt_free(vars->low_p);
+	ft_color_opt_free(vars->high_p);
 	free(vars->mlx);
 	return (0);
 }
@@ -121,7 +121,7 @@ int	ft_vars_init(t_vars *vars, char *map_path)
 	vars->labels = ft_labels_init();
 	if (!vars->win || !vars->layout || !vars->camera || !vars->cube
 		|| !vars->low_p || !vars->high_p || !vars->labels)
-		return (ft_vars_free(vars));
+		return (ft_vars_free(vars), FAILURE);
 	return (SUCCESS);
 }
 
@@ -174,8 +174,7 @@ void	ft_render_text_fields_cursor(t_vars *vars, int frames)
 		}
 		i++;
 	}
-	if (frames % 300 == 0)
-		off = !off;
+	off = !off * (frames % 200 == 0) + off * (frames % 200 != 0);
 	if (i < OPTION_COUNT && !off)
 		ft_draw_line(vars->layout->menu, cursor_s, cursor_e);
 }

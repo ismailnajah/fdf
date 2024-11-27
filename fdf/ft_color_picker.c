@@ -6,179 +6,68 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:40:17 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 10:03:30 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 15:41:40 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_rectangle *ft_rectangle_init(int x, int y, int w, int h)
+void	ft_color_picker_draw_hue(t_image *img, t_color_picker *cp)
 {
-	t_rectangle	*rec;
+	t_point			a;
+	unsigned int	color;
 
-	rec = (t_rectangle *)malloc(sizeof(t_rectangle));
-	if (!rec)
-		return (NULL);
-	rec->x = x;
-	rec->y = y;
-	rec->w = w;
-	rec->h = h;
-	return (rec);
-}
-
-void	ft_border_draw(t_image *img, t_point a, int w, int h)
-{
-	t_point	b;
-
-	b.x = a.x + w;
-	b.y = a.y;
-	b.color = a.color;
-	ft_draw_line(img, a, b);
-	b.x = a.x;
-	b.y = a.y + h;
-	ft_draw_line(img, b, a);
-	a.x = a.x + w;
-	a.y = a.y + h;
-	ft_draw_line(img, a, b);
-	b.x = a.x;
-	b.y = a.y - h;
-	ft_draw_line(img, a, b);
-}
-
-void	ft_color_picker_hue_draw(t_image *img, t_color_picker *cp)
-{
-	t_point	a;
-	int step = 5;
-	int	r;
-	int g;
-	int b;
-
-	a.x = cp->hue->x;
-	a.y = cp->hue->y;
-	a.color = C_WHITE;
-	ft_border_draw(img, a, cp->hue->w, cp->hue->h);
-	r = 255;
-	g = 0;
-	b = 0;
+	ft_rectangle_draw(img, cp->hue, C_WHITE);
+	color = C_RED;
 	a.y = cp->hue->y + 1;
 	while (a.y < cp->hue->y + cp->hue->h)
 	{
 		a.x = cp->hue->x + 1;
 		while (a.x < cp->hue->x + cp->hue->w)
-		{
-			a.color = create_trgb(0, r, g, b);
-			ft_draw_pixel(img, a.x, a.y, a.color);
-			a.x++;
-		}
-		r += step * (r != 255 && g == 0 && b == 255) - step * (r != 0 && g == 255 && b == 0);
-		g += step * (r == 255 && g != 255 && b == 0) - step * (r == 0 && g != 0 && b == 255);
-		b += step * (r == 0 && g == 255 && b != 255) - step * (r == 255 && g == 0 && b != 0);
+			ft_draw_pixel(img, a.x++, a.y, color);
 		if (a.y == cp->hue_cursor->y)
-			cp->hue_cursor->color = a.color;
+			cp->hue_cursor->color = color;
+		color = next_color(color);
 		a.y++;
 	}
-	t_point	d;
-	d = *cp->hue_cursor;
-	d.color = C_BLACK;
-	ft_border_draw(img, d, cp->hue->w, 2);
+	ft_point_copy(&a, cp->hue_cursor);
+	a.color = C_BLACK;
+	ft_border_draw(img, a, cp->hue->w, 2);
 }
 
-unsigned int ft_color_picker_hue(t_image *img, t_color_picker *cp)
-{
-	int x;
-	int y;
-	int	pos;
-
-	x = cp->hue_cursor->x + cp->hue->w / 2;
-	y = cp->hue_cursor->y;
-	pos = (y * img->line_length + x * (img->bits_per_pixel / 8));
-	return (img->addr[pos]);
-}
-
-void ft_draw_circle(t_image *img, int center_x, int center_y, unsigned int color)
-{
-    int radius = 10;
-	int x = radius;
-    int y = 0;
-    int radius_error = 1 - radius;
-    
-    while (x >= y) {
-        ft_draw_pixel(img, center_x + x, center_y + y, color);
-        ft_draw_pixel(img, center_x + y, center_y + x, color);
-        ft_draw_pixel(img, center_x - y, center_y + x, color);
-        ft_draw_pixel(img, center_x - x, center_y + y, color);
-        ft_draw_pixel(img, center_x - x, center_y - y, color);
-        ft_draw_pixel(img, center_x - y, center_y - x, color);
-        ft_draw_pixel(img, center_x + y, center_y - x, color);
-        ft_draw_pixel(img, center_x + x, center_y - y, color); 
-        y++;
-        if (radius_error < 0) {
-            radius_error += 2 * y + 1;
-        } else {
-            x--;
-            radius_error += 2 * (y - x + 1);
-        }
-    }
-}
-
-void	ft_color_picker_sat_draw(t_image *img, t_color_picker *cp)
+void	ft_color_picker_draw_sat(t_image *img, t_color_picker *cp)
 {
 	unsigned int	c1;
 	unsigned int	c2;
-	int				x;
-	int				y;
 	float			step;
-	t_point			a;
+	t_point			p;
 
-	a.x = cp->sat->x;
-	a.y = cp->sat->y;
-	a.color = C_WHITE;
-	ft_border_draw(img, a, cp->sat->w, cp->sat->h);
-	y = cp->y + 1;
-	while (y < cp->sat->y + cp->sat->h)
+	ft_rectangle_draw(img, cp->sat, C_WHITE);
+	p.y = cp->y + 1;
+	while (p.y < cp->sat->y + cp->sat->h)
 	{
-		step = (float) (y - cp->sat->y) / cp->sat->h;
+		step = (p.y - cp->sat->y) / cp->sat->h;
 		c1 = ft_color_lerp(C_WHITE, C_BLACK, step);
 		c2 = ft_color_lerp(cp->hue_cursor->color, C_BLACK, step);
-		x = cp->sat->x + 1;
-		while (x < cp->sat->x + cp->sat->w)
+		p.x = cp->sat->x + 1;
+		while (p.x < cp->sat->x + cp->sat->w)
 		{
-			ft_draw_pixel(img, x, y, ft_color_lerp(c1, c2, (float)(x - cp->sat->x) / cp->sat->w));
-			x++;
-			if (x == cp->sat_cursor->x && y == cp->sat_cursor->y)
-				cp->sat_cursor->color = ft_color_lerp(c1, c2, (float)(x - cp->sat->x) / cp->sat->w);
+			step = (p.x - cp->sat->x) / cp->sat->w;
+			p.color = ft_color_lerp(c1, c2, step);
+			ft_draw_pixel(img, p.x, p.y, p.color);
+			p.x++;
+			if (p.x == cp->sat_cursor->x && p.y == cp->sat_cursor->y)
+				cp->sat_cursor->color = p.color;
 		}
-		y++;
+		p.y++;
 	}
-	ft_draw_circle(img, cp->sat_cursor->x, cp->sat_cursor->y, C_WHITE);
+	ft_circle_draw(img, *cp->sat_cursor);
 }
 
 void	ft_color_picker_draw(t_image *img, t_color_picker *cp)
 {
-	ft_color_picker_hue_draw(img, cp);
-	ft_color_picker_sat_draw(img, cp);
-}
-
-int	ft_is_inside_rectangle(t_rectangle *rec, int x, int y)
-{
-	return (rec->x < x && x < rec->x + rec->w
-			&& rec->y < y && y < rec->y + rec->h);
-}
-
-int	ft_color_picker_focused(t_color_picker *cp, int x, int y)
-{
-	if (ft_is_inside_rectangle(cp->hue, x, y))
-	{
-		cp->hue_cursor->y = y;
-		return (CP_HUE);
-	}
-	else if (ft_is_inside_rectangle(cp->sat, x, y))
-	{
-		cp->sat_cursor->x = x;
-		cp->sat_cursor->y = y;
-		return (CP_SAT);
-	}
-	return (FALSE);
+	ft_color_picker_draw_hue(img, cp);
+	ft_color_picker_draw_sat(img, cp);
 }
 
 void	*ft_color_picker_free(t_color_picker *cp)
@@ -204,9 +93,10 @@ t_color_picker	*ft_color_picker_init(int x, int y)
 	cp->y = y;
 	cp->focused = FALSE;
 	cp->sat = ft_rectangle_init(cp->x, cp->y, 300, 300);
-	cp->sat_cursor= ft_point_init(cp->sat->x + 1, cp->sat->y + 1, 0, C_WHITE);
-	cp->hue = ft_rectangle_init(cp->sat->x + cp->sat->w + 20, cp->sat->y, MENU_W * 0.1, cp->sat->h);
-	cp->hue_cursor = ft_point_init(cp->hue->x, cp->hue->y + 1 /2, 0, C_WHITE);
+	cp->sat_cursor = ft_point_init(cp->sat->x + 1, cp->sat->y + 1, 0, C_WHITE);
+	cp->hue = ft_rectangle_init(cp->sat->x + cp->sat->w + 20,
+			cp->sat->y, MENU_W * 0.1, cp->sat->h);
+	cp->hue_cursor = ft_point_init(cp->hue->x, cp->hue->y + 1 / 2, 0, C_WHITE);
 	if (!cp->sat || !cp->sat_cursor || !cp->hue || !cp->hue_cursor)
 		return (NULL);
 	return (cp);

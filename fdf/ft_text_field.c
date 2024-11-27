@@ -6,20 +6,15 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 11:12:57 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 14:04:28 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 14:08:59 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	ft_label(t_vars *vars, int x, int y, char *text)
-{
-	mlx_string_put(vars->mlx, vars->win, x, y, C_WHITE, text);
-}
-
 int	ft_text_field_sync_value(t_camera *c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < OPTION_COUNT)
@@ -40,7 +35,7 @@ void	ft_text_field_update_value(int key, t_vars *vars, int i)
 		vars->tf_cursor -= 1 * (vars->tf_cursor > 0);
 		c->field[i].text[vars->tf_cursor] = '\0';
 	}
-	else if(key == KEY_ENTER)
+	else if (key == KEY_ENTER)
 	{
 		c->field[i].focused = FALSE;
 		vars->global_mode = NORMAL;
@@ -58,8 +53,8 @@ void	ft_text_field_update_value(int key, t_vars *vars, int i)
 
 int	ft_text_field_event(int key, t_vars *vars)
 {
-	int i;
-	t_camera *c;
+	int			i;
+	t_camera	*c;
 
 	c = vars->camera;
 	if (key != KEY_BACK_SPACE && key != KEY_ENTER
@@ -71,7 +66,7 @@ int	ft_text_field_event(int key, t_vars *vars)
 		if (c->field[i].focused)
 		{
 			ft_text_field_update_value(key, vars, i);
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -80,9 +75,9 @@ int	ft_text_field_event(int key, t_vars *vars)
 
 void	ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y)
 {
-	int i;
-	int	focused;
-	t_text_field *f;
+	int				i;
+	int				focused;
+	t_text_field	*f;
 
 	i = 0;
 	focused = FALSE;
@@ -104,7 +99,7 @@ void	ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y)
 
 t_text_field	*ft_text_field_init(t_camera *c)
 {
-	int					i;
+	int				i;
 	t_text_field	*field;
 
 	field = (t_text_field *)malloc(OPTION_COUNT * sizeof(t_text_field));

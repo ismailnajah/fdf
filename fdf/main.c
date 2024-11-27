@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 13:59:55 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 14:09:30 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,6 @@ int	ft_vars_free(t_vars *vars)
 	ft_color_opt_free(vars->high_p);
 	free(vars->mlx);
 	return (0);
-}
-
-char	**ft_labels_init(void)
-{
-	char	**labels;
-
-	labels = (char **)malloc(OPTION_COUNT * sizeof(char *));
-	if (!labels)
-		return (NULL);
-	labels[0] = "X-anlge [A/D]";
-	labels[1] = "Y-angle [W/S]";
-	labels[2] = "Z-angle [Q/E]";
-	labels[3] = "X-offset [LEFT/RIGHT]";
-	labels[4] = "Y-offset [UP/DOWN]";
-	labels[5] = "Z-offset [-/+]";
-	labels[6] = "Scale [Wheel]";
-	return (labels);
 }
 
 void	*ft_color_opt_free(t_color_opt *opt)

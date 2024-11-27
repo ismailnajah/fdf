@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/26 17:29:30 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 15:30:06 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_camera_compare(t_camera *a, t_camera *b)
 	int i;
 
 	i = 0;
-	while (i < OPTION_COUNT - 2)// do not include scale and z_off
+	while (i < OPTION_COUNT - 2)
 	{
 		if (a->option[i] != b->option[i])
 			return (FALSE);
@@ -50,18 +50,6 @@ void	ft_view_change(int state, t_vars *vars)
 	ft_camera_animate(c, &view_c);
 	if (ft_camera_compare(c, &view_c))
 		animation_state = STOP_ANIMATION;
-}
-
-unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t)
-{
-	int	r;
-	int	g;
-	int	b;
-
-	r = get_r(c1) + t * (get_r(c2) - get_r(c1));
-	g = get_g(c1) + t * (get_g(c2) - get_g(c1));
-	b = get_b(c1) + t * (get_b(c2) - get_b(c1));
-	return (create_trgb(0, r, g, b));
 }
 
 void	ft_scale_z(t_map *map, float z_off)

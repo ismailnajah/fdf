@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 13:49:20 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/27 15:41:21 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,6 +256,10 @@ int	global_mode(int m);
 int text_field_cursor(int m);
 void	*ft_color_opt_free(t_color_opt *opt);
 
+//ft_label.c
+void	ft_label(t_vars *vars, int x, int y, char *text);
+char	**ft_labels_init(void);
+
 //ft_text_field.c
 void			ft_label(t_vars *vars, int x, int y, char *text);
 t_text_field	*ft_text_field_init(t_camera *c);
@@ -277,6 +281,12 @@ void	ft_color_picker_draw(t_image *img, t_color_picker *cp);
 int		ft_color_picker_focused(t_color_picker *cp, int x, int y);
 void	ft_border_draw(t_image *img, t_point a, int w, int h);
 void	*ft_color_picker_free(t_color_picker *cp);
+
+//ft_color_utils.c
+int	ft_color_picker_focused(t_color_picker *cp, int x, int y);
+unsigned int	next_color(unsigned int color);
+unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
+
 
 //ft_draw.c
 void	ft_draw_pixel(t_image *img, int x, int y, int color);
@@ -336,5 +346,15 @@ void			ft_normalize_z(t_map *map);
 //ft_cube.c
 void			ft_draw_cube_view(t_image *img, t_vars *vars);
 int				ft_is_cube_clicked(int x, int y, t_vars *vars);
+
+//ft_rectangle.c
+t_rectangle	*ft_rectangle_init(int x, int y, int w, int h);
+void	ft_rectangle_draw(t_image *img, t_rectangle *rec, unsigned int color);
+int	ft_is_inside_rectangle(t_rectangle *rec, int x, int y);
+void	ft_border_draw(t_image *img, t_point a, int w, int h);
+
+//ft_circle.c
+void	ft_circle_draw(t_image *img, t_point center);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 18:06:28 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 19:49:50 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	ft_print_error(int err)
 		ft_printf("Unable to allocate resources.\n");
 	if (err == ERR_EMPTY_FILE)
 		ft_printf("The map is empty.\n");
+	if (err == ERR_FILE_EXTENSION)
+		ft_printf("Wrong file extension\n");
 	return (FAILURE);
 }
 

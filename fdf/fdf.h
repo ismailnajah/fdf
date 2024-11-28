@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 18:16:21 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 19:50:17 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define ERR_PARSE -3
 # define ERR_MALLOC -4
 # define ERR_EMPTY_FILE -5
+# define ERR_FILE_EXTENSION -6
 
 # define PI 3.14159265358979311600
 # define EPSI 2

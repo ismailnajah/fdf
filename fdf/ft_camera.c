@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:42:09 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 16:13:26 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 20:55:50 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,22 @@ t_camera	ft_camera_of_view(int view, t_camera *old)
 	return (c);
 }
 
+void 	ft_offset_change(float *s, float *e)
+{
+	if (*s < *e)
+	{
+		*s += OFFSET_STEP;
+		if (*s > *e)
+			*s = *e;
+	}
+	else if(*s > *e)
+	{
+		*s -= OFFSET_STEP;
+		if (*s > *e)
+			*s = *e;
+	}
+}
+
 void	ft_camera_animate(t_camera *s, t_camera *e)
 {
 	int		i;
@@ -92,8 +108,8 @@ void	ft_camera_animate(t_camera *s, t_camera *e)
 	{
 		if (s_opt[i] != e_opt[i] && i <= ANGLE_Z)
 			ft_angle_change(&s_opt[i], s_opt[i] > e_opt[i]);
-		else if (s_opt[i] != e_opt[i])
-			s_opt[i] += (1 - 2 * (s_opt[i] > e_opt[i])) * OFFSET_STEP;
+		else
+			ft_offset_change(&s_opt[i], &e_opt[i]);
 		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 15:35:53 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 18:16:21 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@
 # include <stdio.h>
 # include "libft/libft.h"
 # include "mlx.h"
+
+# define ERR_FILE -1
+# define ERR_MAP -2
+# define ERR_PARSE -3
+# define ERR_MALLOC -4
+# define ERR_EMPTY_FILE -5
 
 # define PI 3.14159265358979311600
 # define EPSI 2
@@ -306,6 +312,7 @@ void			ft_draw_line(t_image *img, t_point a, t_point b);
 unsigned int	ft_get_point_color(t_vars *vars, t_point *p);
 float			ft_point_distance(t_point a, t_point b);
 int				ft_in_image(t_image *img, t_point a);
+void			ft_scale_z(t_map *map, float z_off);
 
 //ft_handle_event.c
 int				ft_on_keydown(int keycode, t_vars *vars);
@@ -318,6 +325,7 @@ int				ft_on_mouse_move(int x, int y, t_vars *vars);
 t_map			*ft_map_init(int w, int h);
 void			*ft_map_free(t_map *map);
 void			ft_get_min_max_z(t_map *map, int *min, int *max);
+int				ft_map_realloc_points(t_map *map);
 
 //ft_parse_map.c
 void			ft_map_debug(t_map *map);
@@ -345,7 +353,6 @@ void			*ft_camera_free(t_camera *c);
 t_camera		ft_camera_of_view(int view, t_camera *old_s);
 t_camera		ft_camera_default(void);
 void			ft_camera_animate(t_camera *s, t_camera *e);
-void			print_camera(t_camera *s);
 
 //ft_point.c
 t_point			*ft_point_init(float x, float y, float z, unsigned int color);
@@ -356,9 +363,9 @@ void			ft_point_copy(t_point	*dst, t_point *src);
 //ft_utils.c
 void			ft_view_change(int state, t_vars *vars);
 unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
-void			ft_scale_z(t_map *map, float z_off);
 unsigned int	ft_hex_to_int(char *hex);
 void			ft_normalize_z(t_map *map);
+int				ft_print_error(int err);
 
 //ft_cube.c
 void			ft_draw_cube_view(t_image *img, t_vars *vars);

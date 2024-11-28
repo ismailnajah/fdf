@@ -6,11 +6,30 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:30:01 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 17:32:35 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 18:15:41 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+int	ft_map_realloc_points(t_map *map)
+{
+	t_point	*points;
+	int		i;
+
+	points = (t_point *)malloc((map->w * map->h) * sizeof(t_point));
+	if (!points)
+		return (FAILURE);
+	i = 0;
+	while (i < map->w * (map->h - 1))
+	{
+		points[i] = map->points[i];
+		i++;
+	}
+	free(map->points);
+	map->points = points;
+	return (SUCCESS);
+}
 
 t_map	*ft_map_init(int w, int h)
 {
@@ -21,9 +40,14 @@ t_map	*ft_map_init(int w, int h)
 		return (NULL);
 	map->w = w;
 	map->h = h;
-	map->points = (t_point *)malloc((w * h) * sizeof(t_point));
-	if (!map->points)
-		return (ft_abort(map));
+	if (w == 0 || h == 0)
+		map->points = NULL;
+	else
+	{
+		map->points = (t_point *)malloc((w * h) * sizeof(t_point));
+		if (!map->points)
+			return (ft_abort(map));
+	}
 	return (map);
 }
 

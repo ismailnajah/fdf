@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 11:24:48 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/13 14:46:06 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 18:12:01 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 	char		*new_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
+		return (free(buffer), NULL);
 	if (!buffer)
 	{
 		buffer = (char *)malloc(sizeof(char));

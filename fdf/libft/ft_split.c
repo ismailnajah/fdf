@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:53:37 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/05 13:53:37 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 18:10:18 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,16 @@ static char	**populate_list_words(char **list_words, char const *s, char c)
 		}
 	}
 	return (list_words);
+}
+
+int	ft_split_count(char **words)
+{
+	int	i;
+
+	i = 0;
+	while (words[i] && words[i][0] != '\n')
+		i++;
+	return (i);
 }
 
 char	**ft_split(char const *s, char c)

@@ -6,11 +6,33 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:32:09 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 15:34:07 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 18:05:27 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+void	ft_scale_z(t_map *map, float z_off)
+{
+	int		i;
+	float	min;
+	float	max;
+
+	min = map->points[0].z;
+	max = map->points[0].z;
+	i = 0;
+	while (i < map->w * map->h && z_off != 0.0f)
+	{
+		map->points[i].z /= z_off;
+		if (max < map->points[i].z)
+			max = map->points[i].z;
+		if (min > map->points[i].z)
+			min = map->points[i].z;
+		i++;
+	}
+	map->min_z = min + 0.5f;
+	map->max_z = max + 0.5f;
+}
 
 int	ft_in_image(t_image *img, t_point a)
 {

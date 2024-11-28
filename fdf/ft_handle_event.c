@@ -6,19 +6,24 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 17:06:38 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:25:10 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+int	ft_on_destroy(t_vars *vars)
+{
+	ft_vars_free(vars);
+	ft_printf("[ INFO  ] Window Closed\n");
+	exit(0);
+	return (0);
+}
+
 int	ft_on_keydown(int key, t_vars *v)
 {
 	if (key == KEY_ESC)
-	{
-		ft_vars_free(v);
-		exit(0);
-	}
+		ft_on_destroy(v);
 	if (v->global_mode == INSERT)
 		return (ft_text_field_event(key, v));
 	if (key == KEY_A || key == KEY_D)
@@ -39,14 +44,6 @@ int	ft_on_keydown(int key, t_vars *v)
 	if (key == KEY_SPACE)
 		ft_view_change(RESET_ANIMATION, v);
 	return (ft_text_field_sync_value(v->camera));
-}
-
-int	ft_on_destroy(t_vars *vars)
-{
-	ft_vars_free(vars);
-	ft_printf("[ INFO  ] Window Closed\n");
-	exit(0);
-	return (0);
 }
 
 int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)

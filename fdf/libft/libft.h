@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:18:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 14:22:43 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 18:10:44 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@
 # define ERROR_HAPPENED 1
 # define ERROR_GET 0
 # define ERROR_RESET -1
+
+# define FREE_GNL_BUFFER -1000
 
 typedef struct s_list
 {
@@ -86,6 +88,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_strjoin(char const *s1, char const *s2);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 char	**ft_split(char const *s, char c);
+int		ft_split_count(char **words);
 
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);

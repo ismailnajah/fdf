@@ -6,11 +6,27 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 15:02:51 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 18:06:28 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+int	ft_print_error(int err)
+{
+	ft_printf("[ ERROR ] ");
+	if (err == ERR_FILE)
+		ft_printf("could not open the file: %s.\n", strerror(errno));
+	if (err == ERR_MAP)
+		ft_printf("Invalid map.\n");
+	if (err == ERR_PARSE)
+		ft_printf("Parsing error occured.\n");
+	if (err == ERR_MALLOC)
+		ft_printf("Unable to allocate resources.\n");
+	if (err == ERR_EMPTY_FILE)
+		ft_printf("The map is empty.\n");
+	return (FAILURE);
+}
 
 int	ft_camera_compare(t_camera *a, t_camera *b)
 {
@@ -50,28 +66,6 @@ void	ft_view_change(int state, t_vars *vars)
 	ft_camera_animate(c, &view_c);
 	if (ft_camera_compare(c, &view_c))
 		animation_state = STOP_ANIMATION;
-}
-
-void	ft_scale_z(t_map *map, float z_off)
-{
-	int		i;
-	float	min;
-	float	max;
-
-	min = map->points[0].z;
-	max = map->points[0].z;
-	i = 0;
-	while (i < map->w * map->h && z_off != 0.0f)
-	{
-		map->points[i].z /= z_off;
-		if (max < map->points[i].z)
-			max = map->points[i].z;
-		if (min > map->points[i].z)
-			min = map->points[i].z;
-		i++;
-	}
-	map->min_z = min + 0.5f;
-	map->max_z = max + 0.5f;
 }
 
 unsigned int	ft_hex_to_int(char *hex)

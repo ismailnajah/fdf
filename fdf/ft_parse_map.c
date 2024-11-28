@@ -6,11 +6,27 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 20:34:14 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 16:01:14 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+#define ERR_FILE -1
+#define ERR_MAP -2
+#define ERR_PARSE -3
+
+int	ft_print_error(int err)
+{
+	ft_printf("[ ERROR ] ");
+	if (err == ERR_FILE)
+		ft_printf("could not open the file: %s.\n", strerror(errno));
+	if (err == ERR_MAP)
+		ft_printf("Invalid map.\n");
+	if (err == ERR_PARSE)
+		ft_printf("Unable to parse the map.\n");
+	return (FAILURE);
+}
 
 static int	ft_get_map_resolution(char *path, int *w, int *h)
 {
@@ -22,12 +38,12 @@ static int	ft_get_map_resolution(char *path, int *w, int *h)
 
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
-		return (FAILURE);
+		return (ft_print_error(ERR_FILE));
 	prev = ' ';
 	old_w = -1;
 	byte_read = read(fd, &c, 1);
 	if (byte_read < 0)
-		return (close(fd), FAILURE);
+		return (close(fd), ft_print_error(ERR_FILE));
 	while (byte_read >= 0)
 	{
 		if (c == '\n' || byte_read == 0)
@@ -35,9 +51,9 @@ static int	ft_get_map_resolution(char *path, int *w, int *h)
 			if (*w > 0)
 				*h += 1;
 			if (byte_read == 0)
-				break;
+				break ;
 			if (old_w != -1 && old_w != *w)
-				return (close(fd), FAILURE);
+				return (close(fd), ft_print_error(ERR_MAP));
 			old_w = *w;
 			*w = 0;
 		}
@@ -94,7 +110,7 @@ int	ft_parse_line(t_map *map, char *line, int j)
 
 	words = ft_split(line, ' ');
 	if (!words)
-		return (ft_printf("[ ERROR ] unable to parse the map."), FAILURE);
+		return (FAILURE);
 	i = 0;
 	while (words[i] && words[i][0] != '\n')
 	{
@@ -113,14 +129,14 @@ int	ft_parse_map(int fd, t_map *map)
 
 	line = get_next_line(fd);
 	if (!line)
-		return (ft_printf("[ ERROR ] unable to parse the map.\n"), FAILURE);
+		return (ft_print_error(ERR_PARSE), FAILURE);
 	j = 0;
 	while (line)
 	{
 		ret = ft_parse_line(map, line, j);
 		free(line);
 		if (!ret)
-			return (FAILURE);
+			return (ft_print_error(ERR_PARSE), FAILURE);
 		line = get_next_line(fd);
 		j++;
 	}
@@ -137,21 +153,20 @@ t_map	*ft_get_map_from_file(char *path)
 	w = 0;
 	h = 0;
 	if (!ft_get_map_resolution(path, &w, &h))
-		return (ft_printf("[ ERROR ] Invalid map.\n"), NULL);
-	else
-		ft_printf("[ INFO  ] Loading the map...\n");
+		return (NULL);
+	ft_printf("[ INFO  ] Loading the map...\n");
 	map = ft_map_init(w, h);
 	if (!map)
-		return (ft_printf("[ ERROR ] Failed to allocate the map.\n"), NULL);
+		return (ft_print_error(ERR_MAP), NULL);
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
-		return (ft_printf("[ ERROR ]\n"), ft_map_free(map));
+		return (ft_print_error(ERR_FILE), ft_map_free(map));
 	if (!ft_parse_map(fd, map))
 		return (ft_map_free(map), NULL);
 	ft_normalize_z(map);
 	close(fd);
 	ft_printf("[ INFO  ] Loading done.\n");
-	ft_printf(" ##  Map %s ##\n", path);
+	ft_printf("      ## Map <%s> ##\n", path);
 	ft_printf("\t- width:  %d\n\t- height: %d\n", map->w, map->h);
 	return (map);
 }

@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 15:23:40 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 17:12:47 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:31:13 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ void	ft_border_draw(t_image *img, t_point a, int w, int h)
 	ft_draw_line(img, a, b);
 }
 
-int	ft_is_inside_rectangle(t_rectangle *rec, int x, int y)
+int	ft_is_inside_rect(t_rect *rec, int x, int y)
 {
 	return (rec->x < x && x < rec->x + rec->w
 		&& rec->y < y && y < rec->y + rec->h);
 }
 
-void	ft_rectangle_draw(t_image *img, t_rectangle *rec, unsigned int color)
+void	ft_rect_draw(t_image *img, t_rect *rec, unsigned int color)
 {
 	t_point	a;
 
@@ -47,11 +47,11 @@ void	ft_rectangle_draw(t_image *img, t_rectangle *rec, unsigned int color)
 	ft_border_draw(img, a, rec->w, rec->h);
 }
 
-t_rectangle	*ft_rectangle_init(int x, int y, int w, int h)
+t_rect	*ft_rect_init(int x, int y, int w, int h)
 {
-	t_rectangle	*rec;
+	t_rect	*rec;
 
-	rec = (t_rectangle *)malloc(sizeof(t_rectangle));
+	rec = (t_rect *)malloc(sizeof(t_rect));
 	if (!rec)
 		return (NULL);
 	rec->x = x;

@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:40:17 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 15:41:40 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:28:54 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_color_picker_draw_hue(t_image *img, t_color_picker *cp)
 	t_point			a;
 	unsigned int	color;
 
-	ft_rectangle_draw(img, cp->hue, C_WHITE);
+	ft_rect_draw(img, cp->hue, C_WHITE);
 	color = C_RED;
 	a.y = cp->hue->y + 1;
 	while (a.y < cp->hue->y + cp->hue->h)
@@ -42,7 +42,7 @@ void	ft_color_picker_draw_sat(t_image *img, t_color_picker *cp)
 	float			step;
 	t_point			p;
 
-	ft_rectangle_draw(img, cp->sat, C_WHITE);
+	ft_rect_draw(img, cp->sat, C_WHITE);
 	p.y = cp->y + 1;
 	while (p.y < cp->sat->y + cp->sat->h)
 	{
@@ -92,9 +92,9 @@ t_color_picker	*ft_color_picker_init(int x, int y)
 	cp->x = x;
 	cp->y = y;
 	cp->focused = FALSE;
-	cp->sat = ft_rectangle_init(cp->x, cp->y, 300, 300);
+	cp->sat = ft_rect_init(cp->x, cp->y, 300, 300);
 	cp->sat_cursor = ft_point_init(cp->sat->x + 1, cp->sat->y + 1, 0, C_WHITE);
-	cp->hue = ft_rectangle_init(cp->sat->x + cp->sat->w + 20,
+	cp->hue = ft_rect_init(cp->sat->x + cp->sat->w + 20,
 			cp->sat->y, MENU_W * 0.1, cp->sat->h);
 	cp->hue_cursor = ft_point_init(cp->hue->x, cp->hue->y + 1 / 2, 0, C_WHITE);
 	if (!cp->sat || !cp->sat_cursor || !cp->hue || !cp->hue_cursor)

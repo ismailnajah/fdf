@@ -9,6 +9,7 @@ SRC =  main.c\
 	   ft_vars.c\
 	   ft_handle_event.c\
 	   ft_draw.c\
+	   ft_draw_utils.c\
 	   ft_text_field.c\
 	   ft_text_field_draw.c\
 	   ft_color_picker.c\
@@ -33,8 +34,6 @@ LIBFTDIR = ./libft
 
 LIBFT = $(LIBFTDIR)/libft.a
 
-OS := $(shell uname)
-
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ) fdf.h
@@ -44,15 +43,15 @@ $(NAME): $(LIBFT) $(OBJ) fdf.h
 	$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
 $(LIBFT):
-	make -C $(LIBFTDIR)
+	@make -C $(LIBFTDIR)
 
 clean:
 	make -C $(LIBFTDIR) clean
 	@rm -rf $(OBJ)
 
 fclean: clean
-	make -C $(LIBFTDIR) fclean
-	rm -f $(NAME)
+	@make -C $(LIBFTDIR) fclean
+	@rm -f $(NAME)
 
 re: fclean all
 

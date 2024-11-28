@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 15:29:06 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 19:54:07 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:29:51 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ void	ft_color_option_focused(t_vars *vars, int x, int y)
 
 int	ft_color_picker_focused(t_color_picker *cp, int x, int y)
 {
-	if (ft_is_inside_rectangle(cp->hue, x, y))
+	if (ft_is_inside_rect(cp->hue, x, y))
 	{
 		cp->hue_cursor->y = y;
 		return (CP_HUE);
 	}
-	else if (ft_is_inside_rectangle(cp->sat, x, y))
+	else if (ft_is_inside_rect(cp->sat, x, y))
 	{
 		cp->sat_cursor->x = x;
 		cp->sat_cursor->y = y;

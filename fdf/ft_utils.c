@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 20:58:15 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:02:51 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ void	ft_scale_z(t_map *map, float z_off)
 			min = map->points[i].z;
 		i++;
 	}
-	map->minZ = min + 0.5f;
-	map->maxZ = max + 0.5f;
+	map->min_z = min + 0.5f;
+	map->max_z = max + 0.5f;
 }
 
 unsigned int	ft_hex_to_int(char *hex)
@@ -115,12 +115,12 @@ void	ft_normalize_z(t_map *map)
 	}
 	if (fact)
 	{
-		map->minZ = (float)min / fact;
-		map->maxZ = (float)max / fact;
+		map->min_z = (float)min / fact;
+		map->max_z = (float)max / fact;
 	}
 	else
 	{
-		map->minZ = 0;
-		map->maxZ = 0;
+		map->min_z = 0;
+		map->max_z = 0;
 	}
 }

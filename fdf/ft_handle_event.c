@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 09:24:17 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 18:38:26 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,11 @@ int	ft_on_keydown(int key, t_vars *v)
 	if (key == KEY_Q || key == KEY_E)
 		ft_camera_angle_update(&v->camera->option[ANGLE_Z], key == KEY_E);
 	if (key == KEY_UP || key == KEY_DOWN)
-		v->camera->option[Y_OFF] += (1 - 2 * (key == KEY_UP)) * OFFSET_STEP;
+		v->camera->option[Y_OFF] += (1 - 2 * (key == KEY_UP)) * X_OFF_STEP;
 	if (key == KEY_LEFT || key == KEY_RIGHT)
-		v->camera->option[X_OFF] += (1 - 2 * (key == KEY_LEFT)) * OFFSET_STEP;
+		v->camera->option[X_OFF] += (1 - 2 * (key == KEY_LEFT)) * Y_OFF_STEP;
 	if (key == KEY_PLUS || key == KEY_MINUS)
-	{
-		ft_scale_z(v->map, 1 + (1 - 2 * (key == KEY_PLUS)) * Z_STEP);
-		v->camera->option[Z_OFF] -= (1 - 2 * (key == KEY_PLUS));
-	}
+		v->camera->option[Z_OFF] += (1 - 2 * (key == KEY_MINUS)) * Z_OFF_STEP;
 	if (key == KEY_SPACE)
 		ft_view_change(RESET_ANIMATION, v);
 	return (ft_text_field_sync_value(v->camera));

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:42:09 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 09:13:59 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 15:36:41 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,11 @@ void	ft_camera_update(t_camera *s, t_camera *e)
 	s_opt = s->option;
 	e_opt = e->option;
 	i = 0;
-	while (i < OPTION_COUNT - 2)
+	while (i < SCALE)
 	{
 		if (s_opt[i] != e_opt[i] && i <= ANGLE_Z)
 			ft_camera_angle_update(&s_opt[i], s_opt[i] > e_opt[i]);
-		else
+		else if (s_opt[i] != e_opt[i])
 			ft_camera_offset_update(&s_opt[i], &e_opt[i]);
 		i++;
 	}

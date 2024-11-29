@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 09:21:15 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 20:05:17 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@
 # define MIN_ZOOM 200
 
 # define ANGLE_STEP 1
-# define OFFSET_STEP 10
-# define Z_STEP 0.05f
+# define OFFSET_STEP 1
 
 # define FACT 120
 
@@ -72,6 +71,14 @@ enum
 	TEXT_FIELD_W = MENU_W / 5,
 	TEXT_FIELD_H = 30,
 	TEXT_FIELD_MAX_CHAR = 6,
+};
+
+//steps
+enum
+{
+	X_OFF_STEP = 10,
+	Y_OFF_STEP = 10,
+	Z_OFF_STEP = 1,
 	SCALE_STEP = (MAX_ZOOM - MIN_ZOOM) / 40,
 };
 
@@ -138,7 +145,7 @@ enum
 	DEFAULT_SCALE = 300,
 	DEFAULT_X_OFF = (MAIN_W / 2),
 	DEFAULT_Y_OFF = (MAIN_H / 2),
-	DEFAULT_Z_OFF = 1,
+	DEFAULT_Z_OFF = 40,
 };
 
 //views
@@ -173,8 +180,6 @@ typedef struct s_map
 {
 	int		w;
 	int		h;
-	float	max_z;
-	float	min_z;
 	t_point	*points;
 }	t_map;
 
@@ -273,7 +278,6 @@ char			**ft_labels_init(void);
 t_text_field	*ft_text_field_init(t_camera *c);
 void			ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y);
 int				ft_text_field_event(int key, t_vars *vars);
-void			ft_camera_update_value(t_camera *c, int i);
 int				ft_text_field_sync_value(t_camera *c);
 
 //ft_text_field_draw.c
@@ -313,7 +317,6 @@ void			ft_draw_line(t_image *img, t_point a, t_point b);
 unsigned int	ft_get_point_color(t_vars *vars, t_point *p);
 float			ft_point_distance(t_point a, t_point b);
 int				ft_in_image(t_image *img, t_point a);
-void			ft_scale_z(t_map *map, float z_off);
 
 //ft_handle_event.c
 int				ft_on_keydown(int keycode, t_vars *vars);

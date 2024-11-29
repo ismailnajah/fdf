@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:12:32 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 16:00:57 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 18:38:12 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	ft_draw_line(t_image *img, t_point start, t_point end)
 
 void	ft_draw_projected_line(t_vars *vars, t_point a, int i, int j)
 {
+	t_point		p;
 	t_point		proj;
 	t_map		*map;
 	t_image		*img;
@@ -60,7 +61,12 @@ void	ft_draw_projected_line(t_vars *vars, t_point a, int i, int j)
 	map = vars->map;
 	img = vars->layout->main;
 	c = vars->camera;
-	ft_rotate_xyz_point(map->points + (j * map->w + i), &proj, c);
+	ft_point_copy(&p, map->points + (j * map->w + i));
+	if (vars->low_p->focused || vars->high_p->focused)
+		p.color = ft_get_point_color(vars, &p);
+	map->points[j * map->w + i].color = p.color;
+	p.z = p.z * (c->option[Z_OFF] / DEFAULT_Z_OFF);
+	ft_rotate_xyz_point(&p, &proj, c);
 	ft_point_scale(&proj, &proj, c);
 	if (ft_point_distance(proj, a) < EPSI)
 		ft_draw_pixel(img, a.x, a.y, ft_color_lerp(a.color, proj.color, 0.5));
@@ -70,22 +76,24 @@ void	ft_draw_projected_line(t_vars *vars, t_point a, int i, int j)
 
 void	ft_draw_cell(t_vars *vars, int i, int j)
 {
-	t_point		a;
-	t_point		*o;
+	t_point		p;
+	t_point		proj;
 	t_map		*map;
 	t_camera	*c;
 
 	map = vars->map;
 	c = vars->camera;
-	o = &map->points[j * map->w + i];
+	ft_point_copy(&p, &map->points[j * map->w + i]);
 	if (vars->low_p->focused || vars->high_p->focused)
-		o->color = ft_get_point_color(vars, o);
-	ft_rotate_xyz_point(map->points + (j * map->w + i), &a, c);
-	ft_point_scale(&a, &a, c);
+		p.color = ft_get_point_color(vars, &p);
+	map->points[j * map->w + i].color = p.color;
+	p.z = p.z * (c->option[Z_OFF] / DEFAULT_Z_OFF);
+	ft_rotate_xyz_point(&p, &proj, c);
+	ft_point_scale(&proj, &proj, c);
 	if (i + 1 < map->w)
-		ft_draw_projected_line(vars, a, i + 1, j);
+		ft_draw_projected_line(vars, proj, i + 1, j);
 	if (j + 1 < map->h)
-		ft_draw_projected_line(vars, a, i, j + 1);
+		ft_draw_projected_line(vars, proj, i, j + 1);
 }
 
 void	ft_draw_main_view(t_vars *vars)

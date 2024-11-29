@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 09:22:11 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 20:10:00 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_camera_compare(t_camera *a, t_camera *b)
 	int	i;
 
 	i = 0;
-	while (i < OPTION_COUNT - 2)
+	while (i < SCALE)
 	{
 		if (a->option[i] != b->option[i])
 			return (FALSE);
@@ -104,19 +104,9 @@ void	ft_normalize_z(t_map *map)
 	fact = max;
 	if (max != min)
 		fact = max - min;
-	while (i < map->h * map->w && max != min)
+	while (i < map->h * map->w && fact != 0)
 	{
-		map->points[i].z = (map->points[i].z - min) / fact - 0.5f;
+		map->points[i].z = (float)(map->points[i].z - min) / fact - 0.5;
 		i++;
-	}
-	if (fact)
-	{
-		map->min_z = (float)min / fact;
-		map->max_z = (float)max / fact;
-	}
-	else
-	{
-		map->min_z = 0;
-		map->max_z = 0;
 	}
 }

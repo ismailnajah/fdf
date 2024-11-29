@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 19:49:50 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 09:22:11 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_print_error(int err)
 {
-	ft_printf("[ ERROR ] ");
+	ft_printf(RED"[ ERROR ] "RESET);
 	if (err == ERR_FILE)
 		ft_printf("could not open the file: %s.\n", strerror(errno));
 	if (err == ERR_MAP)
@@ -65,7 +65,7 @@ void	ft_view_change(int state, t_vars *vars)
 			return ;
 		view_c = ft_camera_of_view(view, c);
 	}
-	ft_camera_animate(c, &view_c);
+	ft_camera_update(c, &view_c);
 	if (ft_camera_compare(c, &view_c))
 		animation_state = STOP_ANIMATION;
 }

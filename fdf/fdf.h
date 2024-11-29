@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 19:50:17 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 09:21:15 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,12 +329,10 @@ void			ft_get_min_max_z(t_map *map, int *min, int *max);
 int				ft_map_realloc_points(t_map *map);
 
 //ft_parse_map.c
-void			ft_map_debug(t_map *map);
 void			*ft_map_free(t_map *map);
 t_map			*ft_map_init(int w, int h);
 t_map			*ft_get_map_from_file(char *path);
 void			ft_get_min_max_z(t_map *map, int *min, int *max);
-void			*ft_words_free(char **words);
 
 //ft_image.c
 void			*ft_image_free(void *mlx, t_image *img);
@@ -353,7 +351,11 @@ t_camera		*ft_camera_init(void);
 void			*ft_camera_free(t_camera *c);
 t_camera		ft_camera_of_view(int view, t_camera *old_s);
 t_camera		ft_camera_default(void);
-void			ft_camera_animate(t_camera *s, t_camera *e);
+void			ft_camera_update(t_camera *s, t_camera *e);
+
+//ft_camera_utils.c
+void			ft_camera_angle_update(float *angle, int direction);
+void			ft_camera_offset_update(float *s, float *e);
 
 //ft_point.c
 t_point			*ft_point_init(float x, float y, float z, unsigned int color);

@@ -24,6 +24,7 @@ SRC =  main.c\
 	   ft_point.c\
 	   ft_image.c\
 	   ft_camera.c\
+	   ft_camera_utils.c\
 	   ft_rectangle.c\
 	   ft_circle.c\
 	   ft_utils.c

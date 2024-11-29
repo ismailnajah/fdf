@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:53:37 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 18:10:18 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 09:09:58 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,16 @@ static int	count_words(char const *s, char c)
 	return (count);
 }
 
-static char	**free_previous(char **list_words, int index)
+char	**ft_split_free(char **list_words)
 {
-	while (index >= 0)
+	int	i;
+
+	i = 0;
+	while (list_words[i])
 	{
-		free(list_words[index]);
-		list_words[index] = NULL;
-		index--;
+		free(list_words[i]);
+		list_words[i] = NULL;
+		i++;
 	}
 	free(list_words);
 	return (NULL);
@@ -64,7 +67,7 @@ static char	**populate_list_words(char **list_words, char const *s, char c)
 				i++;
 			list_words[index] = ft_substr(s, start, i - start);
 			if (!list_words[index])
-				return (free_previous(list_words, index - 1));
+				return (ft_split_free(list_words));
 			index++;
 		}
 	}

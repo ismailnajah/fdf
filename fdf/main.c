@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 20:14:46 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 09:24:34 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		ft_printf("Usage: ./fdf MAP_FILE.fdf");
+		ft_printf("Usage: ./fdf MAP_FILE.fdf\n");
 		return (1);
 	}
 	if (ft_strncmp(av[1] + ft_strlen(av[1]) - 4, ".fdf", 4) != 0)

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 09:22:52 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/24 21:00:31 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 09:11:46 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,4 @@ float	ft_fmod(float value, float div)
 	if (abs_value >= div)
 		return ((abs_value - div) * sign);
 	return (value);
-}
-
-void	ft_angle_change(float *angle, int direction)
-{
-	direction = (1 - 2 * direction);
-	*angle = ft_fmod(*angle + direction * ANGLE_STEP, 360.0f);
 }

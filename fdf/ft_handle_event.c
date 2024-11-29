@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 17:25:10 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 09:24:17 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_on_destroy(t_vars *vars)
 {
 	ft_vars_free(vars);
-	ft_printf("[ INFO  ] Window Closed\n");
+	ft_printf(GREEN"[ INFO  ] "RESET"Window Closed\n");
 	exit(0);
 	return (0);
 }
@@ -27,11 +27,11 @@ int	ft_on_keydown(int key, t_vars *v)
 	if (v->global_mode == INSERT)
 		return (ft_text_field_event(key, v));
 	if (key == KEY_A || key == KEY_D)
-		ft_angle_change(&v->camera->option[ANGLE_X], key == KEY_D);
+		ft_camera_angle_update(&v->camera->option[ANGLE_X], key == KEY_D);
 	if (key == KEY_S || key == KEY_W)
-		ft_angle_change(&v->camera->option[ANGLE_Y], key == KEY_W);
+		ft_camera_angle_update(&v->camera->option[ANGLE_Y], key == KEY_W);
 	if (key == KEY_Q || key == KEY_E)
-		ft_angle_change(&v->camera->option[ANGLE_Z], key == KEY_E);
+		ft_camera_angle_update(&v->camera->option[ANGLE_Z], key == KEY_E);
 	if (key == KEY_UP || key == KEY_DOWN)
 		v->camera->option[Y_OFF] += (1 - 2 * (key == KEY_UP)) * OFFSET_STEP;
 	if (key == KEY_LEFT || key == KEY_RIGHT)

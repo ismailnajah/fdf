@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:18:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 18:10:44 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/29 09:02:20 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@
 # define STDIN	0
 # define STDOUT	1
 # define STDERR	2
+
+//printf colors
+# define RESET "\033[0m"
+# define RED   "\033[31m"
+# define GREEN "\033[32m"
 
 # define SUCCESS 1
 # define FAILURE 0
@@ -89,6 +94,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 char	**ft_split(char const *s, char c);
 int		ft_split_count(char **words);
+char	**ft_split_free(char **list_words);
 
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);

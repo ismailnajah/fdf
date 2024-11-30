@@ -91,6 +91,9 @@ To interact with the wireframe, you can use the following keyboard controls:
 ![screenshot1](images/42.png)
 *42.fdf Map.*
 
+![screenshot4](images/zidan.png)
+*zidan.fdf Map.*
+
 ![screenshot2](images/Japan.L.png)
 *Japan.L.fdf Map.*
 

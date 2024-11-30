@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:30:01 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 19:08:54 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:56:23 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,25 @@ void	ft_get_min_max_z(t_map *map, int *min, int *max)
 			*max = map->points[i].z;
 		else if (map->points[i].z < *min)
 			*min = map->points[i].z;
+		i++;
+	}
+}
+
+void	ft_normalize_z(t_map *map)
+{
+	int	i;
+	int	min;
+	int	max;
+	int	fact;
+
+	ft_get_min_max_z(map, &min, &max);
+	i = 0;
+	fact = max;
+	if (max != min)
+		fact = max - min;
+	while (i < map->h * map->w && fact != 0)
+	{
+		map->points[i].z = (float)(map->points[i].z - min) / fact - 0.5;
 		i++;
 	}
 }

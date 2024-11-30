@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 21:13:24 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 15:59:21 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 12:01:35 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,13 @@ int	main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		ft_printf("Usage: ./fdf MAP_FILE.fdf\n");
+		ft_printf("Usage: ./fdf filename.fdf\n");
 		return (1);
 	}
-	if (ft_strncmp(av[1] + ft_strlen(av[1]) - 4, ".fdf", 4) != 0)
-		return (ft_print_error(ERR_FILE_EXTENSION));
-	if (ft_vars_init(&vars, av[ac - 1]) == FAILURE)
+	if (!is_valid_file(av[1]))
 		return (2);
+	if (ft_vars_init(&vars, av[ac - 1]) == FAILURE)
+		return (3);
 	mlx_hook(vars.win, ON_KEYDOWN, 1L << 0, ft_on_keydown, &vars);
 	mlx_hook(vars.win, ON_MOUSEUP, 1L << 3, ft_on_mouse_up, &vars);
 	mlx_hook(vars.win, ON_MOUSEMOVE, 1L << 6, ft_on_mouse_move, &vars);

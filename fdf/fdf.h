@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/30 11:31:24 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 12:41:52 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define ERR_MALLOC -4
 # define ERR_EMPTY_FILE -5
 # define ERR_FILE_EXTENSION -6
+# define ERR_IS_DIR -7
 
 # define PI 3.14159265358979311600
 # define EPSI 2
@@ -39,7 +40,6 @@
 
 # define ANGLE_STEP 1
 # define OFFSET_STEP 1
-
 # define FACT 120
 
 # define CP_HUE 1
@@ -332,6 +332,7 @@ t_map			*ft_map_init(int w, int h);
 void			*ft_map_free(t_map *map);
 void			ft_get_min_max_z(t_map *map, int *min, int *max);
 int				ft_map_realloc_points(t_map *map);
+void			ft_normalize_z(t_map *map);
 
 //ft_parse_map.c
 void			*ft_map_free(t_map *map);
@@ -372,8 +373,8 @@ void			ft_point_copy(t_point	*dst, t_point *src);
 void			ft_view_change(int state, t_vars *vars);
 unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
 unsigned int	ft_hex_to_int(char *hex);
-void			ft_normalize_z(t_map *map);
-int				ft_print_error(int err);
+int				ft_print_error(int err, char *path);
+int				is_valid_file(char *path);
 
 //ft_cube.c
 void			ft_draw_cube_view(t_image *img, t_vars *vars);

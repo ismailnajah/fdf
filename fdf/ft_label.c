@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:08:34 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/30 11:38:25 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 12:08:07 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_label(t_vars *vars, int x, int y, char *text)
 	mlx_string_put(vars->mlx, vars->win, x, y, C_WHITE, text);
 }
 
-void	ft_label_color_opt(t_vars *vars)
+void	ft_label_color_opt(t_vars *vars, char *buff)
 {
 	ft_label(vars, MENU_W * 0.2, MENU_H / 2 - 20, "Low  Point Color");
 	ft_label(vars, MENU_W * 0.2, MENU_H / 2 + 40, "High Point Color");
@@ -49,7 +49,7 @@ void	ft_label_draw(t_vars *vars)
 		i++;
 	}
 	ft_label(vars, MENU_W * 0.3, label_y + 50, vars->labels[i]);
-	ft_label_color_opt(vars);
+	ft_label_color_opt(vars, buff);
 }
 
 char	**ft_labels_init(void)

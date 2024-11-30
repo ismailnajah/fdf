@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/30 11:38:47 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 12:19:54 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	ft_parse_line(t_map *map, char *line, int j)
 	old_w = w;
 	map->w = w;
 	if (!ft_map_realloc_points(map))
-		return (ft_print_error(ERR_MALLOC), ft_split_free(words), FAILURE);
+		return (ft_print_error(ERR_MALLOC, NULL), ft_split_free(words), 0);
 	i = 0;
 	while (words[i] && words[i][0] != '\n')
 	{
@@ -76,7 +76,7 @@ int	ft_parse_map(int fd, t_map *map)
 
 	line = get_next_line(fd);
 	if (!line)
-		return (ft_print_error(ERR_EMPTY_FILE), FAILURE);
+		return (ft_print_error(ERR_EMPTY_FILE, NULL), FAILURE);
 	j = 0;
 	while (line)
 	{
@@ -86,7 +86,7 @@ int	ft_parse_map(int fd, t_map *map)
 		if (!ret)
 		{
 			get_next_line(FREE_GNL_BUFFER);
-			return (ft_print_error(ERR_PARSE));
+			return (ft_print_error(ERR_PARSE, NULL));
 		}
 		line = get_next_line(fd);
 		j++;
@@ -101,13 +101,13 @@ t_map	*ft_get_map_from_file(char *path)
 
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
-		return (ft_print_error(ERR_FILE), NULL);
+		return (ft_print_error(ERR_FILE, path), NULL);
 	ft_printf(GREEN"[ INFO  ]"RESET" Parsing the map...\n");
 	map = ft_map_init(0, 0);
 	if (!map)
 	{
 		close(fd);
-		return (ft_print_error(ERR_MALLOC), NULL);
+		return (ft_print_error(ERR_MALLOC, path), NULL);
 	}
 	if (!ft_parse_map(fd, map))
 	{

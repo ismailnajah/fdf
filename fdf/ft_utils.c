@@ -6,17 +6,22 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 20:10:00 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 12:52:45 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	ft_print_error(int err)
+int	ft_print_error(int err, char *path)
 {
 	ft_printf(RED"[ ERROR ] "RESET);
 	if (err == ERR_FILE)
-		ft_printf("could not open the file: %s.\n", strerror(errno));
+	{
+		ft_printf("could not open %s: ", path);
+		perror("");
+	}
+	if (err == ERR_IS_DIR)
+		ft_printf("could not open %s: %s.\n", path, strerror(EISDIR));
 	if (err == ERR_MAP)
 		ft_printf("Invalid map.\n");
 	if (err == ERR_PARSE)
@@ -26,7 +31,10 @@ int	ft_print_error(int err)
 	if (err == ERR_EMPTY_FILE)
 		ft_printf("The map is empty.\n");
 	if (err == ERR_FILE_EXTENSION)
-		ft_printf("Wrong file extension\n");
+	{
+		ft_printf("Bad file extension.\n");
+		ft_printf("    Usage: ./fdf filename.fdf\n");
+	}
 	return (FAILURE);
 }
 
@@ -92,21 +100,17 @@ unsigned int	ft_hex_to_int(char *hex)
 	return (color);
 }
 
-void	ft_normalize_z(t_map *map)
+int	is_valid_file(char *path)
 {
-	int	i;
-	int	min;
-	int	max;
-	int	fact;
+	int	fd;
 
-	ft_get_min_max_z(map, &min, &max);
-	i = 0;
-	fact = max;
-	if (max != min)
-		fact = max - min;
-	while (i < map->h * map->w && fact != 0)
+	fd = open(path, O_RDONLY | O_DIRECTORY);
+	if (fd > 0)
 	{
-		map->points[i].z = (float)(map->points[i].z - min) / fact - 0.5;
-		i++;
+		close(fd);
+		return (ft_print_error(ERR_IS_DIR, path));
 	}
+	if (ft_strncmp(path + ft_strlen(path) - 4, ".fdf", 4) != 0)
+		return (ft_print_error(ERR_FILE_EXTENSION, path));
+	return (SUCCESS);
 }

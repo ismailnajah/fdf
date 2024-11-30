@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:14:20 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 16:34:04 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:29:01 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,15 @@ void	ft_cube_draw(t_image *img, t_point *cube)
 	i = 0;
 	while (i < 4)
 	{
-		ft_draw_line(img, cube[i], cube[(i + 1) % 4]);
+		ft_draw_line(img, cube[i], cube[(i + 1) % 4], 1);
 		i++;
 	}
-	ft_draw_line(img, cube[0], cube[3]);
-	ft_draw_line(img, cube[0], cube[4]);
-	ft_draw_line(img, cube[7], cube[3]);
-	ft_draw_line(img, cube[4], cube[7]);
-	ft_draw_line(img, cube[4], cube[5]);
-	ft_draw_line(img, cube[5], cube[1]);
+	ft_draw_line(img, cube[0], cube[3], 1);
+	ft_draw_line(img, cube[0], cube[4], 1);
+	ft_draw_line(img, cube[7], cube[3], 1);
+	ft_draw_line(img, cube[4], cube[7], 1);
+	ft_draw_line(img, cube[4], cube[5], 1);
+	ft_draw_line(img, cube[5], cube[1], 1);
 }
 
 void	ft_draw_cube_view(t_image *img, t_vars *vars)

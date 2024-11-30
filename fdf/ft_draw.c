@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:12:32 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 18:38:12 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:31:48 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_draw_pixel(t_image *img, int x, int y, int color)
 	*(unsigned int *) dst = color;
 }
 
-void	ft_draw_line(t_image *img, t_point start, t_point end)
+void	ft_draw_line(t_image *img, t_point start, t_point end, int fact)
 {
 	t_point	d;
 	t_point	p;
@@ -39,14 +39,15 @@ void	ft_draw_line(t_image *img, t_point start, t_point end)
 	d.y /= steps;
 	p.x = start.x;
 	p.y = start.y;
+	fact = abs(fact);
 	while (steps > 0)
 	{
 		p.color = ft_color_lerp(start.color, end.color,
 				(float)(dist - steps) / dist);
 		ft_draw_pixel(img, p.x, p.y, p.color);
-		p.x += d.x;
-		p.y += d.y;
-		steps--;
+		p.x += d.x * fact;
+		p.y += d.y * fact;
+		steps -= fact;
 	}
 }
 
@@ -71,7 +72,7 @@ void	ft_draw_projected_line(t_vars *vars, t_point a, int i, int j)
 	if (ft_point_distance(proj, a) < EPSI)
 		ft_draw_pixel(img, a.x, a.y, ft_color_lerp(a.color, proj.color, 0.5));
 	else
-		ft_draw_line(img, a, proj);
+		ft_draw_line(img, a, proj, 1 + vars->camera->option[DOT_FACT]);
 }
 
 void	ft_draw_cell(t_vars *vars, int i, int j)

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 09:09:38 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:38:47 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,6 @@ t_map	*ft_get_map_from_file(char *path)
 	close(fd);
 	ft_printf(GREEN"[ INFO  ] "RESET"Parsing done.\n");
 	ft_printf(GREEN"[ INFO  ] "RESET"Map %s ( %d x %d ) loaded.\n",
-		ft_strrchr(path, '/') + 1, map->w, map->h);
+		basename(path), map->w, map->h);
 	return (map);
 }

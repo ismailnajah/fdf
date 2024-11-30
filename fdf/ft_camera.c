@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:42:09 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 15:36:41 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:32:20 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_camera	*ft_camera_init(void)
 	c->option[X_OFF] = DEFAULT_X_OFF;
 	c->option[Y_OFF] = DEFAULT_Y_OFF;
 	c->option[Z_OFF] = DEFAULT_Z_OFF;
+	c->option[DOT_FACT] = 0;
 	c->field = ft_text_field_init(c);
 	if (!c->field)
 		return (ft_camera_free(c));
@@ -50,6 +51,7 @@ t_camera	ft_camera_default(void)
 	c.option[X_OFF] = DEFAULT_X_OFF;
 	c.option[Y_OFF] = DEFAULT_Y_OFF;
 	c.option[Z_OFF] = DEFAULT_Z_OFF;
+	c.option[DOT_FACT] = 0;
 	return (c);
 }
 

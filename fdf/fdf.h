@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 20:05:17 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:31:24 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
+# include <libgen.h>
 # include "libft/libft.h"
 # include "mlx.h"
 
@@ -229,6 +230,7 @@ enum
 	Y_OFF,
 	Z_OFF,
 	SCALE,
+	DOT_FACT,
 	OPTION_COUNT,
 };
 
@@ -311,7 +313,7 @@ unsigned int	ft_color_parse(char *color_str);
 //ft_draw.c
 void			ft_draw_pixel(t_image *img, int x, int y, int color);
 void			ft_draw_main_view(t_vars *vars);
-void			ft_draw_line(t_image *img, t_point a, t_point b);
+void			ft_draw_line(t_image *img, t_point a, t_point b, int fact);
 
 //ft_draw_utils.c
 unsigned int	ft_get_point_color(t_vars *vars, t_point *p);

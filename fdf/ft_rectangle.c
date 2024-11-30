@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 15:23:40 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/28 15:31:13 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:29:27 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ void	ft_border_draw(t_image *img, t_point a, int w, int h)
 	b.x = a.x + w;
 	b.y = a.y;
 	b.color = a.color;
-	ft_draw_line(img, a, b);
+	ft_draw_line(img, a, b, 1);
 	b.x = a.x;
 	b.y = a.y + h;
-	ft_draw_line(img, b, a);
+	ft_draw_line(img, b, a, 1);
 	a.x = a.x + w;
 	a.y = a.y + h;
-	ft_draw_line(img, a, b);
+	ft_draw_line(img, a, b, 1);
 	b.x = a.x;
 	b.y = a.y - h;
-	ft_draw_line(img, a, b);
+	ft_draw_line(img, a, b, 1);
 }
 
 int	ft_is_inside_rect(t_rect *rec, int x, int y)

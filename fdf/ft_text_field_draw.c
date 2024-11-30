@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:31:17 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 18:34:20 by inajah           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:28:18 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_text_field_draw_cursor(t_vars *vars, int frames)
 	}
 	off = !off * (frames % 200 == 0) + off * (frames % 200 != 0);
 	if (i < OPTION_COUNT && !off)
-		ft_draw_line(vars->layout->menu, cursor_s, cursor_e);
+		ft_draw_line(vars->layout->menu, cursor_s, cursor_e, 1);
 }
 
 void	ft_text_field_draw(t_vars *vars)

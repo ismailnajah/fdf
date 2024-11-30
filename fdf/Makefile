@@ -29,31 +29,35 @@ SRC =  main.c\
 	   ft_circle.c\
 	   ft_utils.c
 
+OBJDIR := obj
 OBJ := $(SRC:.c=.o)
+OBJ := $(OBJ:%=$(OBJDIR)/%)
 
 LIBFTDIR = ./libft
-
 LIBFT = $(LIBFTDIR)/libft.a
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ) fdf.h
+$(NAME): $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME) $(LIBFT)
 
-%.o : %.c fdf.h
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o : %.c fdf.h | $(OBJDIR)
 	$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
 $(LIBFT):
-	@make -C $(LIBFTDIR)
+	make -s -C $(LIBFTDIR)
 
 clean:
-	make -C $(LIBFTDIR) clean
-	@rm -rf $(OBJ)
+	make -s -C $(LIBFTDIR) clean
+	rm -rf $(OBJDIR)
 
 fclean: clean
-	@make -C $(LIBFTDIR) fclean
-	@rm -f $(NAME)
+	make -s -C $(LIBFTDIR) fclean
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:07:50 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/30 12:52:45 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 09:50:55 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	ft_view_change(int state, t_vars *vars)
 		view_c = ft_camera_default();
 	else if (animation_state == UPDATE_ANIMATION)
 	{
-		view = ft_is_cube_clicked(vars->mouse_x, vars->mouse_y, vars);
+		view = ft_is_cube_clicked(vars->mouse->x, vars->mouse->y, vars);
 		if (!view)
 			return ;
 		view_c = ft_camera_of_view(view, c);

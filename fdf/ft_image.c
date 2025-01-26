@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:01:47 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/27 17:11:58 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 10:10:19 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_image	*ft_image_init(void *mlx, int width, int height)
 		return (ft_image_free(mlx, img));
 	img->w = width;
 	img->h = height;
+	img->focused = false;
 	return (img);
 }
 
@@ -87,4 +88,21 @@ t_layout	*ft_layout_init(void *mlx)
 		return (ft_layout_free(mlx, layout));
 	ft_image_clear(layout->menu, C_GREY);
 	return (layout);
+}
+
+void	ft_layout_set_image_focused(t_layout *layout, int x, int y)
+{
+	if (x < layout->menu->w)
+		layout->menu->focused = true;
+	else if (x > WIN_H - layout->cube_view->w && y < layout->cube_view->h)
+		layout->cube_view->focused = true;
+	else
+		layout->main->focused = true;
+}
+
+void	ft_layout_reset_image_focused(t_layout *layout)
+{
+	layout->menu->focused = false;
+	layout->cube_view->focused = false;
+	layout->main->focused = false;
 }

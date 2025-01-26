@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/30 13:14:02 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 10:07:07 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
+# include <stdbool.h>
 # include <libgen.h>
 # include "libft/libft.h"
 # include "mlx.h"
@@ -167,6 +168,7 @@ typedef struct s_image
 	int		endian;
 	int		w;
 	int		h;
+	bool	focused;
 }	t_image;
 
 typedef struct s_point
@@ -240,11 +242,19 @@ typedef struct s_camera
 	float			option[OPTION_COUNT];
 }	t_camera;
 
+typedef struct s_mouse
+{
+	int	x;
+	int	y;
+	bool left_pressed;
+	bool right_pressed;
+}	t_mouse;
+
 typedef struct s_color_option
 {
 	t_point			*hue;
 	t_point			*sat;
-	int				focused;
+	bool			focused;
 	unsigned int	color;
 }	t_color_option;
 
@@ -260,8 +270,7 @@ typedef struct s_vars
 	t_color_option	*low_p;
 	t_color_option	*high_p;
 	char			**labels;
-	int				mouse_x;
-	int				mouse_y;
+	t_mouse			*mouse;
 	int				global_mode;
 	int				tf_cursor;
 }	t_vars;
@@ -275,6 +284,10 @@ int				ft_vars_init(t_vars *vars, char *map_path);
 void			ft_label_draw(t_vars *vars);
 void			ft_label(t_vars *vars, int x, int y, char *text);
 char			**ft_labels_init(void);
+
+//ft_mouse.c
+t_mouse			*ft_mouse_init(void);
+void	ft_mouse_update_position(t_vars *vars, int x, int y);
 
 //ft_text_field.c
 t_text_field	*ft_text_field_init(t_camera *c);
@@ -346,6 +359,8 @@ t_image			*ft_image_init(void *mlx, int width, int height);
 void			ft_image_clear(t_image *img, unsigned int color);
 void			*ft_layout_free(void *mlx, t_layout *layout);
 t_layout		*ft_layout_init(void *mlx);
+void			ft_layout_set_image_focused(t_layout *layout, int x, int y);
+void			ft_layout_reset_image_focused(t_layout *layout);
 
 //ft_math.c
 float			ft_fmod(float value, float div);

@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:30:04 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 20:05:41 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 09:35:57 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,9 @@ int	ft_vars_init(t_vars *vars, char *map_path)
 	vars->low_p = ft_color_option_init(vars->color_picker);
 	vars->high_p = ft_color_option_init(vars->color_picker);
 	vars->labels = ft_labels_init();
+	vars->mouse = ft_mouse_init();
 	if (!vars->win || !vars->layout || !vars->camera || !vars->cube
-		|| !vars->low_p || !vars->high_p || !vars->labels)
+		|| !vars->low_p || !vars->high_p || !vars->labels || !vars->mouse)
 		return (ft_vars_free(vars), FAILURE);
 	return (SUCCESS);
 }

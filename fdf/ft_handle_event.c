@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/29 18:38:26 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 10:09:21 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,17 @@ int	ft_on_keydown(int key, t_vars *v)
 	if (key == KEY_Q || key == KEY_E)
 		ft_camera_angle_update(&v->camera->option[ANGLE_Z], key == KEY_E);
 	if (key == KEY_UP || key == KEY_DOWN)
-		v->camera->option[Y_OFF] += (1 - 2 * (key == KEY_UP)) * X_OFF_STEP;
+		v->camera->option[Y_OFF] += (1 - 2 * (key == KEY_UP)) * Y_OFF_STEP;
 	if (key == KEY_LEFT || key == KEY_RIGHT)
-		v->camera->option[X_OFF] += (1 - 2 * (key == KEY_LEFT)) * Y_OFF_STEP;
+		v->camera->option[X_OFF] += (1 - 2 * (key == KEY_LEFT)) * X_OFF_STEP;
 	if (key == KEY_PLUS || key == KEY_MINUS)
 		v->camera->option[Z_OFF] += (1 - 2 * (key == KEY_MINUS)) * Z_OFF_STEP;
 	if (key == KEY_SPACE)
 		ft_view_change(RESET_ANIMATION, v);
 	return (ft_text_field_sync_value(v->camera));
 }
+
+int lmouse_pressed = 0;
 
 int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)
 {
@@ -60,24 +62,35 @@ int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)
 	}
 	if (keycode == KEY_LEFT_CLICK)
 	{
-		vars->mouse_x = x;
-		vars->mouse_y = y;
+		ft_mouse_update_position(vars, x, y);
+		vars->mouse->left_pressed = true;
 		cp->focused = ft_color_picker_focused(cp, x, y);
 		if (!vars->color_picker->focused)
 			ft_color_option_focused(vars, x, y);
 		ft_text_field_focused(vars, x, y);
+		ft_layout_set_image_focused(vars->layout, x, y);
 		ft_view_change(UPDATE_ANIMATION, vars);
 	}
 	return (ft_text_field_sync_value(vars->camera));
 }
+
 
 int	ft_on_mouse_up(int button, int x, int y, t_vars *vars)
 {
 	(void)x;
 	(void)y;
 	if (button == KEY_LEFT_CLICK)
-		vars->color_picker->focused = FALSE;
+	{
+		vars->color_picker->focused = false;
+		vars->mouse->left_pressed = false;
+		ft_layout_reset_image_focused(vars->layout);
+	}
 	return (0);
+}
+
+bool is_main_focused(t_vars *vars)
+{
+	return (vars->layout->main->focused);
 }
 
 int	ft_on_mouse_move(int x, int y, t_vars *vars)
@@ -98,6 +111,13 @@ int	ft_on_mouse_move(int x, int y, t_vars *vars)
 				x = vars->color_picker->x + vars->color_picker->sat->w - 1;
 		}
 		ft_color_picker_focused(vars->color_picker, x, y);
+	}
+	else if (vars->mouse->left_pressed && is_main_focused(vars))
+	{
+		vars->camera->option[Y_OFF] += y - vars->mouse->y;
+		vars->camera->option[X_OFF] += x - vars->mouse->x;
+		ft_mouse_update_position(vars, x, y);
+		return (ft_text_field_sync_value(vars->camera));
 	}
 	return (0);
 }

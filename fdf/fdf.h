@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2025/01/26 10:07:07 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 10:25:07 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -372,6 +372,7 @@ t_camera		*ft_camera_init(void);
 void			*ft_camera_free(t_camera *c);
 t_camera		ft_camera_of_view(int view, t_camera *old_s);
 t_camera		ft_camera_default(void);
+void	ft_camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step);
 void			ft_camera_update(t_camera *s, t_camera *e);
 
 //ft_camera_utils.c

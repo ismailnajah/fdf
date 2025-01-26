@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:42:09 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/30 11:32:20 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 10:56:15 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,26 @@ t_camera	ft_camera_of_view(int view, t_camera *old)
 		c.option[ANGLE_Z] = -90.0f;
 	}
 	return (c);
+}
+
+void	ft_camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step)
+{
+    float mousex = mouse->x - MENU_W;
+    float mousey = mouse->y;
+
+    float dx = mousex - camera->option[X_OFF];
+    float dy = mousey - camera->option[Y_OFF];
+
+    float new_scale = camera->option[SCALE] + scale_step;
+
+    if (new_scale < MIN_ZOOM) new_scale = MIN_ZOOM;
+    if (new_scale > MAX_ZOOM) new_scale = MAX_ZOOM;
+
+    float scale_ratio = new_scale / camera->option[SCALE];
+    camera->option[X_OFF] -= dx * (scale_ratio - 1);
+    camera->option[Y_OFF] -= dy * (scale_ratio - 1);
+
+    camera->option[SCALE] = new_scale;
 }
 
 void	ft_camera_update(t_camera *s, t_camera *e)

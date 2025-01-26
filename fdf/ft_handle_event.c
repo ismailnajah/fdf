@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2025/01/26 10:09:21 by inajah           ###   ########.fr       */
+/*   Updated: 2025/01/26 10:19:43 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,19 @@ int	ft_on_mouse_event(int keycode, int x, int y, t_vars *vars)
 	t_color_picker	*cp;
 
 	cp = vars->color_picker;
+	ft_mouse_update_position(vars, x, y);
 	if (keycode == KEY_SCROLL_UP)
 	{
 		if (vars->camera->option[SCALE] <= MAX_ZOOM)
-			vars->camera->option[SCALE] += SCALE_STEP;
+			ft_camera_update_zoom(vars->camera, vars->mouse, SCALE_STEP);
 	}
 	if (keycode == KEY_SCROLL_DOWN)
 	{
 		if (vars->camera->option[SCALE] > MIN_ZOOM)
-			vars->camera->option[SCALE] -= SCALE_STEP;
+			ft_camera_update_zoom(vars->camera, vars->mouse, -SCALE_STEP);
 	}
 	if (keycode == KEY_LEFT_CLICK)
 	{
-		ft_mouse_update_position(vars, x, y);
 		vars->mouse->left_pressed = true;
 		cp->focused = ft_color_picker_focused(cp, x, y);
 		if (!vars->color_picker->focused)

@@ -6,7 +6,7 @@
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:30:04 by inajah            #+#    #+#             */
-/*   Updated: 2025/01/26 09:35:57 by inajah           ###   ########.fr       */
+/*   Updated: 2025/02/10 13:36:23 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	ft_vars_free(t_vars *vars)
 		mlx_destroy_display(vars->mlx);
 	ft_color_picker_free(vars->color_picker);
 	free(vars->labels);
+	free(vars->mouse);
 	ft_color_option_free(vars->low_p);
 	ft_color_option_free(vars->high_p);
 	free(vars->mlx);

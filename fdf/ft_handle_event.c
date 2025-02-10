@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:18:59 by inajah            #+#    #+#             */
-/*   Updated: 2025/01/26 11:58:48 by inajah           ###   ########.fr       */
+/*   Updated: 2025/02/10 13:19:19 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_on_destroy(t_vars *vars)
 {
 	ft_vars_free(vars);
-	//ft_printf("[1]    1337420 segmentation fault\n");
+//	ft_printf("[1]    1337420 segmentation fault\n");
 	ft_printf(GREEN"[ INFO  ] "RESET"Window Closed\n");
 	exit(0);
 	return (0);

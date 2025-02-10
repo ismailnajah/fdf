@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:18:29 by inajah            #+#    #+#             */
-/*   Updated: 2024/11/30 12:19:54 by inajah           ###   ########.fr       */
+/*   Updated: 2025/02/10 13:28:26 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ void	ft_parse_point(t_map *map, int i, int j, char *point_str)
 	words = ft_split(point_str, ',');
 	if (!words)
 		return ;
+	if (!words[0])
+	{
+		ft_split_free(words);
+		return ;
+	}
 	map->points[j * map->w + i].z = ft_atoi(words[0]);
 	map->points[j * map->w + i].color = ft_color_parse(words[1]);
 	words = ft_split_free(words);

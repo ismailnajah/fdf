@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2025/01/26 10:25:07 by inajah           ###   ########.fr       */
+/*   Updated: 2025/02/10 13:15:08 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define PI 3.14159265358979311600
 # define EPSI 2
 
-# define MAX_ZOOM 8000
+# define MAX_ZOOM 5000
 # define MIN_ZOOM 200
 
 # define ANGLE_STEP 1

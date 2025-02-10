@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:42:09 by inajah            #+#    #+#             */
-/*   Updated: 2025/01/26 10:56:15 by inajah           ###   ########.fr       */
+/*   Updated: 2025/02/10 13:17:48 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	ft_camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step)
     float new_scale = camera->option[SCALE] + scale_step;
 
     if (new_scale < MIN_ZOOM) new_scale = MIN_ZOOM;
-    if (new_scale > MAX_ZOOM) new_scale = MAX_ZOOM;
+    //if (new_scale > MAX_ZOOM) new_scale = MAX_ZOOM;
 
     float scale_ratio = new_scale / camera->option[SCALE];
     camera->option[X_OFF] -= dx * (scale_ratio - 1);

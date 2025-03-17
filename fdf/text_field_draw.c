@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_text_field_draw.c                               :+:      :+:    :+:   */
+/*   text_field_draw.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,17 +12,17 @@
 
 #include "fdf.h"
 
-void	ft_text_field_draw_border(t_image *img, t_text_field *f)
+void	text_field_draw_border(t_image *img, t_text_field *f)
 {
 	t_point			a;
 
 	a.x = f->x;
 	a.y = f->y;
 	a.color = C_GREEN * f->focused + C_WHITE;
-	ft_border_draw(img, a, f->w, f->h);
+	border_draw(img, a, f->w, f->h);
 }
 
-void	ft_text_field_draw_cursor(t_vars *vars, int frames)
+void	text_field_draw_cursor(t_vars *vars, int frames)
 {
 	static int	off;
 	t_point		cursor_s;
@@ -46,10 +46,10 @@ void	ft_text_field_draw_cursor(t_vars *vars, int frames)
 	}
 	off = !off * (frames % 200 == 0) + off * (frames % 200 != 0);
 	if (i < OPTION_COUNT && !off)
-		ft_draw_line(vars->layout->menu, cursor_s, cursor_e, 1);
+		draw_line(vars->layout->menu, cursor_s, cursor_e, 1);
 }
 
-void	ft_text_field_draw(t_vars *vars)
+void	text_field_draw(t_vars *vars)
 {
 	t_text_field	*fields;
 	static int		frames;
@@ -59,9 +59,9 @@ void	ft_text_field_draw(t_vars *vars)
 	i = 0;
 	while (i < OPTION_COUNT)
 	{
-		ft_text_field_draw_border(vars->layout->menu, &fields[i]);
+		text_field_draw_border(vars->layout->menu, &fields[i]);
 		i++;
 	}
-	ft_text_field_draw_cursor(vars, frames);
+	text_field_draw_cursor(vars, frames);
 	frames = (frames + 1) % 1000;
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_label.c                                         :+:      :+:    :+:   */
+/*   label.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,23 +12,23 @@
 
 #include "fdf.h"
 
-void	ft_label(t_vars *vars, int x, int y, char *text)
+void	label(t_vars *vars, int x, int y, char *text)
 {
 	mlx_string_put(vars->mlx, vars->win, x, y, C_WHITE, text);
 }
 
-void	ft_label_color_opt(t_vars *vars, char *buff)
+void	label_color_opt(t_vars *vars, char *buff)
 {
-	ft_label(vars, MENU_W * 0.2, MENU_H / 2 - 20, "Low  Point Color");
-	ft_label(vars, MENU_W * 0.2, MENU_H / 2 + 40, "High Point Color");
+	label(vars, MENU_W * 0.2, MENU_H / 2 - 20, "Low  Point Color");
+	label(vars, MENU_W * 0.2, MENU_H / 2 + 40, "High Point Color");
 	sprintf(buff, "0x");
 	sprintf(buff + 2, "%.6X", vars->low_p->color);
-	ft_label(vars, MENU_W * 0.7, MENU_H / 2 - 20, buff);
+	label(vars, MENU_W * 0.7, MENU_H / 2 - 20, buff);
 	sprintf(buff + 2, "%.6X", vars->high_p->color);
-	ft_label(vars, MENU_W * 0.7, MENU_H / 2 + 40, buff);
+	label(vars, MENU_W * 0.7, MENU_H / 2 + 40, buff);
 }
 
-void	ft_label_draw(t_vars *vars)
+void	label_draw(t_vars *vars)
 {
 	static char	buff[14];
 	t_camera	*c;
@@ -40,19 +40,19 @@ void	ft_label_draw(t_vars *vars)
 	while (i < OPTION_COUNT)
 	{
 		label_y = c->field[i].y + c->field[i].h / 2 + 5;
-		ft_label(vars, 20, label_y, vars->labels[i]);
+		label(vars, 20, label_y, vars->labels[i]);
 		sprintf(buff, "%d", (int)c->option[i]);
 		if (c->field[i].focused)
-			ft_label(vars, c->field[i].x + 5, label_y, c->field[i].text);
+			label(vars, c->field[i].x + 5, label_y, c->field[i].text);
 		else
-			ft_label(vars, c->field[i].x + 5, label_y, buff);
+			label(vars, c->field[i].x + 5, label_y, buff);
 		i++;
 	}
-	ft_label(vars, MENU_W * 0.3, label_y + 50, vars->labels[i]);
-	ft_label_color_opt(vars, buff);
+	label(vars, MENU_W * 0.3, label_y + 50, vars->labels[i]);
+	label_color_opt(vars, buff);
 }
 
-char	**ft_labels_init(void)
+char	**labels_init(void)
 {
 	char	**labels;
 

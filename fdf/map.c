@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_map.c                                           :+:      :+:    :+:   */
+/*   map.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-int	ft_map_realloc_points(t_map *map)
+int	map_realloc_points(t_map *map)
 {
 	t_point	*points;
 	int		i;
@@ -31,7 +31,7 @@ int	ft_map_realloc_points(t_map *map)
 	return (SUCCESS);
 }
 
-t_map	*ft_map_init(int w, int h)
+t_map	*map_init(int w, int h)
 {
 	t_map	*map;
 
@@ -51,7 +51,7 @@ t_map	*ft_map_init(int w, int h)
 	return (map);
 }
 
-void	*ft_map_free(t_map *map)
+void	*map_free(t_map *map)
 {
 	free(map->points);
 	map->points = NULL;
@@ -59,7 +59,7 @@ void	*ft_map_free(t_map *map)
 	return (NULL);
 }
 
-void	ft_get_min_max_z(t_map *map, int *min, int *max)
+void	get_min_max_z(t_map *map, int *min, int *max)
 {
 	int	i;
 
@@ -76,14 +76,14 @@ void	ft_get_min_max_z(t_map *map, int *min, int *max)
 	}
 }
 
-void	ft_normalize_z(t_map *map)
+void	normalize_z(t_map *map)
 {
 	int	i;
 	int	min;
 	int	max;
 	int	fact;
 
-	ft_get_min_max_z(map, &min, &max);
+	get_min_max_z(map, &min, &max);
 	i = 0;
 	fact = max;
 	if (max != min)

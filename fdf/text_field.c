@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_text_field.c                                    :+:      :+:    :+:   */
+/*   text_field.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-int	ft_text_field_sync_value(t_camera *c)
+int	text_field_sync_value(t_camera *c)
 {
 	int	i;
 
@@ -25,7 +25,7 @@ int	ft_text_field_sync_value(t_camera *c)
 	return (0);
 }
 
-void	ft_text_field_update_value(int key, t_vars *vars, int i)
+void	text_field_update_value(int key, t_vars *vars, int i)
 {
 	t_camera	*c;
 
@@ -51,7 +51,7 @@ void	ft_text_field_update_value(int key, t_vars *vars, int i)
 	}
 }
 
-int	ft_text_field_event(int key, t_vars *vars)
+int	text_field_event(int key, t_vars *vars)
 {
 	int			i;
 	t_camera	*c;
@@ -65,7 +65,7 @@ int	ft_text_field_event(int key, t_vars *vars)
 	{
 		if (c->field[i].focused)
 		{
-			ft_text_field_update_value(key, vars, i);
+			text_field_update_value(key, vars, i);
 			break ;
 		}
 		i++;
@@ -73,7 +73,7 @@ int	ft_text_field_event(int key, t_vars *vars)
 	return (0);
 }
 
-void	ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y)
+void	text_field_focused(t_vars *vars, int mouse_x, int mouse_y)
 {
 	int				i;
 	int				focused;
@@ -90,14 +90,14 @@ void	ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y)
 		{
 			f->focused = TRUE;
 			focused = TRUE;
-			vars->tf_cursor = ft_strlen(f->text);
+			vars->tf_cursor = strlen(f->text);
 		}
 		i++;
 	}
 	vars->global_mode = INSERT * focused + NORMAL * !focused;
 }
 
-t_text_field	*ft_text_field_init(t_camera *c)
+t_text_field	*text_field_init(t_camera *c)
 {
 	int				i;
 	t_text_field	*field;

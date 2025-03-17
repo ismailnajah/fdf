@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cube.c                                          :+:      :+:    :+:   */
+/*   cube.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-void	ft_cube_init(t_point *cube)
+void	cube_init(t_point *cube)
 {
 	cube[0].x = -0.5f;
 	cube[0].y = 0.5f;
@@ -40,25 +40,25 @@ void	ft_cube_init(t_point *cube)
 	cube[7].z = -0.5f;
 }
 
-void	ft_cube_draw(t_image *img, t_point *cube)
+void	cube_draw(t_image *img, t_point *cube)
 {
 	int	i;
 
 	i = 0;
 	while (i < 4)
 	{
-		ft_draw_line(img, cube[i], cube[(i + 1) % 4], 1);
+		draw_line(img, cube[i], cube[(i + 1) % 4], 1);
 		i++;
 	}
-	ft_draw_line(img, cube[0], cube[3], 1);
-	ft_draw_line(img, cube[0], cube[4], 1);
-	ft_draw_line(img, cube[7], cube[3], 1);
-	ft_draw_line(img, cube[4], cube[7], 1);
-	ft_draw_line(img, cube[4], cube[5], 1);
-	ft_draw_line(img, cube[5], cube[1], 1);
+	draw_line(img, cube[0], cube[3], 1);
+	draw_line(img, cube[0], cube[4], 1);
+	draw_line(img, cube[7], cube[3], 1);
+	draw_line(img, cube[4], cube[7], 1);
+	draw_line(img, cube[4], cube[5], 1);
+	draw_line(img, cube[5], cube[1], 1);
 }
 
-void	ft_draw_cube_view(t_image *img, t_vars *vars)
+void	draw_cube_view(t_image *img, t_vars *vars)
 {
 	int				i;
 	t_point			cube[8];
@@ -67,20 +67,20 @@ void	ft_draw_cube_view(t_image *img, t_vars *vars)
 	cube_camera.option[ANGLE_X] = DEFAULT_ANGLE_X;
 	cube_camera.option[ANGLE_Y] = DEFAULT_ANGLE_Y;
 	cube_camera.option[ANGLE_Z] = DEFAULT_ANGLE_Z;
-	ft_cube_init(cube);
+	cube_init(cube);
 	i = 0;
 	while (i < 8)
 	{
-		ft_rotate_xyz_point(cube + i, vars->cube + i, &cube_camera);
+		rotate_xyz_point(cube + i, vars->cube + i, &cube_camera);
 		vars->cube[i].x = vars->cube[i].x * img->w * 0.5 + img->w / 2;
 		vars->cube[i].y = vars->cube[i].y * img->w * 0.5 + img->h / 2;
 		vars->cube[i].color = C_WHITE;
 		i++;
 	}
-	ft_cube_draw(img, vars->cube);
+	cube_draw(img, vars->cube);
 }
 
-int	ft_is_cube_clicked(int x, int y, t_vars *vars)
+int	is_cube_clicked(int x, int y, t_vars *vars)
 {
 	t_point	*cube;
 

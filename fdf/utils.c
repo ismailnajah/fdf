@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utils.c                                         :+:      :+:    :+:   */
+/*   utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,33 +12,33 @@
 
 #include "fdf.h"
 
-int	ft_print_error(int err, char *path)
+int	print_error(int err, char *path)
 {
-	ft_printf(RED"[ ERROR ] "RESET);
+	printf(RED"[ ERROR ] "RESET);
 	if (err == ERR_FILE)
 	{
-		ft_printf("could not open %s: ", path);
+		printf("could not open %s: ", path);
 		perror("");
 	}
 	if (err == ERR_IS_DIR)
-		ft_printf("could not open %s: %s.\n", path, strerror(EISDIR));
+		printf("could not open %s: %s.\n", path, strerror(EISDIR));
 	if (err == ERR_MAP)
-		ft_printf("Invalid map.\n");
+		printf("Invalid map.\n");
 	if (err == ERR_PARSE)
-		ft_printf("Parsing error occured.\n");
+		printf("Parsing error occured.\n");
 	if (err == ERR_MALLOC)
-		ft_printf("Unable to allocate resources.\n");
+		printf("Unable to allocate resources.\n");
 	if (err == ERR_EMPTY_FILE)
-		ft_printf("The map is empty.\n");
+		printf("The map is empty.\n");
 	if (err == ERR_FILE_EXTENSION)
 	{
-		ft_printf("Bad file extension.\n");
-		ft_printf("    Usage: ./fdf filename.fdf\n");
+		printf("Bad file extension.\n");
+		printf("    Usage: ./fdf filename.fdf\n");
 	}
 	return (FAILURE);
 }
 
-int	ft_camera_compare(t_camera *a, t_camera *b)
+int	camera_compare(t_camera *a, t_camera *b)
 {
 	int	i;
 
@@ -52,7 +52,7 @@ int	ft_camera_compare(t_camera *a, t_camera *b)
 	return (TRUE);
 }
 
-void	ft_view_change(int state, t_vars *vars)
+void	view_change(int state, t_vars *vars)
 {
 	static int	animation_state;
 	int			view;
@@ -65,20 +65,20 @@ void	ft_view_change(int state, t_vars *vars)
 		return ;
 	c = vars->camera;
 	if (animation_state == RESET_ANIMATION)
-		view_c = ft_camera_default();
+		view_c = camera_default();
 	else if (animation_state == UPDATE_ANIMATION)
 	{
-		view = ft_is_cube_clicked(vars->mouse->x, vars->mouse->y, vars);
+		view = is_cube_clicked(vars->mouse->x, vars->mouse->y, vars);
 		if (!view)
 			return ;
-		view_c = ft_camera_of_view(view, c);
+		view_c = camera_of_view(view, c);
 	}
-	ft_camera_update(c, &view_c);
-	if (ft_camera_compare(c, &view_c))
+	camera_update(c, &view_c);
+	if (camera_compare(c, &view_c))
 		animation_state = STOP_ANIMATION;
 }
 
-unsigned int	ft_hex_to_int(char *hex)
+unsigned int	hex_to_int(char *hex)
 {
 	unsigned int	color;
 	int				i;
@@ -108,9 +108,9 @@ int	is_valid_file(char *path)
 	if (fd > 0)
 	{
 		close(fd);
-		return (ft_print_error(ERR_IS_DIR, path));
+		return (print_error(ERR_IS_DIR, path));
 	}
-	if (ft_strncmp(path + ft_strlen(path) - 4, ".fdf", 4) != 0)
-		return (ft_print_error(ERR_FILE_EXTENSION, path));
+	if (strncmp(path + strlen(path) - 4, ".fdf", 4) != 0)
+		return (print_error(ERR_FILE_EXTENSION, path));
 	return (SUCCESS);
 }

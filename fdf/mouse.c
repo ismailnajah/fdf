@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_mouse.c                                         :+:      :+:    :+:   */
+/*   mouse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-t_mouse *ft_mouse_init(void)
+t_mouse *mouse_init(void)
 {
 	t_mouse	*mouse;
 
@@ -21,12 +21,12 @@ t_mouse *ft_mouse_init(void)
 		return (NULL);
 	mouse->x = 0;
 	mouse->y = 0;
-	mouse->left_pressed = false;
+	mouse->lepressed = false;
 	mouse->right_pressed = false;
 	return (mouse);
 }
 
-void	ft_mouse_update_position(t_vars *vars, int x, int y)
+void	mouse_update_position(t_vars *vars, int x, int y)
 {
 	vars->mouse->x = x;
 	vars->mouse->y = y;

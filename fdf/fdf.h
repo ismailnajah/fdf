@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2025/02/10 13:15:08 by inajah           ###   ########.fr       */
+/*   Updated: 2025/03/17 13:28:31 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ enum
 	KEY_SPACE = 32,
 	KEY_SCROLL_UP = 4,
 	KEY_SCROLL_DOWN = 5,
-	KEY_LEFT_CLICK = 1,
+	KEY_LECLICK = 1,
 	KEY_RIGHT_CLICK = 2,
 };
 
@@ -246,7 +246,7 @@ typedef struct s_mouse
 {
 	int	x;
 	int	y;
-	bool left_pressed;
+	bool lepressed;
 	bool right_pressed;
 }	t_mouse;
 
@@ -275,134 +275,133 @@ typedef struct s_vars
 	int				tf_cursor;
 }	t_vars;
 
-//ft_vars.c
-int				ft_is_vars_changed(t_vars *vars);
-int				ft_vars_free(t_vars *vars);
-int				ft_vars_init(t_vars *vars, char *map_path);
+//vars.c
+int				is_vars_changed(t_vars *vars);
+int				vars_free(t_vars *vars);
+int				vars_init(t_vars *vars, char *map_path);
 
-//ft_label.c
-void			ft_label_draw(t_vars *vars);
-void			ft_label(t_vars *vars, int x, int y, char *text);
-char			**ft_labels_init(void);
+//label.c
+void			label_draw(t_vars *vars);
+void			label(t_vars *vars, int x, int y, char *text);
+char			**labels_init(void);
 
-//ft_mouse.c
-t_mouse			*ft_mouse_init(void);
-void	ft_mouse_update_position(t_vars *vars, int x, int y);
+//mouse.c
+t_mouse			*mouse_init(void);
+void	mouse_update_position(t_vars *vars, int x, int y);
 
-//ft_text_field.c
-t_text_field	*ft_text_field_init(t_camera *c);
-void			ft_text_field_focused(t_vars *vars, int mouse_x, int mouse_y);
-int				ft_text_field_event(int key, t_vars *vars);
-int				ft_text_field_sync_value(t_camera *c);
+//text_field.c
+t_text_field	*text_field_init(t_camera *c);
+void			text_field_focused(t_vars *vars, int mouse_x, int mouse_y);
+int				text_field_event(int key, t_vars *vars);
+int				text_field_sync_value(t_camera *c);
 
-//ft_text_field_draw.c
-void			ft_text_field_draw(t_vars *vars);
+//text_field_draw.c
+void			text_field_draw(t_vars *vars);
 
-//ft_color.c
+//color.c
 int				create_trgb(int t, int r, int g, int b);
 int				get_t(int trgb);
 int				get_r(int trgb);
 int				get_g(int trgb);
 int				get_b(int trgb);
 
-//ft_color_picker
-t_color_picker	*ft_color_picker_init(int x, int y);
-void			ft_color_picker_draw(t_image *img, t_color_picker *cp);
-void			ft_border_draw(t_image *img, t_point a, int w, int h);
-void			*ft_color_picker_free(t_color_picker *cp);
+//color_picker
+t_color_picker	*color_picker_init(int x, int y);
+void			color_picker_draw(t_image *img, t_color_picker *cp);
+void			border_draw(t_image *img, t_point a, int w, int h);
+void			*color_picker_free(t_color_picker *cp);
 
-//ft_color_option.c
-void			*ft_color_option_free(t_color_option *opt);
-t_color_option	*ft_color_option_init(t_color_picker *cp);
-void			ft_color_option_draw(t_image *img, t_point p, int w);
+//color_option.c
+void			*color_option_free(t_color_option *opt);
+t_color_option	*color_option_init(t_color_picker *cp);
+void			color_option_draw(t_image *img, t_point p, int w);
 
-//ft_color_utils.c
-int				ft_color_picker_focused(t_color_picker *cp, int x, int y);
+//color_utils.c
+int				color_picker_focused(t_color_picker *cp, int x, int y);
 unsigned int	next_color(unsigned int color);
-unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
-void			ft_color_option_focused(t_vars *vars, int x, int y);
-unsigned int	ft_color_parse(char *color_str);
+unsigned int	color_lerp(unsigned int c1, unsigned int c2, float t);
+void			color_option_focused(t_vars *vars, int x, int y);
+unsigned int	color_parse(char *color_str);
 
-//ft_draw.c
-void			ft_draw_pixel(t_image *img, int x, int y, int color);
-void			ft_draw_main_view(t_vars *vars);
-void			ft_draw_line(t_image *img, t_point a, t_point b, int fact);
+//draw.c
+void			draw_pixel(t_image *img, int x, int y, int color);
+void			draw_main_view(t_vars *vars);
+void			draw_line(t_image *img, t_point a, t_point b, int fact);
 
-//ft_draw_utils.c
-unsigned int	ft_get_point_color(t_vars *vars, t_point *p);
-float			ft_point_distance(t_point a, t_point b);
-int				ft_in_image(t_image *img, t_point a);
+//draw_utils.c
+unsigned int	get_point_color(t_vars *vars, t_point *p);
+float			point_distance(t_point a, t_point b);
+int				in_image(t_image *img, t_point a);
 
-//ft_handle_event.c
-int				ft_on_keydown(int keycode, t_vars *vars);
-int				ft_on_destroy(t_vars *vars);
-int				ft_on_mouse_event(int keycode, int x, int y, t_vars *vars);
-int				ft_on_mouse_up(int button, int x, int y, t_vars *vars);
-int				ft_on_mouse_move(int x, int y, t_vars *vars);
+//handle_event.c
+int				on_keydown(int keycode, t_vars *vars);
+int				on_destroy(t_vars *vars);
+int				on_mouse_event(int keycode, int x, int y, t_vars *vars);
+int				on_mouse_up(int button, int x, int y, t_vars *vars);
+int				on_mouse_move(int x, int y, t_vars *vars);
 
-//ft_map.c
-t_map			*ft_map_init(int w, int h);
-void			*ft_map_free(t_map *map);
-void			ft_get_min_max_z(t_map *map, int *min, int *max);
-int				ft_map_realloc_points(t_map *map);
-void			ft_normalize_z(t_map *map);
+//map.c
+t_map			*map_init(int w, int h);
+void			*map_free(t_map *map);
+void			get_min_max_z(t_map *map, int *min, int *max);
+int				map_realloc_points(t_map *map);
+void			normalize_z(t_map *map);
 
-//ft_parse_map.c
-void			*ft_map_free(t_map *map);
-t_map			*ft_map_init(int w, int h);
-t_map			*ft_get_map_from_file(char *path);
-void			ft_get_min_max_z(t_map *map, int *min, int *max);
+//parse_map.c
+void			*map_free(t_map *map);
+t_map			*map_init(int w, int h);
+t_map			*get_map_from_file(char *path);
+void			get_min_max_z(t_map *map, int *min, int *max);
 
-//ft_image.c
-void			*ft_image_free(void *mlx, t_image *img);
-t_image			*ft_image_init(void *mlx, int width, int height);
-void			ft_image_clear(t_image *img, unsigned int color);
-void			*ft_layout_free(void *mlx, t_layout *layout);
-t_layout		*ft_layout_init(void *mlx);
-void			ft_layout_set_image_focused(t_layout *layout, int x, int y);
-void			ft_layout_reset_image_focused(t_layout *layout);
+//image.c
+void			*image_free(void *mlx, t_image *img);
+t_image			*image_init(void *mlx, int width, int height);
+void			image_clear(t_image *img, unsigned int color);
+void			*layout_free(void *mlx, t_layout *layout);
+t_layout		*layout_init(void *mlx);
+void			layout_set_image_focused(t_layout *layout, int x, int y);
+void			layout_reset_image_focused(t_layout *layout);
 
-//ft_math.c
-float			ft_fmod(float value, float div);
-void			ft_angle_change(float *angle, int direction);
-void			ft_rotate_xyz_point(t_point *p, t_point *proj, t_camera *s);
+//math.c
+void			angle_change(float *angle, int direction);
+void			rotate_xyz_point(t_point *p, t_point *proj, t_camera *s);
 
-//ft_camera.c
-t_camera		*ft_camera_init(void);
-void			*ft_camera_free(t_camera *c);
-t_camera		ft_camera_of_view(int view, t_camera *old_s);
-t_camera		ft_camera_default(void);
-void	ft_camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step);
-void			ft_camera_update(t_camera *s, t_camera *e);
+//camera.c
+t_camera		*camera_init(void);
+void			*camera_free(t_camera *c);
+t_camera		camera_of_view(int view, t_camera *old_s);
+t_camera		camera_default(void);
+void	camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step);
+void			camera_update(t_camera *s, t_camera *e);
 
-//ft_camera_utils.c
-void			ft_camera_angle_update(float *angle, int direction);
-void			ft_camera_offset_update(float *s, float *e);
+//camera_utils.c
+void			camera_angle_update(float *angle, int direction);
+void			camera_offset_update(float *s, float *e);
 
-//ft_point.c
-t_point			*ft_point_init(float x, float y, float z, unsigned int color);
-int				ft_point_sort(t_point *a, t_point *b);
-void			ft_point_scale(t_point *a, t_point *p, t_camera *c);
-void			ft_point_copy(t_point	*dst, t_point *src);
+//point.c
+t_point			*point_init(float x, float y, float z, unsigned int color);
+int				point_sort(t_point *a, t_point *b);
+void			point_scale(t_point *a, t_point *p, t_camera *c);
+void			point_copy(t_point	*dst, t_point *src);
 
-//ft_utils.c
-void			ft_view_change(int state, t_vars *vars);
-unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t);
-unsigned int	ft_hex_to_int(char *hex);
-int				ft_print_error(int err, char *path);
+//utils.c
+void			view_change(int state, t_vars *vars);
+unsigned int	color_lerp(unsigned int c1, unsigned int c2, float t);
+unsigned int	hex_to_int(char *hex);
+int				print_error(int err, char *path);
 int				is_valid_file(char *path);
 
-//ft_cube.c
-void			ft_draw_cube_view(t_image *img, t_vars *vars);
-int				ft_is_cube_clicked(int x, int y, t_vars *vars);
+//cube.c
+void			draw_cube_view(t_image *img, t_vars *vars);
+int				is_cube_clicked(int x, int y, t_vars *vars);
 
-//ft_rect.c
-t_rect			*ft_rect_init(int x, int y, int w, int h);
-void			ft_rect_draw(t_image *img, t_rect *rec, unsigned int c);
-int				ft_is_inside_rect(t_rect *rec, int x, int y);
-void			ft_border_draw(t_image *img, t_point a, int w, int h);
+//rect.c
+t_rect			*rect_init(int x, int y, int w, int h);
+void			rect_draw(t_image *img, t_rect *rec, unsigned int c);
+int				is_inside_rect(t_rect *rec, int x, int y);
+void			border_draw(t_image *img, t_point a, int w, int h);
 
-//ft_circle.c
-void			ft_circle_draw(t_image *img, t_point center);
+//circle.c
+void			circle_draw(t_image *img, t_point center);
 
 #endif

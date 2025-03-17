@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_color_utils.c                                   :+:      :+:    :+:   */
+/*   color_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,16 +12,16 @@
 
 #include "fdf.h"
 
-unsigned int	ft_color_parse(char *color_str)
+unsigned int	color_parse(char *color_str)
 {
 	if (!color_str)
 		return (C_WHITE);
 	if (color_str[0] != '0' || (color_str[1] != 'x' && color_str[1] != 'X'))
 		return (C_WHITE);
-	return (ft_hex_to_int(color_str + 2));
+	return (hex_to_int(color_str + 2));
 }
 
-void	ft_color_option_focused(t_vars *vars, int x, int y)
+void	color_option_focused(t_vars *vars, int x, int y)
 {
 	vars->low_p->focused = FALSE;
 	vars->high_p->focused = FALSE;
@@ -30,26 +30,26 @@ void	ft_color_option_focused(t_vars *vars, int x, int y)
 		if (LP_COLOR_Y < y && y < LP_COLOR_Y + COLOR_W)
 		{
 			vars->low_p->focused = TRUE;
-			ft_point_copy(vars->color_picker->sat_cursor, vars->low_p->sat);
-			ft_point_copy(vars->color_picker->hue_cursor, vars->low_p->hue);
+			point_copy(vars->color_picker->sat_cursor, vars->low_p->sat);
+			point_copy(vars->color_picker->hue_cursor, vars->low_p->hue);
 		}
 		else if (HP_COLOR_Y < y && y < HP_COLOR_Y + COLOR_W)
 		{
 			vars->high_p->focused = TRUE;
-			ft_point_copy(vars->color_picker->sat_cursor, vars->high_p->sat);
-			ft_point_copy(vars->color_picker->hue_cursor, vars->high_p->hue);
+			point_copy(vars->color_picker->sat_cursor, vars->high_p->sat);
+			point_copy(vars->color_picker->hue_cursor, vars->high_p->hue);
 		}
 	}
 }
 
-int	ft_color_picker_focused(t_color_picker *cp, int x, int y)
+int	color_picker_focused(t_color_picker *cp, int x, int y)
 {
-	if (ft_is_inside_rect(cp->hue, x, y))
+	if (is_inside_rect(cp->hue, x, y))
 	{
 		cp->hue_cursor->y = y;
 		return (CP_HUE);
 	}
-	else if (ft_is_inside_rect(cp->sat, x, y))
+	else if (is_inside_rect(cp->sat, x, y))
 	{
 		cp->sat_cursor->x = x;
 		cp->sat_cursor->y = y;
@@ -78,7 +78,7 @@ unsigned int	next_color(unsigned int color)
 	return (create_trgb(0, r, g, b));
 }
 
-unsigned int	ft_color_lerp(unsigned int c1, unsigned int c2, float t)
+unsigned int	color_lerp(unsigned int c1, unsigned int c2, float t)
 {
 	int	r;
 	int	g;

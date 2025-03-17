@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_camera_utils.c                                  :+:      :+:    :+:   */
+/*   camera_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,13 +12,13 @@
 
 #include "fdf.h"
 
-void	ft_camera_angle_update(float *angle, int direction)
+void	camera_angle_update(float *angle, int direction)
 {
 	direction = (1 - 2 * direction);
-	*angle = ft_fmod(*angle + direction * ANGLE_STEP, 360.0f);
+	*angle = fmod(*angle + direction * ANGLE_STEP, 360.0f);
 }
 
-void	ft_camera_offset_update(float *s, float *e)
+void	camera_offset_update(float *s, float *e)
 {
 	if (*s < *e)
 	{

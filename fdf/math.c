@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_math.c                                          :+:      :+:    :+:   */
+/*   math.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -44,7 +44,7 @@ float	ft_sin(float new_angle)
 	return (sin_angle);
 }
 
-void	ft_rotate_xyz_point(t_point *p, t_point *rot, t_camera *c)
+void	rotate_xyz_point(t_point *p, t_point *rot, t_camera *c)
 {
 	float	ax;
 	float	ay;
@@ -67,16 +67,4 @@ void	ft_rotate_xyz_point(t_point *p, t_point *rot, t_camera *c)
 	rot->z += p->y * ft_sin(ax);
 	rot->z += p->z * (ft_cos(ax) * ft_cos(ay));
 	rot->color = p->color;
-}
-
-float	ft_fmod(float value, float div)
-{
-	int		sign;
-	float	abs_value;
-
-	abs_value = fabs(value);
-	sign = 1 - 2 * (value < 0.0f);
-	if (abs_value >= div)
-		return ((abs_value - div) * sign);
-	return (value);
 }

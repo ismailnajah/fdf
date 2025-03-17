@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_parse_map.c                                     :+:      :+:    :+:   */
+/*   parse_map.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,18 +12,18 @@
 
 #include "fdf.h"
 
-int	ft_parse_map_error(t_map *map, int diff)
+int	parse_map_error(t_map *map, int diff)
 {
-	ft_printf(RED"[ ERROR ] "RESET);
-	ft_printf("Line %d is too ", map->h);
+	printf(RED"[ ERROR ] "RESET);
+	printf("Line %d is too ", map->h);
 	if (diff < 0)
-		ft_printf("short.\n");
+		printf("short.\n");
 	else
-		ft_printf("long.\n");
+		printf("long.\n");
 	return (FAILURE);
 }
 
-void	ft_parse_point(t_map *map, int i, int j, char *point_str)
+void	parse_point(t_map *map, int i, int j, char *point_str)
 {
 	char	**words;
 	int		w;
@@ -41,12 +41,12 @@ void	ft_parse_point(t_map *map, int i, int j, char *point_str)
 		ft_split_free(words);
 		return ;
 	}
-	map->points[j * map->w + i].z = ft_atoi(words[0]);
-	map->points[j * map->w + i].color = ft_color_parse(words[1]);
+	map->points[j * map->w + i].z = atoi(words[0]);
+	map->points[j * map->w + i].color = color_parse(words[1]);
 	words = ft_split_free(words);
 }
 
-int	ft_parse_line(t_map *map, char *line, int j)
+int	parse_line(t_map *map, char *line, int j)
 {
 	static int	old_w = -1;
 	char		**words;
@@ -58,22 +58,22 @@ int	ft_parse_line(t_map *map, char *line, int j)
 		return (FAILURE);
 	w = ft_split_count(words);
 	if (old_w != -1 && w != old_w)
-		return (ft_split_free(words), ft_parse_map_error(map, w - old_w));
+		return (ft_split_free(words), parse_map_error(map, w - old_w));
 	old_w = w;
 	map->w = w;
-	if (!ft_map_realloc_points(map))
-		return (ft_print_error(ERR_MALLOC, NULL), ft_split_free(words), 0);
+	if (!map_realloc_points(map))
+		return (print_error(ERR_MALLOC, NULL), ft_split_free(words), 0);
 	i = 0;
 	while (words[i] && words[i][0] != '\n')
 	{
-		ft_parse_point(map, i, j, words[i]);
+		parse_point(map, i, j, words[i]);
 		i++;
 	}
 	ft_split_free(words);
 	return (SUCCESS);
 }
 
-int	ft_parse_map(int fd, t_map *map)
+int	parse_map(int fd, t_map *map)
 {
 	char	*line;
 	int		j;
@@ -81,17 +81,17 @@ int	ft_parse_map(int fd, t_map *map)
 
 	line = get_next_line(fd);
 	if (!line)
-		return (ft_print_error(ERR_EMPTY_FILE, NULL), FAILURE);
+		return (print_error(ERR_EMPTY_FILE, NULL), FAILURE);
 	j = 0;
 	while (line)
 	{
 		map->h += 1;
-		ret = ft_parse_line(map, line, j);
+		ret = parse_line(map, line, j);
 		free(line);
 		if (!ret)
 		{
 			get_next_line(FREE_GNL_BUFFER);
-			return (ft_print_error(ERR_PARSE, NULL));
+			return (print_error(ERR_PARSE, NULL));
 		}
 		line = get_next_line(fd);
 		j++;
@@ -99,30 +99,30 @@ int	ft_parse_map(int fd, t_map *map)
 	return (SUCCESS);
 }
 
-t_map	*ft_get_map_from_file(char *path)
+t_map	*get_map_from_file(char *path)
 {
 	int		fd;
 	t_map	*map;
 
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
-		return (ft_print_error(ERR_FILE, path), NULL);
-	ft_printf(GREEN"[ INFO  ]"RESET" Parsing the map...\n");
-	map = ft_map_init(0, 0);
+		return (print_error(ERR_FILE, path), NULL);
+	printf(GREEN"[ INFO  ]"RESET" Parsing the map...\n");
+	map = map_init(0, 0);
 	if (!map)
 	{
 		close(fd);
-		return (ft_print_error(ERR_MALLOC, path), NULL);
+		return (print_error(ERR_MALLOC, path), NULL);
 	}
-	if (!ft_parse_map(fd, map))
+	if (!parse_map(fd, map))
 	{
 		close(fd);
-		return (ft_map_free(map), NULL);
+		return (map_free(map), NULL);
 	}
-	ft_normalize_z(map);
+	normalize_z(map);
 	close(fd);
-	ft_printf(GREEN"[ INFO  ] "RESET"Parsing done.\n");
-	ft_printf(GREEN"[ INFO  ] "RESET"Map %s ( %d x %d ) loaded.\n",
+	printf(GREEN"[ INFO  ] "RESET"Parsing done.\n");
+	printf(GREEN"[ INFO  ] "RESET"Map %s ( %d x %d ) loaded.\n",
 		basename(path), map->w, map->h);
 	return (map);
 }

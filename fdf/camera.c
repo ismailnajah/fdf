@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_camera.c                                        :+:      :+:    :+:   */
+/*   camera.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,14 +12,14 @@
 
 #include "fdf.h"
 
-void	*ft_camera_free(t_camera *c)
+void	*camera_free(t_camera *c)
 {
 	free(c->field);
 	free(c);
 	return (NULL);
 }
 
-t_camera	*ft_camera_init(void)
+t_camera	*camera_init(void)
 {
 	t_camera	*c;
 
@@ -34,13 +34,13 @@ t_camera	*ft_camera_init(void)
 	c->option[Y_OFF] = DEFAULT_Y_OFF;
 	c->option[Z_OFF] = DEFAULT_Z_OFF;
 	c->option[DOT_FACT] = 0;
-	c->field = ft_text_field_init(c);
+	c->field = text_field_init(c);
 	if (!c->field)
-		return (ft_camera_free(c));
+		return (camera_free(c));
 	return (c);
 }
 
-t_camera	ft_camera_default(void)
+t_camera	camera_default(void)
 {
 	static t_camera	c;
 
@@ -55,7 +55,7 @@ t_camera	ft_camera_default(void)
 	return (c);
 }
 
-t_camera	ft_camera_of_view(int view, t_camera *old)
+t_camera	camera_of_view(int view, t_camera *old)
 {
 	static t_camera	c;
 	int				i;
@@ -81,7 +81,7 @@ t_camera	ft_camera_of_view(int view, t_camera *old)
 	return (c);
 }
 
-void	ft_camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step)
+void	camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step)
 {
     float mousex = mouse->x - MENU_W;
     float mousey = mouse->y;
@@ -101,7 +101,7 @@ void	ft_camera_update_zoom(t_camera *camera, t_mouse *mouse, int scale_step)
     camera->option[SCALE] = new_scale;
 }
 
-void	ft_camera_update(t_camera *s, t_camera *e)
+void	camera_update(t_camera *s, t_camera *e)
 {
 	int		i;
 	float	*s_opt;
@@ -113,9 +113,9 @@ void	ft_camera_update(t_camera *s, t_camera *e)
 	while (i < SCALE)
 	{
 		if (s_opt[i] != e_opt[i] && i <= ANGLE_Z)
-			ft_camera_angle_update(&s_opt[i], s_opt[i] > e_opt[i]);
+			camera_angle_update(&s_opt[i], s_opt[i] > e_opt[i]);
 		else if (s_opt[i] != e_opt[i])
-			ft_camera_offset_update(&s_opt[i], &e_opt[i]);
+			camera_offset_update(&s_opt[i], &e_opt[i]);
 		i++;
 	}
 }

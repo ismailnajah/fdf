@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_rectangle.c                                     :+:      :+:    :+:   */
+/*   rectangle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,42 +12,42 @@
 
 #include "fdf.h"
 
-void	ft_border_draw(t_image *img, t_point a, int w, int h)
+void	border_draw(t_image *img, t_point a, int w, int h)
 {
 	t_point	b;
 
 	b.x = a.x + w;
 	b.y = a.y;
 	b.color = a.color;
-	ft_draw_line(img, a, b, 1);
+	draw_line(img, a, b, 1);
 	b.x = a.x;
 	b.y = a.y + h;
-	ft_draw_line(img, b, a, 1);
+	draw_line(img, b, a, 1);
 	a.x = a.x + w;
 	a.y = a.y + h;
-	ft_draw_line(img, a, b, 1);
+	draw_line(img, a, b, 1);
 	b.x = a.x;
 	b.y = a.y - h;
-	ft_draw_line(img, a, b, 1);
+	draw_line(img, a, b, 1);
 }
 
-int	ft_is_inside_rect(t_rect *rec, int x, int y)
+int	is_inside_rect(t_rect *rec, int x, int y)
 {
 	return (rec->x < x && x < rec->x + rec->w
 		&& rec->y < y && y < rec->y + rec->h);
 }
 
-void	ft_rect_draw(t_image *img, t_rect *rec, unsigned int color)
+void	rect_draw(t_image *img, t_rect *rec, unsigned int color)
 {
 	t_point	a;
 
 	a.x = rec->x;
 	a.y = rec->y;
 	a.color = color;
-	ft_border_draw(img, a, rec->w, rec->h);
+	border_draw(img, a, rec->w, rec->h);
 }
 
-t_rect	*ft_rect_init(int x, int y, int w, int h)
+t_rect	*rect_init(int x, int y, int w, int h)
 {
 	t_rect	*rec;
 

@@ -26,9 +26,9 @@ t_camera	*camera_init(void)
 	c = (t_camera *)malloc(sizeof(t_camera));
 	if (!c)
 		return (NULL);
-	c->option[ANGLE_X] = DEFAULT_ANGLE_X;
-	c->option[ANGLE_Y] = DEFAULT_ANGLE_Y;
-	c->option[ANGLE_Z] = DEFAULT_ANGLE_Z;
+	c->option[ANGLE_X] = 0;//DEFAULT_ANGLE_X;
+	c->option[ANGLE_Y] = 0;//DEFAULT_ANGLE_Y;
+	c->option[ANGLE_Z] = 0;//DEFAULT_ANGLE_Z;
 	c->option[SCALE] = DEFAULT_SCALE;
 	c->option[X_OFF] = DEFAULT_X_OFF;
 	c->option[Y_OFF] = DEFAULT_Y_OFF;
@@ -44,9 +44,9 @@ t_camera	camera_default(void)
 {
 	static t_camera	c;
 
-	c.option[ANGLE_X] = DEFAULT_ANGLE_X;
-	c.option[ANGLE_Y] = DEFAULT_ANGLE_Y;
-	c.option[ANGLE_Z] = DEFAULT_ANGLE_Z;
+	c.option[ANGLE_X] = 0;
+	c.option[ANGLE_Y] = 0;
+	c.option[ANGLE_Z] = 0;
 	c.option[SCALE] = DEFAULT_SCALE;
 	c.option[X_OFF] = DEFAULT_X_OFF;
 	c.option[Y_OFF] = DEFAULT_Y_OFF;
@@ -66,17 +66,21 @@ t_camera	camera_of_view(int view, t_camera *old)
 		c.option[i] = old->option[i];
 		i++;
 	}
-	c.option[ANGLE_X] = 0.0f;
+	c.option[ANGLE_X] = -60.0f;
 	c.option[ANGLE_Y] = 0.0f;
-	c.option[ANGLE_Z] = 0.0f;
+	c.option[ANGLE_Z] = 45.0f;
 	if (view == TOP_VIEW)
 		return (c);
 	if (view == SIDE_VIEW)
-		c.option[ANGLE_X] = 90.0f;
+	{
+		c.option[ANGLE_X] = 0.0f;
+		c.option[ANGLE_Y] = -35.0f;
+		c.option[ANGLE_Z] = 135.0f;
+	}
 	if (view == FRONT_VIEW)
 	{
-		c.option[ANGLE_Y] = 90.0f;
-		c.option[ANGLE_Z] = -90.0f;
+		c.option[ANGLE_X] = 35.0f;
+		c.option[ANGLE_Z] = 45.0f;
 	}
 	return (c);
 }

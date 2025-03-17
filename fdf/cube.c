@@ -64,9 +64,9 @@ void	draw_cube_view(t_image *img, t_vars *vars)
 	t_point			cube[8];
 	static t_camera	cube_camera;
 
-	cube_camera.option[ANGLE_X] = DEFAULT_ANGLE_X;
-	cube_camera.option[ANGLE_Y] = DEFAULT_ANGLE_Y;
-	cube_camera.option[ANGLE_Z] = DEFAULT_ANGLE_Z;
+	cube_camera.option[ANGLE_X] = 0;//DEFAULT_ANGLE_X;
+	cube_camera.option[ANGLE_Y] = 0;//DEFAULT_ANGLE_Y;
+	cube_camera.option[ANGLE_Z] = 0;//DEFAULT_ANGLE_Z;
 	cube_init(cube);
 	i = 0;
 	while (i < 8)

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:27:36 by inajah            #+#    #+#             */
-/*   Updated: 2025/03/17 13:28:31 by inajah           ###   ########.fr       */
+/*   Updated: 2025/03/17 14:14:44 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,7 +364,7 @@ void			layout_reset_image_focused(t_layout *layout);
 
 //math.c
 void			angle_change(float *angle, int direction);
-void			rotate_xyz_point(t_point *p, t_point *proj, t_camera *s);
+void			rotate_xyz_point(t_point *p, t_point *proj, t_camera *c);
 
 //camera.c
 t_camera		*camera_init(void);
